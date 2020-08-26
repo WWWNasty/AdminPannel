@@ -2,16 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Admin.Panel.Core.Entities;
+using Admin.Panel.Core.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
-using Admin.Panel.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Admin.Panel.Data.Repositories;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Admin.Panel.Web
 {
@@ -27,11 +30,26 @@ namespace Admin.Panel.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserStore<User>, UserRepository>();
+            services.AddTransient<IRoleStore<ApplicationRole>, RoleRepository>();
+            services.AddIdentity<User, ApplicationRole>()
+                //.AddDapperStores(options => {
+                //    options.AddRolesTable<ExtendedRolesTable, ExtendedIdentityRole>();
+                //});
+                .AddDefaultTokenProviders();
+            //TODO защита пароля поставить true на проде
+            services.Configure<IdentityOptions>(options => {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
+            });
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
