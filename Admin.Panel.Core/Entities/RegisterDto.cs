@@ -33,6 +33,7 @@ namespace Admin.Panel.Core.Entities
 
         //public string CompanyName { get; set; }
 
+        [Display(Name = "Компания")]
         public List<ApplicationCompany> ApplicationCompanies { get; set; } = new List<ApplicationCompany>();
     }
 }

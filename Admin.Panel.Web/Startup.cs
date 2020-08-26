@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
@@ -14,7 +15,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Admin.Panel.Data.Repositories;
+using Admin.Panel.Web.Servises;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using Microsoft.Extensions.FileProviders;
 
 namespace Admin.Panel.Web
 {
@@ -43,6 +48,7 @@ namespace Admin.Panel.Web
                 //    options.AddRolesTable<ExtendedRolesTable, ExtendedIdentityRole>();
                 //});
                 .AddDefaultTokenProviders();
+            services.AddTransient<IEmailSender, EmailSender>();
             //TODO защита пароля поставить true на проде
             services.Configure<IdentityOptions>(options => {
                 options.Password.RequireNonAlphanumeric = false;
@@ -50,8 +56,15 @@ namespace Admin.Panel.Web
                 options.Password.RequireUppercase = false;
                 options.Password.RequireDigit = false;
             });
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddRazorRuntimeCompilation();
             services.AddRazorPages();
+            //services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
+            //{
+            //    var libraryPath = Path.GetFullPath(
+            //        Path.Combine(HostEnvironment.ContentRootPath, "..", "MyClassLib"));
+            //    options.FileProviders.Add(new PhysicalFileProvider(libraryPath));
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,6 +74,7 @@ namespace Admin.Panel.Web
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+
             }
             else
             {

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admin.Panel.Web", "Admin.Panel.Web\Admin.Panel.Web.csproj", "{8E249E4F-F68F-4E04-BE83-2BADC2800635}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin.Panel.Web", "Admin.Panel.Web\Admin.Panel.Web.csproj", "{8E249E4F-F68F-4E04-BE83-2BADC2800635}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admin.Panel.Core", "Admin.Panel.Core\Admin.Panel.Core.csproj", "{D030DC95-2B6C-4303-94B7-B384016EE2C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin.Panel.Core", "Admin.Panel.Core\Admin.Panel.Core.csproj", "{D030DC95-2B6C-4303-94B7-B384016EE2C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admin.Panel.Data", "Admin.Panel.Data\Admin.Panel.Data.csproj", "{75836654-ACFD-4D1B-A1FA-809E11BD82EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin.Panel.Data", "Admin.Panel.Data\Admin.Panel.Data.csproj", "{75836654-ACFD-4D1B-A1FA-809E11BD82EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

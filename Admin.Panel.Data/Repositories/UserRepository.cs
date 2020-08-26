@@ -188,7 +188,7 @@ namespace Admin.Panel.Data.Repositories
 
         public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+           // cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
             {
@@ -204,7 +204,7 @@ namespace Admin.Panel.Data.Repositories
 
         public Task<string> GetSecurityStampAsync(User user, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            //cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
             {
@@ -230,7 +230,7 @@ namespace Admin.Panel.Data.Repositories
 
         public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            //cancellationToken.ThrowIfCancellationRequested();
 
             return Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
         }
@@ -277,7 +277,7 @@ namespace Admin.Panel.Data.Repositories
 
         public Task SetSecurityStampAsync(User user, string stamp, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+           // cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
             {
