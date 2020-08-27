@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Admin.Panel.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Admin.Panel.Web.Controllers
 {
@@ -23,6 +24,7 @@ namespace Admin.Panel.Web.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Админ")]
         public IActionResult Privacy()
         {
             return View();

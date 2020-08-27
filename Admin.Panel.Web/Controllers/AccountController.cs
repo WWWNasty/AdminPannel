@@ -150,7 +150,7 @@ namespace Admin.Panel.Web.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Privacy", "Home");
         }
 
         private void AddErrors(IdentityResult result)
@@ -160,6 +160,5 @@ namespace Admin.Panel.Web.Controllers
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
-
     }
 }
