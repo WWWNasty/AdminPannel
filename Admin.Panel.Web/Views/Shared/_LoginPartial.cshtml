@@ -1,40 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Admin.Panel.Data.Repositories
 @using Admin.Panel.Core.Entities
+
 @inject SignInManager<User> SignInManager
 
-@*<ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
-        </li>
-        <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-            </form>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register11111111111111111</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-        </li>
-    }
-</ul>*@
-
-@if (User.Identity.IsAuthenticated)
+@if (SignInManager.IsSignedIn(User))
 {
-    <form asp-area="Auth" asp-page="/Views/Account" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
+    <form asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
                 <a class="nav-link">Hello, @User.Identity.Name!</a>
             </li>
             <li>
-                <a asp-controller="Account" asp-action="Register" class="nav-link">Выйти</a>
+                <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
             </li>
         </ul>
     </form>
@@ -42,6 +20,10 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a  asp-controller="Account" asp-action="Register" class="nav-link">Register</a></li>
+        <li><a asp-controller="Account" asp-action="Register" class="nav-link">Создать пользователя</a></li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+        <li><a asp-controller="Account" asp-action="LogIn" class="nav-link">Войти</a></li>
     </ul>
 }

@@ -35,6 +35,7 @@ namespace Admin.Panel.Core.Entities
         public string ConfirmationToken { get; set; }
 
         [Display(Name = "Компания")]
+        [Required(ErrorMessage = "Компания обязательна!")]
         public List<ApplicationCompany> ApplicationCompanies { get; set; } = new List<ApplicationCompany>();
     }
 }
