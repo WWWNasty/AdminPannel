@@ -73,8 +73,8 @@ namespace Admin.Panel.Data.Repositories
                 try
                 {
                     var query =
-                        @"INSERT INTO ApplicationUser(UserName,PasswordHash,Nickname,CreatedDate,SecurityStamp,IsConfirmed,ConfirmationToken,IsUsed,RoleId) 
-                            VALUES(@UserName,@PasswordHash,@Nickname,@CreatedDate,@SecurityStamp,@IsConfirmed,@ConfirmationToken,1,1);
+                        @"INSERT INTO ApplicationUser(UserName,PasswordHash,Nickname,CreatedDate,SecurityStamp,IsConfirmed,ConfirmationToken,IsUsed,RoleId,NormalizedUserName,Email) 
+                            VALUES(@UserName,@PasswordHash,@Nickname,@CreatedDate,@SecurityStamp,@IsConfirmed,@ConfirmationToken,1,1,@NormalizedUserName,@Email);
                             SELECT UserId = @@IDENTITY";
                     var value = cn.ExecuteScalar<int>(query, user);
 
@@ -137,7 +137,7 @@ namespace Admin.Panel.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<User> FindByNameAsync(string userName, CancellationToken cancellationToken)
+        public async Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -147,15 +147,17 @@ namespace Admin.Panel.Data.Repositories
 
                 try
                 {
-                    var query = "SELECT * FROM ApplicationUser WHERE LOWER(UserName)=LOWER(@UserName)";
-                    var user = await cn.QueryAsync<User>(query, new { @UserName = userName });
+                    //var query = "SELECT * FROM ApplicationUser WHERE LOWER(UserName)=LOWER(@UserName)";
+                    var query = $@"SELECT * FROM [ApplicationUser]
+                    WHERE [NormalizedUserName] = @{nameof(normalizedUserName)}";
+                    var user = await cn.QueryAsync<User>(query, new { @NormalizedUserName = normalizedUserName});
 
                     return user.SingleOrDefault();
                 }
                 catch (Exception ex)
                 {
 
-                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                    throw new Exception($"{GetType().FullName}.наверное такой пользователь уже есть", ex);
                 }
 
             }
@@ -183,7 +185,7 @@ namespace Admin.Panel.Data.Repositories
 
         public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(user.NormalizedUserName);
         }
 
         public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
