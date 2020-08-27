@@ -163,7 +163,7 @@ namespace Admin.Panel.Data.Repositories
 
         public Task<string> GetEmailAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(user.Email);
         }
 
         public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
@@ -188,8 +188,6 @@ namespace Admin.Panel.Data.Repositories
 
         public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
         {
-           // cancellationToken.ThrowIfCancellationRequested();
-
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
@@ -197,15 +195,28 @@ namespace Admin.Panel.Data.Repositories
             return Task.FromResult(user.PasswordHash);
         }
 
-        public Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
+        public async Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            using (var cn = new SqlConnection(_connectionString))
+            {
+                await cn.OpenAsync();
+
+                try
+                {
+                    var query = "SELECT r.[Name] FROM [ApplicationRole] r INNER JOIN [ApplicationUser] ur ON ur.[RoleId] = r.Id WHERE ur.Id = @userId";
+                    var queryResults = await cn.QueryAsync<string>(query, new { userId = user.Id });
+
+                    return queryResults.ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
         }
 
         public Task<string> GetSecurityStampAsync(User user, CancellationToken cancellationToken)
         {
-            //cancellationToken.ThrowIfCancellationRequested();
-
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
@@ -215,12 +226,12 @@ namespace Admin.Panel.Data.Repositories
 
         public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(user.Id.ToString());
         }
 
         public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(user.UserName);
         }
 
         public Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
@@ -230,8 +241,6 @@ namespace Admin.Panel.Data.Repositories
 
         public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
         {
-            //cancellationToken.ThrowIfCancellationRequested();
-
             return Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
         }
 
@@ -262,22 +271,36 @@ namespace Admin.Panel.Data.Repositories
 
         public Task SetNormalizedEmailAsync(User user, string normalizedEmail, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            user.NormalizedEmail = normalizedEmail;
+            return Task.FromResult(0);
         }
 
         public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            user.NormalizedUserName = normalizedName;
+            return Task.FromResult(0);
         }
 
         public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            user.PasswordHash = passwordHash;
+            return Task.FromResult(0);
         }
 
         public Task SetSecurityStampAsync(User user, string stamp, CancellationToken cancellationToken)
         {
-           // cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
             {

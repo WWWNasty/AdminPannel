@@ -22,7 +22,7 @@ namespace Admin.Panel.Core.Entities
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
-        public CancellationToken Password { get; set; }
+        public string Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
@@ -32,6 +32,7 @@ namespace Admin.Panel.Core.Entities
         public int CompanyId { get; set; }
 
         //public string CompanyName { get; set; }
+        public string ConfirmationToken { get; set; }
 
         [Display(Name = "Компания")]
         public List<ApplicationCompany> ApplicationCompanies { get; set; } = new List<ApplicationCompany>();

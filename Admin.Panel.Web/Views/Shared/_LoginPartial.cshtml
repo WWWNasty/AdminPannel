@@ -3,7 +3,7 @@
 @using Admin.Panel.Core.Entities
 @inject SignInManager<User> SignInManager
 
-<ul class="navbar-nav">
+@*<ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
@@ -18,14 +18,13 @@
     else
     {
         <li class="nav-item">
-            @*<a asp-controller="Account" asp-action="R" class="nav-link"></a>*@
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register11111111111111111</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
         </li>
     }
-</ul>
+</ul>*@
 
 @if (User.Identity.IsAuthenticated)
 {
@@ -35,7 +34,7 @@
                 <a class="nav-link">Hello, @User.Identity.Name!</a>
             </li>
             <li>
-                <a asp-controller="Account" asp-action="Register" class="nav-link">Register2222222222222</a>
+                <a asp-controller="Account" asp-action="Register" class="nav-link">Выйти</a>
             </li>
         </ul>
     </form>
