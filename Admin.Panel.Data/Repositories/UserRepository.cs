@@ -73,8 +73,8 @@ namespace Admin.Panel.Data.Repositories
                 try
                 {
                     var query =
-                        @"INSERT INTO ApplicationUser(UserName,PasswordHash,Nickname,CreatedDate,SecurityStamp,IsConfirmed,ConfirmationToken,IsUsed,RoleId,NormalizedUserName,Email) 
-                            VALUES(@UserName,@PasswordHash,@Nickname,@CreatedDate,@SecurityStamp,@IsConfirmed,@ConfirmationToken,1,1,@NormalizedUserName,@Email);
+                        @"INSERT INTO ApplicationUser(UserName,PasswordHash,Nickname,CreatedDate,SecurityStamp,IsConfirmed,ConfirmationToken,IsUsed,RoleId,NormalizedUserName,NormalizedEmail,Email) 
+                            VALUES(@UserName,@PasswordHash,@Nickname,@CreatedDate,@SecurityStamp,@IsConfirmed,@ConfirmationToken,1,1,@NormalizedUserName,@NormalizedEmail,@Email);
                             SELECT UserId = @@IDENTITY";
                     var value = cn.ExecuteScalar<int>(query, user);
 
@@ -105,9 +105,21 @@ namespace Admin.Panel.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        public async Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync(cancellationToken);
+                    return await connection.QuerySingleOrDefaultAsync<User>($@"SELECT * FROM [ApplicationUser]
+                    WHERE [NormalizedEmail] = @{nameof(normalizedEmail)}", new {normalizedEmail});
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection()", ex);
+                }
+            }
         }
 
         public async Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
@@ -170,7 +182,7 @@ namespace Admin.Panel.Data.Repositories
 
         public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(user.EmailConfirmed);
         }
 
         public Task<IList<UserLoginInfo>> GetLoginsAsync(User user, CancellationToken cancellationToken)
@@ -180,7 +192,7 @@ namespace Admin.Panel.Data.Repositories
 
         public Task<string> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(user.NormalizedEmail);
         }
 
         public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
