@@ -90,8 +90,8 @@ namespace Admin.Panel.Web.Controllers
         {
             try
             {
-                RegisterDto сompanies = _userRepository.GetAllCompanies();
-                return View(сompanies);
+                RegisterDto model = _userRepository.GetAllCompanies();
+                return View(model);
             }
             catch (Exception)
             {
@@ -131,9 +131,11 @@ namespace Admin.Panel.Web.Controllers
                 }
                 AddErrors(result);
             }
-
+            model = _userRepository.GetAllCompanies();
             // If we got this far, something failed, redisplay form
             return View(model);
+            //return RedirectToAction("Register", "Account", new { c = model.ApplicationCompanies });
+
         }
 
         [HttpPost]
