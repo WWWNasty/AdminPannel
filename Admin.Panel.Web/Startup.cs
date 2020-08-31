@@ -49,7 +49,7 @@ namespace Admin.Panel.Web
                 //});
                 .AddDefaultTokenProviders();
             services.AddTransient<IEmailSender, EmailSender>();
-            //TODO защита пароля поставить true на проде
+            //TODO сложность пароля поставить true на проде
             services.Configure<IdentityOptions>(options => {
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;

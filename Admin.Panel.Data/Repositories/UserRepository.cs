@@ -73,8 +73,8 @@ namespace Admin.Panel.Data.Repositories
                 try
                 {
                     var query =
-                        @"INSERT INTO ApplicationUser(UserName,PasswordHash,Nickname,CreatedDate,SecurityStamp,IsConfirmed,ConfirmationToken,IsUsed,RoleId,NormalizedUserName,NormalizedEmail,Email) 
-                            VALUES(@UserName,@PasswordHash,@Nickname,@CreatedDate,@SecurityStamp,@IsConfirmed,@ConfirmationToken,1,1,@NormalizedUserName,@NormalizedEmail,@Email);
+                        @"INSERT INTO ApplicationUser(UserName,PasswordHash,Nickname,CreatedDate,SecurityStamp,IsConfirmed,ConfirmationToken,IsUsed,RoleId,NormalizedUserName,NormalizedEmail,Email,EmailConfirmed) 
+                            VALUES(@UserName,@PasswordHash,@Nickname,@CreatedDate,@SecurityStamp,@IsConfirmed,@ConfirmationToken,1,1,@NormalizedUserName,@NormalizedEmail,@Email,@EmailConfirmed);
                             SELECT UserId = @@IDENTITY";
                     var value = cn.ExecuteScalar<int>(query, user);
 
@@ -344,9 +344,24 @@ namespace Admin.Panel.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            using (var cn = new SqlConnection(_connectionString))
+            {
+                await cn.OpenAsync();
+                try
+                {
+                    await cn.ExecuteAsync(@"UPDATE ApplicationUser SET UserName=@UserName,PasswordHash=@PasswordHash,NickName=@NickName,SecurityStamp=@SecurityStamp,IsConfirmed=@IsConfirmed,
+                    NormalizedUserName=@NormalizedUserName,NormalizedEmail=@NormalizedEmail,Email=@Email,
+                    EmailConfirmed=@EmailConfirmed WHERE Id=@Id", user);
+
+                    return IdentityResult.Success;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
         }
 
         public void Dispose()

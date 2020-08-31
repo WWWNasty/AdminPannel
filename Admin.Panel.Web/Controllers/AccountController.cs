@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Interfaces;
+using Admin.Panel.Web.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -123,8 +124,8 @@ namespace Admin.Panel.Web.Controllers
                 if (result.Succeeded)
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    //await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToLocal(returnUrl);
