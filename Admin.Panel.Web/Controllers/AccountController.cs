@@ -72,10 +72,10 @@ namespace Admin.Panel.Web.Controllers
                 //{
                 //    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
                 //}
-                //if (result.IsLockedOut)
-                //{ 
-                //    return RedirectToAction(nameof(Lockout));
-                //}
+                if (result.IsLockedOut)
+                {
+                    return RedirectToAction(nameof(Lockout));
+                }
 
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
@@ -179,6 +179,13 @@ namespace Admin.Panel.Web.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Lockout()
+        {
+            return View();
         }
 
         [HttpGet]

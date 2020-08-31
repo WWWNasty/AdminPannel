@@ -1,63 +1,61 @@
 ﻿@model Admin.Panel.Core.Entities.RegisterDto
 
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Создание нового пользователя";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.HiddenFor(model => model.ApplicationCompanies)
-
-    @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
+<form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
     <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @*@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })*@
+            <label asp-for="Email"></label>
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Nickname, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Nickname, new { @class = "form-control" })
+            <label asp-for="Nickname"></label>
+            <input asp-for="Nickname" class="form-control" />
+            <span asp-validation-for="Nickname" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            <label asp-for="ConfirmPassword"></label>
+            <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.ApplicationCompanies, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @{
-                List<SelectListItem> lst = new List<SelectListItem>();
+                List<SelectListItem> lst1 = new List<SelectListItem>();
                 for (int i = Model.ApplicationCompanies.Count - 1; i >= 0; i--)
                 {
-                    lst.Add(new SelectListItem {Text = Model.ApplicationCompanies[i].CompanyName, Value = Model.ApplicationCompanies[i].CompanyId.ToString()});
+                    lst1.Add(new SelectListItem { Text = Model.ApplicationCompanies[i].CompanyName, Value = Model.ApplicationCompanies[i].CompanyId.ToString() });
                 }
             }
+            <label asp-for="CompanyId"></label>
+            <select asp-for="CompanyId" asp-items="lst1" class="custom-select dropdown-stile">
+                <option selected="selected" disabled="disabled"></option>
+            </select>
+            <span asp-validation-for="CompanyId" class="text-danger"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-default">Создать</button>
+</form>
 
-            @Html.DropDownListFor(m => m.CompanyId, lst, "", new {@class = "custom-select dropdown-stile"})
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Создать" />
-        </div>
-    </div>
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }
-

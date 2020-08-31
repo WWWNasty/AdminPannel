@@ -7,15 +7,16 @@ namespace Admin.Panel.Core.Entities
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Введите Email!")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите пароль!")]
         [DataType(DataType.Password)]
+        [Display(Name = "Пароль")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Запомнить меня?")]
         public bool RememberMe { get; set; }
     }
 }

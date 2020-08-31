@@ -7,7 +7,7 @@ namespace Admin.Panel.Core.Entities
 {
     public class ForgotPasswordViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Введите email!")]
         [EmailAddress]
         public string Email { get; set; }
     }
