@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Admin.Panel.Data.Repositories
 @using Admin.Panel.Core.Entities
-@model Admin.Panel.Core.Entities.RegisterDto
 
 @inject SignInManager<User> SignInManager
 
@@ -17,6 +16,9 @@
             </li>
         </ul>
     </form>
+    
+        <a asp-controller="Account" asp-action="ChangePassword" class="nav-link">Изменить пароль</a>
+ 
 }
 else
 {
