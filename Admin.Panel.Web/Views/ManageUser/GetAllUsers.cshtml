@@ -10,7 +10,9 @@
 @foreach (var user in Model)
 {
     <div class="card-body">
-        <h4 class="card-title">@user.Nickname</h4>
+        <input type="hidden" name="Id" value="@user.Id"/>
+        <h4 class="card-title">@user.Nickname
+            <a asp-controller="ManageUser" asp-action="UpdateUser" asp-route-userId="@user.Id" class="text-success"> @Html.DisplayFor(modelItem => user.UserName)</a></h4>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">@user.Email</li>
             <li class="list-group-item">@user.IsUsed</li>

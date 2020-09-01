@@ -67,6 +67,12 @@ namespace Admin.Panel.Web.Controllers
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var isUsed = await _userRepository.IsUsed(model.Email, CancellationToken.None);
+                if (isUsed == false)
+                {
+                    return RedirectToAction(nameof(Lockout));
+                }
+
                 if (result.Succeeded)
                 {
                     return RedirectToLocal(returnUrl);
@@ -75,10 +81,7 @@ namespace Admin.Panel.Web.Controllers
                 //{
                 //    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
                 //}
-                if (result.IsLockedOut)
-                {
-                    return RedirectToAction(nameof(Lockout));
-                }
+               
 
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);

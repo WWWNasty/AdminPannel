@@ -18,7 +18,7 @@ namespace Admin.Panel.Core.Entities
         public bool IsConfirmed { get; set; }
         public string ConfirmationToken { get; set; }
         public DateTime CreatedDate { get; set; }
-
+        public bool IsUsed { get; set; }
         public int ApplicationCompanyId { get; set; }
 
     }

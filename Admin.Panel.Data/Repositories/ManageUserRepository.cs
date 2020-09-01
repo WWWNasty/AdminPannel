@@ -69,9 +69,8 @@ namespace Admin.Panel.Data.Repositories
                 await cn.OpenAsync();
                 try
                 {
-                    await cn.ExecuteAsync(@"UPDATE ApplicationUser SET UserName=@UserName,PasswordHash=@PasswordHash,NickName=@NickName,SecurityStamp=@SecurityStamp,IsConfirmed=@IsConfirmed,
-                    NormalizedUserName=@NormalizedUserName,NormalizedEmail=@NormalizedEmail,Email=@Email,
-                    EmailConfirmed=@EmailConfirmed,IsUsed=@IsUsed WHERE Id=@Id", user);
+                    await cn.ExecuteAsync(@"UPDATE ApplicationUser SET UserName=@UserName,NickName=@NickName,
+                    Email=@Email,IsUsed=@IsUsed WHERE Id=@Id", user);
 
                     return user.Id;
                 }

@@ -14,13 +14,13 @@ namespace Admin.Panel.Web.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IManageUserRepository _manageUserRepository;
-        private readonly IMapper _mapper;
+       // private readonly IMapper _mapper;
 
-        public ManageUserController(IManageUserRepository manageUserRepository, IUserRepository userRepository, IMapper mapper)
+        public ManageUserController(IManageUserRepository manageUserRepository, IUserRepository userRepository/*, IMapper mapper*/)
         {
             _manageUserRepository = manageUserRepository;
             _userRepository = userRepository;
-            _mapper = mapper;
+           // _mapper = mapper;
         }
 
         [HttpGet]
@@ -43,7 +43,20 @@ namespace Admin.Panel.Web.Controllers
         public async Task<IActionResult> UpdateUser(int userId)
         {
            var user = await _manageUserRepository.GetUser(userId);
-            return View(_mapper.Map<UpdateUserViewModel>(user));
+
+           var model = new UpdateUserViewModel()
+           {
+               Id = user.Id,
+               IsUsed = user.IsUsed,
+               UserName = user.UserName,
+               Nickname = user.Nickname,
+               Email = user.Email,
+               //CreatedDate = user.CreatedDate,
+               //ApplicationCompanyId = user.ApplicationCompanyId
+
+           };
+           // return View(_mapper.Map<UpdateUserViewModel>(user));
+           return View(model);
         }
 
         [HttpPost]
