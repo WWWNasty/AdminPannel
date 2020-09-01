@@ -353,7 +353,7 @@ namespace Admin.Panel.Data.Repositories
                 {
                     await cn.ExecuteAsync(@"UPDATE ApplicationUser SET UserName=@UserName,PasswordHash=@PasswordHash,NickName=@NickName,SecurityStamp=@SecurityStamp,IsConfirmed=@IsConfirmed,
                     NormalizedUserName=@NormalizedUserName,NormalizedEmail=@NormalizedEmail,Email=@Email,
-                    EmailConfirmed=@EmailConfirmed WHERE Id=@Id", user);
+                    EmailConfirmed=@EmailConfirmed,IsUsed=@IsUsed WHERE Id=@Id", user);
 
                     return IdentityResult.Success;
                 }

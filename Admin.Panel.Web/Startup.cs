@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Interfaces;
+using Admin.Panel.Data.MapperProfiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Admin.Panel.Data.Repositories;
 using Admin.Panel.Web.Servises;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
@@ -40,8 +42,10 @@ namespace Admin.Panel.Web
             //        Configuration.GetConnectionString("DefaultConnection")));
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddScoped<IManageUserRepository, ManageUserRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserStore<User>, UserRepository>();
+            services.AddAutoMapper(typeof(MappingProfile));
             services.AddTransient<IRoleStore<ApplicationRole>, RoleRepository>();
             services.AddIdentity<User, ApplicationRole>()
                 //.AddDapperStores(options => {
