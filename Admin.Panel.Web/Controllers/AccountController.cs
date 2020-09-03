@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Interfaces;
+using Admin.Panel.Core.Interfaces.Repositories;
 using Admin.Panel.Core.Interfaces.Services;
 using Admin.Panel.Web.Extensions;
 using Microsoft.AspNetCore.Authentication;
@@ -67,16 +68,16 @@ namespace Admin.Panel.Web.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
                 var isUsed = await _userRepository.IsUsed(model.Email, CancellationToken.None);
                 if (isUsed == false)
                 {
                     return RedirectToAction(nameof(Lockout));
                 }
-                if (result.IsLockedOut)
-                {
-                    return RedirectToAction(nameof(Lockout));
-                }
+                //if (result.IsLockedOut)
+                //{
+                //    return RedirectToAction(nameof(Lockout));
+                //}
                 if (result.Succeeded)
                 {
                     return RedirectToLocal(returnUrl);
@@ -183,7 +184,7 @@ namespace Admin.Panel.Web.Controllers
         {
             try
             {
-                RegisterDto model = _manageUserService.GetAllCompanies();
+                RegisterDto model = await _manageUserService.GetAllCompanies();
                 return View(model);
             }
             catch (Exception)
@@ -224,7 +225,7 @@ namespace Admin.Panel.Web.Controllers
                 }
                 AddErrors(result);
             }
-            model = _manageUserService.GetAllCompanies();
+            model = await _manageUserService.GetAllCompanies();
             // If we got this far, something failed, redisplay form
             return View(model);
             //return RedirectToAction("Register", "Account", new { c = model.ApplicationCompanies });

@@ -9,6 +9,7 @@ using System.Threading;
 using Admin.Panel.Core.Entities;
 using System.Data.SqlClient;
 using System.Linq;
+using Admin.Panel.Core.Interfaces.Repositories;
 
 namespace Admin.Panel.Data.Repositories
 {
@@ -349,39 +350,39 @@ namespace Admin.Panel.Data.Repositories
 
         }
 
-        public Task<DateTimeOffset?> GetLockoutEndDateAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<DateTimeOffset?> GetLockoutEndDateAsync(User user, CancellationToken cancellationToken)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task SetLockoutEndDateAsync(User user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task SetLockoutEndDateAsync(User user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task<int> IncrementAccessFailedCountAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<int> IncrementAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task ResetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task ResetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task<bool> GetLockoutEnabledAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<bool> GetLockoutEnabledAsync(User user, CancellationToken cancellationToken)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task SetLockoutEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task SetLockoutEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

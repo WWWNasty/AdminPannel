@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Interfaces.Repositories.Questionary;
 using Admin.Panel.Core.Interfaces.Services;
@@ -16,9 +17,9 @@ namespace Admin.Panel.Core.Services
             _companyRepository = companyRepository;
         }
 
-        public RegisterDto GetAllCompanies()
+        public async Task<RegisterDto> GetAllCompanies()
         {
-            List<ApplicationCompany> companies = _companyRepository.GetAllAsync();
+            List<ApplicationCompany> companies = await _companyRepository.GetAllAsync();
             RegisterDto registerObject = new RegisterDto
             {
                 ApplicationCompanies = companies
