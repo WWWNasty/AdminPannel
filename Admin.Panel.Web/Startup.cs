@@ -5,6 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Interfaces;
+using Admin.Panel.Core.Interfaces.Repositories.Questionary;
+using Admin.Panel.Core.Interfaces.Services;
+using Admin.Panel.Core.Services;
 using Admin.Panel.Data.MapperProfiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -16,12 +19,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Admin.Panel.Data.Repositories;
+using Admin.Panel.Data.Repositories.Questionary;
 using Admin.Panel.Web.Servises;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.FileProviders;
+
 
 namespace Admin.Panel.Web
 {
@@ -43,6 +48,8 @@ namespace Admin.Panel.Web
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddScoped<IManageUserRepository, ManageUserRepository>();
+            services.AddScoped<IManageUserService, ManageUserService>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserStore<User>, UserRepository>();
             services.AddAutoMapper(typeof(MappingProfile));

@@ -14,7 +14,7 @@ namespace Admin.Panel.Web.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IManageUserRepository _manageUserRepository;
-       // private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
 
         public ManageUserController(IManageUserRepository manageUserRepository, IUserRepository userRepository/*, IMapper mapper*/)
         {

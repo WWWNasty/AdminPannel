@@ -12,5 +12,7 @@ namespace Admin.Panel.Core.Entities
             set => Id = value;
         }
         public string CompanyName { get; set; }
+
+        public string Description { get; set; }
     }
 }

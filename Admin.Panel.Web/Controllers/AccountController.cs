@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Interfaces;
+using Admin.Panel.Core.Interfaces.Services;
 using Admin.Panel.Web.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +20,7 @@ namespace Admin.Panel.Web.Controllers
     {
 
         private readonly UserManager<User> _userManager;
+        private readonly IManageUserService _manageUserService;
         private readonly IUserRepository _userRepository;
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -27,16 +29,15 @@ namespace Admin.Panel.Web.Controllers
             UserManager<User> userManager,
             IUserRepository userRepository,
             SignInManager<User> signInManager,
-            IEmailSender emailSender
-
-        )
+            IEmailSender emailSender, 
+            IManageUserService manageUserService)
 
         {
             _userManager = userManager;
             _userRepository = userRepository;
             _signInManager = signInManager;
             _emailSender = emailSender;
-
+            _manageUserService = manageUserService;
         }
 
         [TempData]
@@ -66,13 +67,16 @@ namespace Admin.Panel.Web.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
                 var isUsed = await _userRepository.IsUsed(model.Email, CancellationToken.None);
                 if (isUsed == false)
                 {
                     return RedirectToAction(nameof(Lockout));
                 }
-
+                if (result.IsLockedOut)
+                {
+                    return RedirectToAction(nameof(Lockout));
+                }
                 if (result.Succeeded)
                 {
                     return RedirectToLocal(returnUrl);
@@ -81,8 +85,6 @@ namespace Admin.Panel.Web.Controllers
                 //{
                 //    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
                 //}
-               
-
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
             }
@@ -181,7 +183,7 @@ namespace Admin.Panel.Web.Controllers
         {
             try
             {
-                RegisterDto model = _userRepository.GetAllCompanies();
+                RegisterDto model = _manageUserService.GetAllCompanies();
                 return View(model);
             }
             catch (Exception)
@@ -222,7 +224,7 @@ namespace Admin.Panel.Web.Controllers
                 }
                 AddErrors(result);
             }
-            model = _userRepository.GetAllCompanies();
+            model = _manageUserService.GetAllCompanies();
             // If we got this far, something failed, redisplay form
             return View(model);
             //return RedirectToAction("Register", "Account", new { c = model.ApplicationCompanies });

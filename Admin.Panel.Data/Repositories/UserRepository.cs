@@ -21,37 +21,6 @@ namespace Admin.Panel.Data.Repositories
             _connectionString = configuration.GetConnectionString("questionaryConnection");
         }
 
-
-        public RegisterDto GetAllCompanies()
-        {
-            List<ApplicationCompany> companies = GetCompaniesAsync();
-            RegisterDto registerObject = new RegisterDto
-            {
-                ApplicationCompanies = companies
-            };
-
-            return registerObject;
-        }
-
-        protected List<ApplicationCompany> GetCompaniesAsync()
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                try
-                {
-                    var query = "SELECT * FROM Companies";
-                    var сompanies = connection.Query<ApplicationCompany>(query);
-                    return сompanies.ToList();
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
-                }
-            }
-        }
-
         public Task AddLoginAsync(User user, UserLoginInfo login, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -380,5 +349,39 @@ namespace Admin.Panel.Data.Repositories
 
         }
 
+        public Task<DateTimeOffset?> GetLockoutEndDateAsync(User user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetLockoutEndDateAsync(User user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> IncrementAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ResetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> GetLockoutEnabledAsync(User user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetLockoutEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
