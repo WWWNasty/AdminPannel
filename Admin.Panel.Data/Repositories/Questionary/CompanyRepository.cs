@@ -10,7 +10,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 
 namespace Admin.Panel.Data.Repositories.Questionary
-{
+{//TODO необходимы dto отдельные
     public class CompanyRepository: ICompanyRepository
     {
         private readonly string _connectionString;

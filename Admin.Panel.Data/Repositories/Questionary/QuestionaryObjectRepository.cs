@@ -59,7 +59,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 await connection.OpenAsync();
                 try
                 {
-                    var query = "SELECT * FROM Companies";
+                    var query = "SELECT * FROM QuestionaryObjects";
                     var result = connection.Query<QuestionaryObject>(query).ToList();
                     return result;
                 }
@@ -84,10 +84,9 @@ namespace Admin.Panel.Data.Repositories.Questionary
                             @"INSERT INTO QuestionaryObjects(Code,Description,Updated,Name,ObjectTypeId,CompanyId) 
                                 VALUES(@Code,@Description,@Updated,@Name,@ObjectTypeId,@CompanyId);
                                 SELECT QuestionaryObjectId = @@IDENTITY";
-                        var value = cn.ExecuteScalar<int>(query, obj, transaction);
+                        var objId = cn.ExecuteScalar<int>(query, obj, transaction);
 
-                        var objId = value;
-                        //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+                        //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& 
                         List<ObjectProperty> objectProperties = cn.Query<ObjectProperty>(@"SELECT * FROM ObjectProperties AS p 
                             INNER JOIN ObjectPropertyToObjectTypes AS tp ON tp.ObjectPropertyId = p.Id
                             INNER JOIN QuestionaryObjectTypes AS t ON tp.QuestionaryObjectTypeId = t.Id").ToList();
@@ -105,7 +104,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
                         }
 
-                        var result = cn.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE Id=@Id", new { @Id = value }).SingleOrDefault();
+                        var result = cn.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE Id=@Id", new { @Id = objId }).SingleOrDefault();
 
                         transaction.Commit();
 
