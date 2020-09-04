@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Admin.Panel.Core.Entities.Questionary
 {
-    class QuestionaryObject: BaseEntity
+    public class QuestionaryObject: BaseEntity
     {
         public string Code { get; set; }
         public string Description { get; set; }
@@ -12,5 +12,8 @@ namespace Admin.Panel.Core.Entities.Questionary
         public string Name { get; set; }
         public int ObjectTypeId { get; set; }
         public int CompanyId { get; set; }
+        //TODO create model нужна
+        public string Value { get; set; }
+
     }
 }

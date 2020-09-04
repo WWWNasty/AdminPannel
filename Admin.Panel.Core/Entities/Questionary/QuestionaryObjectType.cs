@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Admin.Panel.Core.Entities.Questionary
 {
-    class QuestionaryObjectType: BaseEntity
+    public class QuestionaryObjectType: BaseEntity
     {
         public string Name { get; set; }
     }
