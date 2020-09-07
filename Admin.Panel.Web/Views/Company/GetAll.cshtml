@@ -1,0 +1,29 @@
+﻿@using Admin.Panel.Core.Entities
+@model List<Admin.Panel.Core.Entities.ApplicationCompany>
+
+@{
+    ViewData["Title"] = "Все Компании";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<a asp-controller="Company" asp-action="Create" class="nav-link">Создать компанию</a>
+
+@foreach (var company in Model)
+{
+    <div class="card-body">
+        <input type="hidden" name="CompanyId" value="@company.CompanyId" />
+        <h4 class="card-title">
+            <a asp-controller="Company" asp-action="Delete" asp-route-CompanyId="@company.CompanyId" class="btn btn-danger"> Удалить</a>
+            <a asp-controller="Company" asp-action="Update" asp-route-Id="@company.CompanyId" class="text-success"> @Html.DisplayFor(modelItem => company.CompanyName)</a>
+
+        </h4>
+    
+        @company.CompanyDescription
+
+    </div>
+}
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

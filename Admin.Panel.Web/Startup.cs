@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.FileProviders;
+using Admin.Panel.Data.Repositories.Questionary;
 
 
 namespace Admin.Panel.Web
@@ -51,6 +52,9 @@ namespace Admin.Panel.Web
             services.AddScoped<IManageUserRepository, ManageUserRepository>();
             services.AddScoped<IManageUserService, ManageUserService>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IObjectPropertiesRepository, ObjectPropertiesRepository>();
+            services.AddScoped<IQuestionaryObjectRepository, QuestionaryObjectRepository>();
+            services.AddScoped<IQuestionaryObjectTypesRepository, QuestionaryObjectTypesRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserStore<User>, UserRepository>();
             services.AddAutoMapper(typeof(MappingProfile));

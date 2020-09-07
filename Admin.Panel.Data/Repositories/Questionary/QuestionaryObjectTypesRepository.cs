@@ -5,14 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
-using Admin.Panel.Core.Entities.Questionary.Dtos;
 using Admin.Panel.Core.Interfaces.Repositories.Questionary;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 
 namespace Admin.Panel.Data.Repositories.Questionary
 {//TODO нужны дто для всего
-    //TODO нужна репа для ObjectProperties 
     public class QuestionaryObjectTypesRepository: IQuestionaryObjectTypesRepository
     {
         private readonly string _connectionString;
@@ -69,7 +67,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
             }
         }
 
-        public async Task<QuestionaryObjectTypeCreateDto> CreateAsync(QuestionaryObjectTypeCreateDto obj)
+        public async Task<QuestionaryObjectType> CreateAsync(QuestionaryObjectType obj)
         {
             using (var cn = new SqlConnection(_connectionString))
             {
@@ -96,7 +94,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 }, transaction);
                         }
 
-                        var result = cn.Query<QuestionaryObjectTypeCreateDto>(@"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id", new { @Id = objTypeId }).SingleOrDefault();
+                        var result = cn.Query<QuestionaryObjectType>(@"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id", new { @Id = objTypeId }).SingleOrDefault();
 
                         transaction.Commit();
 

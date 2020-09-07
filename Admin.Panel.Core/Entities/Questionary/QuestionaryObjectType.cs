@@ -7,5 +7,6 @@ namespace Admin.Panel.Core.Entities.Questionary
     public class QuestionaryObjectType: BaseEntity
     {
         public string Name { get; set; }
+        public List<ObjectProperty> ObjectProperties { get; set; }
     }
 }

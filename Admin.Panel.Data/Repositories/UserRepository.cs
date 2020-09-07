@@ -119,16 +119,6 @@ namespace Admin.Panel.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<bool> IsUsed(string name, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            var result = await FindByNameAsync(name.ToUpper(), cancellationToken);
-            if (result.IsUsed == false)
-            {
-                return false;
-            }
-            return true;
-        }
 
         public async Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {

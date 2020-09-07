@@ -7,6 +7,6 @@ namespace Admin.Panel.Core.Interfaces.Repositories
 {
     public interface IUserRepository : IUserStore<User>, IUserLoginStore<User>, IUserPasswordStore<User>, IUserSecurityStampStore<User>, IUserRoleStore<User>, IUserEmailStore<User> /*IUserLockoutStore<User>*/
     {
-        public Task<bool> IsUsed(string name, CancellationToken cancellationToken);
+     
     }
 }

@@ -20,7 +20,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
             _connectionString = configuration.GetConnectionString("questionaryConnection");
         }
 
-        public async Task<ApplicationCompany> GetAsync(int id)
+        public async Task<ApplicationCompany> GetAsync(int CompanyId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -29,7 +29,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 try
                 {
                     var query = "SELECT * FROM Companies WHERE CompanyId=@Id";
-                    var сompany = await connection.QueryAsync<ApplicationCompany>(query, new { @Id = id });
+                    var сompany = await connection.QueryAsync<ApplicationCompany>(query, new { @Id = CompanyId });
                     return сompany.SingleOrDefault();
                 }
                 catch (Exception ex)
@@ -67,7 +67,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 try
                 {
                     var query = @"INSERT INTO Companies(CompanyName,CompanyDescription) 
-                    VALUES(@Name, @Description)";
+                    VALUES(@CompanyName, @CompanyDescription)";
                     await connection.ExecuteAsync(query, company);
                     return company;
                 }
@@ -86,7 +86,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
                 try
                 {
-                    var query = @"UPDATE Companies SET CompanyName=@Name,CompanyDescription=@Description 
+                    var query = @"UPDATE Companies SET CompanyName=@CompanyName,CompanyDescription=@CompanyDescription 
                      WHERE CompanyId=@CompanyId";
                     await connection.ExecuteAsync(query, company);
                     return company;
@@ -98,7 +98,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
             }
         }
 
-        public async Task Delete(ApplicationCompany company)
+        public async Task DeleteAsync(ApplicationCompany company)
         {
             using (var connection = new SqlConnection(_connectionString))
             {

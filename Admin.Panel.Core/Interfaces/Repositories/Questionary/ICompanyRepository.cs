@@ -12,7 +12,7 @@ namespace Admin.Panel.Core.Interfaces.Repositories.Questionary
         public Task<List<ApplicationCompany>> GetAllAsync();
         public Task<ApplicationCompany> CreateAsync(ApplicationCompany company);
         public Task<ApplicationCompany> UpdateAsync(ApplicationCompany company);
-        public Task Delete(ApplicationCompany company);
+        public Task DeleteAsync(ApplicationCompany company);
 
     }
 }

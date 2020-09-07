@@ -15,13 +15,13 @@ namespace Admin.Panel.Web.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IManageUserRepository _manageUserRepository;
-        //private readonly IMapper _mapper;
+        private readonly IMapper _mapper;
 
-        public ManageUserController(IManageUserRepository manageUserRepository, IUserRepository userRepository/*, IMapper mapper*/)
+        public ManageUserController(IManageUserRepository manageUserRepository, IUserRepository userRepository, IMapper mapper)
         {
             _manageUserRepository = manageUserRepository;
             _userRepository = userRepository;
-           // _mapper = mapper;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -56,7 +56,7 @@ namespace Admin.Panel.Web.Controllers
                //ApplicationCompanyId = user.ApplicationCompanyId
 
            };
-           // return View(_mapper.Map<UpdateUserViewModel>(user));
+            //return View(_mapper.Map<UpdateUserViewModel>(user));
            return View(model);
         }
 
@@ -72,6 +72,5 @@ namespace Admin.Panel.Web.Controllers
             }
             return View(model);
         }
-
     }
 }

@@ -66,28 +66,31 @@ namespace Admin.Panel.Web.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
-                var isUsed = await _userRepository.IsUsed(model.Email, CancellationToken.None);
-                if (isUsed == false)
-                {
-                    return RedirectToAction(nameof(Lockout));
+                var isUsed = await _manageUserService.IsUsed(model.Email, CancellationToken.None);
+
+                if (isUsed == true)
+                { 
+                    // This doesn't count login failures towards account lockout
+                    // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                    var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false,
+                        lockoutOnFailure: false);
+
+                    //if (result.IsLockedOut)
+                    //{
+                    //    return RedirectToAction(nameof(Lockout));
+                    //}
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToLocal(returnUrl);
+                    }
+
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View(model);
                 }
-                //if (result.IsLockedOut)
-                //{
-                //    return RedirectToAction(nameof(Lockout));
-                //}
-                if (result.Succeeded)
-                {
-                    return RedirectToLocal(returnUrl);
-                }
-                //if (result.RequiresTwoFactor)
-                //{
-                //    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
-                //}
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
+                //return RedirectToAction(nameof(Lockout));
             }
 
             // If we got this far, something failed, redisplay form

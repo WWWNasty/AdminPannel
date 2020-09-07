@@ -5,13 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
+    <Compile Remove="Interfaces\Services\Questionary\**" />
+    <Compile Remove="Services\Questionary\**" />
+    <EmbeddedResource Remove="Interfaces\Services\Questionary\**" />
+    <EmbeddedResource Remove="Services\Questionary\**" />
+    <None Remove="Interfaces\Services\Questionary\**" />
+    <None Remove="Services\Questionary\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Services\Questionary\" />
-    <Folder Include="Services\Questionary\" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
   </ItemGroup>
 
 </Project>

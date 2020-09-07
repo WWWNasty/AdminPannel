@@ -32,6 +32,8 @@
   <ItemGroup>
     <Folder Include="Areas\Auth\Controllers\" />
     <Folder Include="Areas\Auth\Views\" />
+    <Folder Include="Views\ObjectsPropValues\" />
+    <Folder Include="Views\ObjectTypesProperties\" />
   </ItemGroup>
 
 </Project>
