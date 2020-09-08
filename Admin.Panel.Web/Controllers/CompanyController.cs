@@ -61,18 +61,6 @@ namespace Admin.Panel.Web.Controllers
         {
             var model = await _companyRepository.GetAsync(id);
 
-            //var model = new UpdateUserViewModel()
-            //{
-            //    Id = user.Id,
-            //    IsUsed = user.IsUsed,
-            //    UserName = user.UserName,
-            //    Nickname = user.Nickname,
-            //    Email = user.Email,
-            //    //CreatedDate = user.CreatedDate,
-            //    //ApplicationCompanyId = user.ApplicationCompanyId
-
-            //};
-            //return View(_mapper.Map<UpdateUserViewModel>(user));
             return View(model);
         }
 

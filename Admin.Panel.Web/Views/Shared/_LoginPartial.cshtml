@@ -11,15 +11,23 @@
             <li>
                 <a class="nav-link">Привет, @User.Identity.Name!</a>
             </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a asp-controller="Company" asp-action="GetAll" class="dropdown-item">Все компании</a>
+                    <a asp-controller="ObjectTypesProperties" asp-action="GetAll" class="dropdown-item">Все объекты</a>
+                    <div class="dropdown-divider"></div>
+                    <a asp-controller="Account" asp-action="ChangePassword" class="dropdown-item">Изменить пароль</a>
+                    <a asp-controller="ManageUser" asp-action="GetAllUsers" class="dropdown-item">Все пользователи</a>
+                </div>
+            </li>
             <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Выйти</button>
+                <button type="submit" class="btn btn-link nav-link">Выйти</button>
             </li>
         </ul>
     </form>
-
-    <a asp-controller="Company" asp-action="GetAll" class="nav-link">Все компании</a>
-    <a asp-controller="Account" asp-action="ChangePassword" class="nav-link">Изменить пароль</a>
-    <a asp-controller="ManageUser" asp-action="GetAllUsers" class="nav-link">Все пользователи</a>
 
 }
 else

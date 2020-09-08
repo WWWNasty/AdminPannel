@@ -1,0 +1,28 @@
+﻿@using Admin.Panel.Core.Entities.Questionary
+@model Admin.Panel.Core.Entities.Questionary.QuestionaryObjectType
+
+@{
+    ViewData["Title"] = "Тип объекта";
+}
+
+<h2>Объект</h2>
+
+<div class="card-body">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <h4 class="card-title">
+        <a asp-controller="ObjectTypesProperties" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
+    </h4>
+    @foreach (var prop in Model.SelectedObjectProperties)
+    {
+        <div class="card-body">
+            <h7 class="card-title">@prop.Name</h7>
+        </div>
+    }
+
+        </div>
+
+
+
+        @section Scripts {
+            @await Html.PartialAsync("_ValidationScriptsPartial")
+        }

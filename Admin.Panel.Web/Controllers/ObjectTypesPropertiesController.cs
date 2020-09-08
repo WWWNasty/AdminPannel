@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Interfaces.Repositories.Questionary;
+using Admin.Panel.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +13,13 @@ namespace Admin.Panel.Web.Controllers
 {
     public class ObjectTypesPropertiesController : Controller
     {
-        //private readonly IObjectPropertiesRepository _objectPropertiesRepository;
         private readonly IQuestionaryObjectTypesRepository _questionaryObjectTypesRepository;
+        private readonly IQuestionaryObjectTypesService _questionaryObjectTypesService;
 
-        public ObjectTypesPropertiesController(IObjectPropertiesRepository objectPropertiesRepository, IQuestionaryObjectTypesRepository questionaryObjectTypesRepository)
+        public ObjectTypesPropertiesController(IQuestionaryObjectTypesRepository questionaryObjectTypesRepository, IQuestionaryObjectTypesService questionaryObjectTypesService)
         {
-            //_objectPropertiesRepository = objectPropertiesRepository;
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
+            _questionaryObjectTypesService = questionaryObjectTypesService;
         }
 
         [HttpGet]
@@ -41,22 +42,9 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "Админ")]
         public async Task<IActionResult> Create()
         {
-            //TODO получить все проперти из  проперти репозит
-            //var model = await _questionaryObjectTypesRepository.GetAsync(id);
+            QuestionaryObjectType model = await _questionaryObjectTypesService.GetAllProperties();
 
-            //var model = new UpdateUserViewModel()
-            //{
-            //    Id = user.Id,
-            //    IsUsed = user.IsUsed,
-            //    UserName = user.UserName,
-            //    Nickname = user.Nickname,
-            //    Email = user.Email,
-            //    //CreatedDate = user.CreatedDate,
-            //    //ApplicationCompanyId = user.ApplicationCompanyId
-
-            //};
-            //return View(_mapper.Map<UpdateUserViewModel>(user));
-            return View();
+            return View(model);
         }
 
         [HttpPost]
@@ -74,23 +62,10 @@ namespace Admin.Panel.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Админ")]
-        public async Task<IActionResult> Update(int id)
+        public async Task<IActionResult> Update()
         {
-            //TODO получить все проперти из  проперти репозит
-            var model = await _questionaryObjectTypesRepository.GetAsync(id);
+            QuestionaryObjectType model = await _questionaryObjectTypesService.GetAllProperties();
 
-            //var model = new UpdateUserViewModel()
-            //{
-            //    Id = user.Id,
-            //    IsUsed = user.IsUsed,
-            //    UserName = user.UserName,
-            //    Nickname = user.Nickname,
-            //    Email = user.Email,
-            //    //CreatedDate = user.CreatedDate,
-            //    //ApplicationCompanyId = user.ApplicationCompanyId
-
-            //};
-            //return View(_mapper.Map<UpdateUserViewModel>(user));
             return View(model);
         }
 

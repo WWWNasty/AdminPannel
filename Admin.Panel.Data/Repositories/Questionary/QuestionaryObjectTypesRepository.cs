@@ -30,16 +30,17 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 {
                     var query = @"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id";
                     var obj = cn.Query<QuestionaryObjectType>(query, new { @Id = id }).SingleOrDefault();
-                    //TODO нужна дто для получения отдельная
-                    //var values = cn.Query<ObjectPropertyValues>(@"SELECT* FROM ObjectPropertyValues AS v
-                    //INNER JOIN ObjectProperty AS p ON v.ObjectPropertyId = p.Id
-                    //INNER JOIN QuestionaryObjects AS o ON v.QuestionaryObjectId = o.Id", new { @Id = id }).ToList();
 
 
-                    //var properties = cn.Query<QuestionaryObjectType>(@"SELECT* FROM ObjectPropertyValues AS v
-                    //INNER JOIN ObjectProperty AS p ON v.ObjectPropertyId = p.Id
-                    //INNER JOIN QuestionaryObjects AS o ON v.QuestionaryObjectId = o.Id", new { @Id = id }).ToList();
+                    var properties = cn.Query<ObjectProperty>(@"SELECT 
+	                                                                p.* 
+		                                                                FROM ObjectProperties AS p
+			                                                                INNER JOIN ObjectPropertyToObjectTypes AS po ON po.ObjectPropertyId = p.Id
+				                                                                where 
+					                                                                po.QuestionaryObjectTypeId = @QuestionaryObjectTypeId", new { QuestionaryObjectTypeId = id }).ToList();
 
+
+                    obj.SelectedObjectProperties = properties;
                     return obj;
                 }
                 catch (Exception ex)

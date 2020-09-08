@@ -1,0 +1,45 @@
+﻿@using Admin.Panel.Core.Entities.Questionary
+@model Admin.Panel.Core.Entities.Questionary.QuestionaryObjectType
+
+@{
+    ViewData["Title"] = "Создание типа объекта";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10">
+            <select class="selectpicker">
+                <option>Mustard</option>
+                <option>Ketchup</option>
+                <option>Barbecue</option>
+            </select>
+            @*<label asp-for=""></label>
+                <input asp-for="" class="form-control" />
+                <asp:CheckBox ID="CheckBox1" runat="server"
+                              oncheckedchanged="CheckBox1_CheckedChanged" />
+
+                <input id="Enable" name="Enable" type="checkbox" value="true" />
+                <input name="Enable" type="hidden" value="false" />
+                <span asp-validation-for="" class="text-danger"></span>*@
+        </div>
+    </div>
+    <button type="submit" class="btn btn-default">Сохранить</button>
+</form>
+
+
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
