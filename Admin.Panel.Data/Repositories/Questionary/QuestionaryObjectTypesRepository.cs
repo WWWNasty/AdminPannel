@@ -10,7 +10,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 
 namespace Admin.Panel.Data.Repositories.Questionary
-{//TODO нужны дто для всего
+{
     public class QuestionaryObjectTypesRepository: IQuestionaryObjectTypesRepository
     {
         private readonly string _connectionString;
@@ -83,19 +83,21 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 VALUES(@Name);
                                 SELECT QuestionaryObjectTypeId = @@IDENTITY";
                         var objTypeId = cn.ExecuteScalar<int>(query, obj, transaction);
-
-                        foreach (ObjectProperty objectProperty in obj.ObjectProperties)
+                        if (obj.ObjectProperties != null)
                         {
-                            cn.Execute(@"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
+                            foreach (ObjectProperty objectProperty in obj.ObjectProperties)
+                            {
+                                cn.Execute(@"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
 		                                                VALUES (@QuestionaryObjectTypeId,@ObjectPropertyId)",
-                                new ObjectPropertyToObjectTypes
-                                {
-                                    QuestionaryObjectTypeId = objTypeId,
-                                    ObjectPropertyId = objectProperty.Id,
-                                }, transaction);
+                                    new ObjectPropertyToObjectTypes
+                                    {
+                                        QuestionaryObjectTypeId = objTypeId,
+                                        ObjectPropertyId = objectProperty.Id,
+                                    }, transaction);
+                            }
                         }
-
-                        var result = cn.Query<QuestionaryObjectType>(@"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id", new { @Id = objTypeId }).SingleOrDefault();
+                        
+                        var result = cn.Query<QuestionaryObjectType>(@"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id", new { @Id = objTypeId }, transaction).SingleOrDefault();
 
                         transaction.Commit();
 

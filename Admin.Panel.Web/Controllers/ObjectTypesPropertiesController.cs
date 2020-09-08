@@ -55,16 +55,16 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _questionaryObjectTypesRepository.CreateAsync(model);
-                return View(model);
+                return RedirectToAction("GetAll", "ObjectTypesProperties");
             }
             return View(model);
         }
 
         [HttpGet]
         [Authorize(Roles = "Админ")]
-        public async Task<IActionResult> Update()
+        public async Task<IActionResult> Update(int id)
         {
-            QuestionaryObjectType model = await _questionaryObjectTypesService.GetAllProperties();
+            QuestionaryObjectType model = await _questionaryObjectTypesService.GetObjectForUpdare(id);
 
             return View(model);
         }
