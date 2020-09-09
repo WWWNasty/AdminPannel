@@ -15,9 +15,10 @@ namespace Admin.Panel.Core.Entities.Questionary
         public int CompanyId { get; set; }
         public string CompanyName { get; set; }
 
-        public List<ObjectProperty> SelectedObjectProperties { get; set; }
+        
+        //public List<ObjectProperty> SelectedObjectProperties { get; set; }
         public List<ObjectPropertyValues> SelectedObjectPropertyValues { get; set; }
-        public Dictionary<List<ObjectProperty>, List<ObjectPropertyValues>> PropertiesValues { get; set; }
+        //public Dictionary<List<ObjectProperty>, List<ObjectPropertyValues>> PropertiesValues { get; set; }
       
 
         //create

@@ -34,22 +34,22 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     var query = @"SELECT * FROM QuestionaryObjects WHERE Id=@Id";
                     var obj = cn.Query<QuestionaryObject>(query, new { @Id = id }).SingleOrDefault();
 
-                    var properties = cn.Query<ObjectProperty>(@"SELECT 
-	                                                                p.* 
+                    var properties = cn.Query<ObjectPropertyValues>(@"SELECT 
+	                                                                po.*, p.IsUsedInReport, p.Name, p.NameInReport, p.ReportCellStyle
 		                                                                FROM ObjectPropertyValues AS po
 			                                                                INNER JOIN ObjectProperties AS p ON po.ObjectPropertyId = p.Id
 				                                                                where 
 					                                                                po.QuestionaryObjectId = @QuestionaryObjectId", new { QuestionaryObjectId = id }).ToList();
 
-                    var values = cn.Query<ObjectPropertyValues>(@"SELECT 
-	                                                                p.* 
-		                                                                FROM ObjectPropertyValues AS po
-			                                                                INNER JOIN ObjectProperties AS p ON po.ObjectPropertyId = p.Id
-				                                                                where 
-					                                                                po.QuestionaryObjectId = @QuestionaryObjectId", new { QuestionaryObjectId = id }).ToList();
+                    // var values = cn.Query<ObjectPropertyValues>(@"SELECT 
+	                   //                                              p.* 
+		                  //                                               FROM ObjectPropertyValues AS po
+			                 //                                                INNER JOIN ObjectProperties AS p ON po.ObjectPropertyId = p.Id
+				                //                                                 where 
+					               //                                                  po.QuestionaryObjectId = @QuestionaryObjectId", new { QuestionaryObjectId = id }).ToList();
 
-                    obj.SelectedObjectProperties = properties;
-                    obj.SelectedObjectPropertyValues = values;
+                    obj.SelectedObjectPropertyValues = properties;
+                    //obj.SelectedObjectPropertyValues = values;
 
                     //obj.PropertiesValues.Add(properties,values);
 
