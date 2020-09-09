@@ -8,18 +8,13 @@ namespace Admin.Panel.Core.Entities.Questionary
     {
         public string Code { get; set; }
         public string Description { get; set; }
-        public DateTime Updated { get; set; }
+        public DateTime Updated { get; set; } = DateTime.UtcNow;
         public string Name { get; set; }
         public int ObjectTypeId { get; set; }
         public string ObjectTypeName { get; set; }
         public int CompanyId { get; set; }
         public string CompanyName { get; set; }
-
-        
-        //public List<ObjectProperty> SelectedObjectProperties { get; set; }
         public List<ObjectPropertyValues> SelectedObjectPropertyValues { get; set; }
-        //public Dictionary<List<ObjectProperty>, List<ObjectPropertyValues>> PropertiesValues { get; set; }
-      
 
         //create
         

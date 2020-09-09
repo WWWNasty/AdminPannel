@@ -31,7 +31,11 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
                 try
                 {
-                    var query = @"SELECT * FROM QuestionaryObjects WHERE Id=@Id";
+                    
+                    var query = @"SELECT o.*, ot.Name AS ObjectTypeName, c.CompanyName  FROM QuestionaryObjects AS o 
+                                          INNER JOIN QuestionaryObjectTypes AS ot ON o.ObjectTypeId = ot.Id
+                                          INNER JOIN Companies AS c ON o.CompanyId = c.CompanyId
+                                            WHERE o.Id=@Id";
                     var obj = cn.Query<QuestionaryObject>(query, new { @Id = id }).SingleOrDefault();
 
                     var properties = cn.Query<ObjectPropertyValues>(@"SELECT 
@@ -40,18 +44,9 @@ namespace Admin.Panel.Data.Repositories.Questionary
 			                                                                INNER JOIN ObjectProperties AS p ON po.ObjectPropertyId = p.Id
 				                                                                where 
 					                                                                po.QuestionaryObjectId = @QuestionaryObjectId", new { QuestionaryObjectId = id }).ToList();
-
-                    // var values = cn.Query<ObjectPropertyValues>(@"SELECT 
-	                   //                                              p.* 
-		                  //                                               FROM ObjectPropertyValues AS po
-			                 //                                                INNER JOIN ObjectProperties AS p ON po.ObjectPropertyId = p.Id
-				                //                                                 where 
-					               //                                                  po.QuestionaryObjectId = @QuestionaryObjectId", new { QuestionaryObjectId = id }).ToList();
+                    
 
                     obj.SelectedObjectPropertyValues = properties;
-                    //obj.SelectedObjectPropertyValues = values;
-
-                    //obj.PropertiesValues.Add(properties,values);
 
                     return obj;
                 }
@@ -97,9 +92,9 @@ namespace Admin.Panel.Data.Repositories.Questionary
                         var objId = cn.ExecuteScalar<int>(query, obj, transaction);
 
                         //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& 
-                        List<ObjectProperty> objectProperties = cn.Query<ObjectProperty>(@"SELECT * FROM ObjectProperties AS p 
+                        List<ObjectProperty> objectProperties = cn.Query<ObjectProperty>(@"SELECT p.* FROM ObjectProperties AS p 
                             INNER JOIN ObjectPropertyToObjectTypes AS tp ON tp.ObjectPropertyId = p.Id
-                            INNER JOIN QuestionaryObjectTypes AS t ON tp.QuestionaryObjectTypeId = t.Id").ToList();
+                            WHERE tp.QuestionaryObjectTypeId = @QuestionaryObjectTypeId ",new { QuestionaryObjectTypeId = obj.ObjectTypeId }, transaction).ToList();
 
                         foreach (ObjectProperty objectProperty in objectProperties)
                         {
@@ -109,12 +104,12 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 {
                                     QuestionaryObjectId = objId,
                                     ObjectPropertyId = objectProperty.Id,
-                                    // Value = obj.SelectedObjectPropertyValues[i]
+                                    Value = objectProperty.Value
                                 }, transaction);
 
                         }
 
-                        var result = cn.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE Id=@Id", new { @Id = objId }).SingleOrDefault();
+                        var result = cn.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE Id=@Id", new { @Id = objId }, transaction).SingleOrDefault();
 
                         transaction.Commit();
 

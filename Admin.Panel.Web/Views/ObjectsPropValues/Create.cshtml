@@ -1,1 +1,75 @@
-﻿
+﻿@using Admin.Panel.Core.Entities.Questionary
+@model Admin.Panel.Core.Entities.Questionary.QuestionaryObject
+
+@{
+    ViewData["Title"] = "Создание объекта";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true" >
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <label asp-for="Code"></label>
+            <input asp-for="Code" class="form-control" />
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <label asp-for="Description"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            @{
+                List<SelectListItem> lst1 = new List<SelectListItem>();
+                for (int i = Model.Companies.Count - 1; i >= 0; i--)
+                {
+                    lst1.Add(new SelectListItem { Text = Model.Companies[i].CompanyName, Value = Model.Companies[i].CompanyId.ToString() });
+                }
+            }
+            <label asp-for="Companies"></label>
+            <select asp-for="CompanyId" asp-items="lst1" class="custom-select dropdown-stile">
+                <option selected="selected" disabled="disabled"></option>
+            </select>
+            <span asp-validation-for="CompanyId" class="text-danger"></span>
+        </div>
+    </div>
+   <div class="form-group">
+       <div class="col-md-10">
+           @{
+               List<SelectListItem> lst = new List<SelectListItem>();
+               for (int i = Model.QuestionaryObjectTypes.Count - 1; i >= 0; i--)
+               {
+                   lst.Add(new SelectListItem { Text = Model.QuestionaryObjectTypes[i].Name, Value = Model.QuestionaryObjectTypes[i].Id.ToString() });
+               }
+           }
+           <label asp-for="QuestionaryObjectTypes"></label>
+           <select asp-for="ObjectTypeId" asp-items="lst" class="custom-select dropdown-stile">
+               <option selected="selected" disabled="disabled"></option>
+           </select>
+           <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
+       </div>
+   </div>
+    
+    
+    <button type="submit" class="btn btn-default">Сохранить</button>
+</form>
+
+
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

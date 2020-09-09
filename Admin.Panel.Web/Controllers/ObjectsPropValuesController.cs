@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Interfaces.Repositories.Questionary;
+using Admin.Panel.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,12 +14,20 @@ namespace Admin.Panel.Web.Controllers
     public class ObjectsPropValuesController : Controller
     {
         private readonly IQuestionaryObjectRepository _questionaryObjectRepository;
+        private readonly IQuestionaryObjectService _questionaryObjectService;
         private readonly ICompanyRepository _companyRepository;
+        private readonly IObjectPropertiesRepository _objectPropertiesRepository;
 
-        public ObjectsPropValuesController(IQuestionaryObjectRepository questionaryObjectRepository, ICompanyRepository companyRepository)
+        public ObjectsPropValuesController(
+            IQuestionaryObjectRepository questionaryObjectRepository, 
+            ICompanyRepository companyRepository, 
+            IObjectPropertiesRepository objectPropertiesRepository, 
+            IQuestionaryObjectService questionaryObjectService)
         {
             _questionaryObjectRepository = questionaryObjectRepository;
             _companyRepository = companyRepository;
+            _objectPropertiesRepository = objectPropertiesRepository;
+            _questionaryObjectService = questionaryObjectService;
         }
 
         [HttpGet]
@@ -42,32 +51,15 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "Админ")]
         public async Task<IActionResult> Create()
         {
-            //TODO получить все company , questionaryObjectTypes , objectProperties и доставать валью этого проперти
             try
             {
-                List<ApplicationCompany> model = await _companyRepository.GetAllAsync();
-
+                var model =await _questionaryObjectService.GetAllForcreate();
                 return View(model);
             }
             catch (Exception)
             {
                 return RedirectToAction("", "");
             }
-            //var model = await _questionaryObjectTypesRepository.GetAsync(id);
-
-            //var model = new UpdateUserViewModel()
-            //{
-            //    Id = user.Id,
-            //    IsUsed = user.IsUsed,
-            //    UserName = user.UserName,
-            //    Nickname = user.Nickname,
-            //    Email = user.Email,
-            //    //CreatedDate = user.CreatedDate,
-            //    //ApplicationCompanyId = user.ApplicationCompanyId
-
-            //};
-            //return View(_mapper.Map<UpdateUserViewModel>(user));
-            return View();
         }
 
         [HttpPost]
@@ -78,7 +70,7 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _questionaryObjectRepository.CreateAsync(model);
-                return View(model);
+                return RedirectToAction("GetAll", "ObjectsPropValues");
             }
             return View(model);
         }
@@ -88,7 +80,7 @@ namespace Admin.Panel.Web.Controllers
         public async Task<ActionResult> Update(int id)
         {
             var model = await _questionaryObjectRepository.GetAsync(id);
-            //TODO получить все cjmpany , questionaryObjectTypes , objectProperties и доставать валью этого проперти
+            //TODO получить все cjmpany , questionaryObjectTypes , objectProperties и доставать валью этого проперти - это должен делать сервис
             //var model = new UpdateUserViewModel()
             //{
             //    Id = user.Id,
