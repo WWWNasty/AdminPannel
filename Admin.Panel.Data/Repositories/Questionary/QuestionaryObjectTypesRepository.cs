@@ -83,19 +83,18 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 VALUES(@Name);
                                 SELECT QuestionaryObjectTypeId = @@IDENTITY";
                         var objTypeId = cn.ExecuteScalar<int>(query, obj, transaction);
-                        if (obj.ObjectProperties != null)
-                        {
-                            foreach (ObjectProperty objectProperty in obj.ObjectProperties)
+                       
+                            foreach (int objectProperty in obj.SelectedPropertiesId)
                             {
                                 cn.Execute(@"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
 		                                                VALUES (@QuestionaryObjectTypeId,@ObjectPropertyId)",
                                     new ObjectPropertyToObjectTypes
                                     {
                                         QuestionaryObjectTypeId = objTypeId,
-                                        ObjectPropertyId = objectProperty.Id,
+                                        ObjectPropertyId = Convert.ToInt32(objectProperty),
                                     }, transaction);
                             }
-                        }
+                        
                         
                         var result = cn.Query<QuestionaryObjectType>(@"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id", new { @Id = objTypeId }, transaction).SingleOrDefault();
 
@@ -121,8 +120,17 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 {
                     var query = @"UPDATE QuestionaryObjectTypes SET Name=@Name 
                      WHERE Id=@Id";
+                    
+                    var properties = connection.Query<ObjectProperty>(@"SELECT 
+	                                                                p.* 
+		                                                                FROM ObjectProperties AS p
+			                                                                INNER JOIN ObjectPropertyToObjectTypes AS po ON po.ObjectPropertyId = p.Id
+				                                                                where 
+					                                                                po.QuestionaryObjectTypeId = @QuestionaryObjectTypeId", new { QuestionaryObjectTypeId = obj.Id }).ToList();
+                    //достать проперти из связующей и сравнить с пропертями модели и если в модели нет такого id дропать запись в связующей
                     //TODO нужно додумать логику удаления из ObjectPropertyToObjectTypes записей если изменены проперти ObjectProperties
                     await connection.ExecuteAsync(query, obj);
+                    
                     return obj;
                 }
                 catch (Exception ex)

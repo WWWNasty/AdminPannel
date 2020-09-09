@@ -2,7 +2,7 @@
 @model Admin.Panel.Core.Entities.Questionary.QuestionaryObjectType
 
 @{
-    ViewData["Title"] = "Редактирование Объекта";
+    ViewData["Title"] = "Редактирование типа объекта";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -18,23 +18,26 @@
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
     </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            <select class="selectpicker">
-                <option>Mustard</option>
-                <option>Ketchup</option>
-                <option>Barbecue</option>
-            </select>
-            @*<label asp-for=""></label>
-                <input asp-for="" class="form-control" />
-                <asp:CheckBox ID="CheckBox1" runat="server"
-                              oncheckedchanged="CheckBox1_CheckedChanged" />
-
-                <input id="Enable" name="Enable" type="checkbox" value="true" />
-                <input name="Enable" type="hidden" value="false" />
-                <span asp-validation-for="" class="text-danger"></span>*@
-        </div>
-    </div>
+     <div class="form-group">
+             <div class="col-md-10">
+                @foreach (var prop in Model.SelectedObjectProperties)
+                {
+                    <div class="card-body">
+                        @* TODO удаление проперти без сохранения как сделать  *@
+                        <a asp-controller="" asp-action="Delete" asp-route-Id="@prop.Id" class="badge badge-pill badge-danger" data-toggle="tooltip" title="Удалить">-</a>
+                        <h7 class="card-title">@prop.Name</h7>
+                    </div>
+                }
+             </div>
+         </div>
+     <div class="form-group">
+         <div class="col-md-10">
+             <select class="selectpicker" asp-for="SelectedPropertiesId"
+                     asp-items="Model.ObjectProperties.Select(p => new SelectListItem(p.Name, p.Id.ToString()))"
+                     multiple>
+             </select>
+         </div>
+     </div>
     <button type="submit" class="btn btn-default">Сохранить</button>
 </form>
 

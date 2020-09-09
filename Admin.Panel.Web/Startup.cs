@@ -54,6 +54,7 @@ namespace Admin.Panel.Web
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IObjectPropertiesRepository, ObjectPropertiesRepository>();
             services.AddScoped<IQuestionaryObjectRepository, QuestionaryObjectRepository>();
+            services.AddScoped<IQuestionaryObjectService, QuestionaryObjectService>();
             services.AddScoped<IQuestionaryObjectTypesRepository, QuestionaryObjectTypesRepository>();
             services.AddScoped<IQuestionaryObjectTypesService, QuestionaryObjectTypesService>();
             services.AddTransient<IUserRepository, UserRepository>();

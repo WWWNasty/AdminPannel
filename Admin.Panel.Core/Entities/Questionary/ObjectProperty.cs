@@ -11,5 +11,7 @@ namespace Admin.Panel.Core.Entities.Questionary
         public bool IsUsedInReport { get; set; }
         public string ReportCellStyle { get; set; }
 
+        public string Value { get; set; }
+
     }
 }

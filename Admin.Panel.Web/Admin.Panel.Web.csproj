@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\ObjectTypesProperties\Partials\_AddProperty.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="bootstrap-select" Version="1.13.18" />
@@ -31,7 +35,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\ObjectsPropValues\" />
+    <None Include="Views\ObjectTypesProperties\Partials\_AddProperty.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap-select\css\bootstrap-select.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap-select\css\bootstrap-select.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap-select\css\bootstrap-select.min.css" />
   </ItemGroup>
 
 </Project>

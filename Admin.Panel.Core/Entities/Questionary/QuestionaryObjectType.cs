@@ -8,6 +8,7 @@ namespace Admin.Panel.Core.Entities.Questionary
     {
         public string Name { get; set; }
         public List<ObjectProperty> SelectedObjectProperties { get; set; }
+        public List<int> SelectedPropertiesId { get; set; }
         public List<ObjectProperty> ObjectProperties { get; set; } = new List<ObjectProperty>();
     }
 }

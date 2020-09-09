@@ -33,15 +33,25 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 {
                     var query = @"SELECT * FROM QuestionaryObjects WHERE Id=@Id";
                     var obj = cn.Query<QuestionaryObject>(query, new { @Id = id }).SingleOrDefault();
-                    //TODO нужна дто для получения отдельная
-                    //var values = cn.Query<ObjectPropertyValues>(@"SELECT* FROM ObjectPropertyValues AS v
-                    //INNER JOIN ObjectProperty AS p ON v.ObjectPropertyId = p.Id
-                    //INNER JOIN QuestionaryObjects AS o ON v.QuestionaryObjectId = o.Id", new { @Id = id }).ToList();
 
+                    var properties = cn.Query<ObjectProperty>(@"SELECT 
+	                                                                p.* 
+		                                                                FROM ObjectPropertyValues AS po
+			                                                                INNER JOIN ObjectProperties AS p ON po.ObjectPropertyId = p.Id
+				                                                                where 
+					                                                                po.QuestionaryObjectId = @QuestionaryObjectId", new { QuestionaryObjectId = id }).ToList();
 
-                    //var properties = cn.Query<QuestionaryObjectType>(@"SELECT* FROM ObjectPropertyValues AS v
-                    //INNER JOIN ObjectProperty AS p ON v.ObjectPropertyId = p.Id
-                    //INNER JOIN QuestionaryObjects AS o ON v.QuestionaryObjectId = o.Id", new { @Id = id }).ToList();
+                    var values = cn.Query<ObjectPropertyValues>(@"SELECT 
+	                                                                p.* 
+		                                                                FROM ObjectPropertyValues AS po
+			                                                                INNER JOIN ObjectProperties AS p ON po.ObjectPropertyId = p.Id
+				                                                                where 
+					                                                                po.QuestionaryObjectId = @QuestionaryObjectId", new { QuestionaryObjectId = id }).ToList();
+
+                    obj.SelectedObjectProperties = properties;
+                    obj.SelectedObjectPropertyValues = values;
+
+                    //obj.PropertiesValues.Add(properties,values);
 
                     return obj;
                 }
@@ -99,7 +109,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 {
                                     QuestionaryObjectId = objId,
                                     ObjectPropertyId = objectProperty.Id,
-                                    Value = obj.Value
+                                    // Value = obj.SelectedObjectPropertyValues[i]
                                 }, transaction);
 
                         }

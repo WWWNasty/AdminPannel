@@ -2,12 +2,12 @@
 @model List<Admin.Panel.Core.Entities.Questionary.QuestionaryObjectType>
 
 @{
-    ViewData["Title"] = "Все Объекты";
+    ViewData["Title"] = "Все типы Объектов";
 }
 
 <h2>@ViewBag.Title</h2>
 
-<a asp-controller="ObjectTypesProperties" asp-action="Create" class="btn btn-outline-primary">Создать объект</a>
+<a asp-controller="ObjectTypesProperties" asp-action="Create" class="btn btn-outline-primary">Создать тип объекта</a>
 
 @foreach (var obj in Model)
 {

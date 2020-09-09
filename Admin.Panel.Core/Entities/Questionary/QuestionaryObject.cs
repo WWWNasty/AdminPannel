@@ -11,9 +11,19 @@ namespace Admin.Panel.Core.Entities.Questionary
         public DateTime Updated { get; set; }
         public string Name { get; set; }
         public int ObjectTypeId { get; set; }
+        public string ObjectTypeName { get; set; }
         public int CompanyId { get; set; }
-        //TODO create model нужна
-        public string Value { get; set; }
+        public string CompanyName { get; set; }
+
+        public List<ObjectProperty> SelectedObjectProperties { get; set; }
+        public List<ObjectPropertyValues> SelectedObjectPropertyValues { get; set; }
+        public Dictionary<List<ObjectProperty>, List<ObjectPropertyValues>> PropertiesValues { get; set; }
+      
+
+        //create
+        
+        public List<QuestionaryObjectType> QuestionaryObjectTypes { get; set; }
+        public List<ApplicationCompany> Companies { get; set; }
 
     }
 }

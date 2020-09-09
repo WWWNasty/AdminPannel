@@ -1,0 +1,32 @@
+﻿@using Admin.Panel.Core.Entities.Questionary
+@model Admin.Panel.Core.Entities.Questionary.ObjectProperty
+
+<div asp-validation-summary="All" class="text-danger"></div>
+<div class="form-group">
+    <div class="col-md-10">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-10">
+        <label asp-for="NameInReport"></label>
+        <input asp-for="NameInReport" class="form-control" />
+        <span asp-validation-for="NameInReport" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-10">
+        <label asp-for="IsUsedInReport"></label>
+        <input asp-for="IsUsedInReport" class="form-control" />
+        <span asp-validation-for="IsUsedInReport" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-10">
+        <label asp-for="ReportCellStyle"></label>
+        <input asp-for="ReportCellStyle" class="form-control" />
+        <span asp-validation-for="ReportCellStyle" class="text-danger"></span>
+    </div>
+</div>

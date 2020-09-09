@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
@@ -32,9 +33,12 @@ namespace Admin.Panel.Core.Services
 
         public async Task<QuestionaryObjectType> GetObjectForUpdare(int id)
         {
-            List<ObjectProperty> properties = await _objectPropertiesRepository.GetAllAsync();
+            List<ObjectProperty> allProperties = await _objectPropertiesRepository.GetAllAsync();
+
             var obj = await _questionaryObjectTypesRepository.GetAsync(id);
-            obj.ObjectProperties = properties;
+           
+                //var properties = allProperties.Select(p => p).Where();
+            obj.ObjectProperties = allProperties;
 
             return obj;
         }
