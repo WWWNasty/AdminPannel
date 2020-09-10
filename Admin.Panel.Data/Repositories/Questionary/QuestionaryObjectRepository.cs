@@ -90,8 +90,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 VALUES(@Code,@Description,@Updated,@Name,@ObjectTypeId,@CompanyId);
                                 SELECT QuestionaryObjectId = @@IDENTITY";
                         var objId = cn.ExecuteScalar<int>(query, obj, transaction);
-
-                        //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& 
+                        
                         List<ObjectProperty> objectProperties = cn.Query<ObjectProperty>(@"SELECT p.* FROM ObjectProperties AS p 
                             INNER JOIN ObjectPropertyToObjectTypes AS tp ON tp.ObjectPropertyId = p.Id
                             WHERE tp.QuestionaryObjectTypeId = @QuestionaryObjectTypeId ",new { QuestionaryObjectTypeId = obj.ObjectTypeId }, transaction).ToList();
@@ -128,11 +127,11 @@ namespace Admin.Panel.Data.Repositories.Questionary
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-
                 try
                 {
                     var query = @"UPDATE QuestionaryObjects SET Code=@Code,Description=@Description,Updated=@Updated,Name=@Name,ObjectTypeId=@ObjectTypeId,CompanyId=@CompanyId 
-                     WHERE Id=@Id";
+                    WHERE Id=@Id";
+                        //достать все id выбранных проперти и все записи с данным id объекта из таблицы с велью, и все записи без id выбранных проперти дропать
                     //TODO нужно додумать логику удаления из ObjectPropertyValues если изменен QuestionaryObjectTypes и добавление новых values в QuestionaryObjectTypes
                     await connection.ExecuteAsync(query, obj);
                     return obj;

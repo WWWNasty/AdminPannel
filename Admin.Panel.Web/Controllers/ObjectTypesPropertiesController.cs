@@ -77,8 +77,7 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _questionaryObjectTypesRepository.UpdateAsync(model);
-                return View(model);
-            }
+                return RedirectToAction("GetAll", "ObjectTypesProperties");            }
             return View(model);
         }
     }
