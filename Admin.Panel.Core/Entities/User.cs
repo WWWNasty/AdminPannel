@@ -19,7 +19,7 @@ namespace Admin.Panel.Core.Entities
         public string ConfirmationToken { get; set; }
         public DateTime CreatedDate { get; set; }
         public bool IsUsed { get; set; }
-        public int ApplicationCompanyId { get; set; }
+        public List<int> ApplicationCompaniesId { get; set; }
 
     }
 }

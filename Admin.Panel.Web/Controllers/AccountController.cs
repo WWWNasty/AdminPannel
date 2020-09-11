@@ -211,7 +211,7 @@ namespace Admin.Panel.Web.Controllers
                     IsConfirmed = true, 
                     ConfirmationToken = model.ConfirmationToken, 
                     CreatedDate = DateTime.UtcNow, 
-                    ApplicationCompanyId = model.CompanyId,
+                    ApplicationCompaniesId = model.SelectedCompaniesId,
                     Email = model.Email.Trim(),
                     EmailConfirmed = true
                 };

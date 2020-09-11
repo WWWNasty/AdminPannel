@@ -31,7 +31,7 @@ namespace Admin.Panel.Core.Entities
 
         [Required(ErrorMessage = "Поле Компания - обязательно!")]
         [Display(Name = "Компания")]
-        public int CompanyId { get; set; }
+        public List<int> SelectedCompaniesId { get; set; }
 
         //public string CompanyName { get; set; }
         public string ConfirmationToken { get; set; }

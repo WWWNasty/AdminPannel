@@ -48,18 +48,31 @@ namespace Admin.Panel.Data.Repositories
                             SELECT UserId = @@IDENTITY";
                     var value = cn.ExecuteScalar<int>(query, user);
 
-                    var userId = value;
-                    var companyId = user.ApplicationCompanyId;
-
-                    ApplicationUserCompany userCompany = new ApplicationUserCompany
+                    if (user.ApplicationCompaniesId.Count != 0)
                     {
-                        UserId = userId,
-                        CompanyId = companyId
-                    };
+                        foreach (int company in user.ApplicationCompaniesId)
+                        {
+                            cn.Execute(
+                                @"INSERT INTO ApplicationUserCompany(UserId,CompanyId) VALUES(@UserId,@CompanyId)",
+                                new ApplicationUserCompany
+                                {
+                                    UserId = value,
+                                    CompanyId = Convert.ToInt32(company)
+                                });
+                        }
+                    }
 
-                    var queryAddCompanyToUser = "INSERT INTO ApplicationUserCompany(UserId,CompanyId) VALUES(@UserId,@CompanyId)";
-
-                    await cn.ExecuteAsync(queryAddCompanyToUser, userCompany);
+                    // var companyId = user.;
+                    //
+                    // ApplicationUserCompany userCompany = new ApplicationUserCompany
+                    // {
+                    //     UserId = userId,
+                    //     CompanyId = companyId
+                    // };
+                    //
+                    // var queryAddCompanyToUser = "INSERT INTO ApplicationUserCompany(UserId,CompanyId) VALUES(@UserId,@CompanyId)";
+                    //
+                    // await cn.ExecuteAsync(queryAddCompanyToUser, userCompany);
 
                     return IdentityResult.Success;
                 }
