@@ -95,18 +95,22 @@ namespace Admin.Panel.Data.Repositories.Questionary
                         //     INNER JOIN ObjectPropertyToObjectTypes AS tp ON tp.ObjectPropertyId = p.Id
                         //     WHERE tp.QuestionaryObjectTypeId = @QuestionaryObjectTypeId ",new { QuestionaryObjectTypeId = obj.ObjectTypeId }, transaction).ToList();
 
-                        foreach (ObjectPropertyValues objectProperty in obj.SelectedObjectPropertyValues)
+                        if (obj.SelectedObjectPropertyValues != null)
                         {
-                            cn.Execute(@"INSERT INTO  ObjectPropertyValues(QuestionaryObjectId,ObjectPropertyId,Value)
-		                                                VALUES (@QuestionaryObjectId,@ObjectPropertyId,@Value)",
-                                new ObjectPropertyValues
-                                {
-                                    QuestionaryObjectId = objId,
-                                    ObjectPropertyId = objectProperty.Id,
-                                    Value = objectProperty.Value
-                                }, transaction);
-
+                             foreach (ObjectPropertyValues objectProperty in obj.SelectedObjectPropertyValues)
+                                                    {
+                                                        cn.Execute(@"INSERT INTO  ObjectPropertyValues(QuestionaryObjectId,ObjectPropertyId,Value)
+                            		                                                VALUES (@QuestionaryObjectId,@ObjectPropertyId,@Value)",
+                                                            new ObjectPropertyValues
+                                                            {
+                                                                QuestionaryObjectId = objId,
+                                                                ObjectPropertyId = objectProperty.Id,
+                                                                Value = objectProperty.Value
+                                                            }, transaction);
+                            
+                                                    }
                         }
+                       
 
                         var result = cn.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE Id=@Id", new { @Id = objId }, transaction).SingleOrDefault();
 
@@ -131,9 +135,32 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 {
                     var query = @"UPDATE QuestionaryObjects SET Code=@Code,Description=@Description,Updated=@Updated,Name=@Name,ObjectTypeId=@ObjectTypeId,CompanyId=@CompanyId 
                     WHERE Id=@Id";
-                        //достать все id выбранных проперти и все записи с данным id объекта из таблицы с велью, и все записи без id выбранных проперти дропать
-                    //TODO нужно додумать логику удаления из ObjectPropertyValues если изменен QuestionaryObjectTypes и добавление новых values в QuestionaryObjectTypes
+
                     await connection.ExecuteAsync(query, obj);
+                    //дропаем все валью записи объекту
+                   
+                    connection.Execute(
+                        @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
+                        new {QuestionaryObjectId = obj.Id});
+
+                    //добавляем заново все валью записи
+                    if (obj.SelectedObjectPropertyValues != null)
+                    {
+                        foreach (ObjectPropertyValues objectProperty in obj.SelectedObjectPropertyValues)
+                                            {
+                                                connection.Execute(@"INSERT INTO  ObjectPropertyValues(QuestionaryObjectId,ObjectPropertyId,Value)
+                        		                                                VALUES (@QuestionaryObjectId,@ObjectPropertyId,@Value)",
+                                                    new ObjectPropertyValues
+                                                    {
+                                                        QuestionaryObjectId = obj.Id,
+                                                        ObjectPropertyId = objectProperty.Id,
+                                                        Value = objectProperty.Value
+                                                    });
+                        
+                                            }
+                    }
+                    
+                    
                     return obj;
                 }
                 catch (Exception ex)
