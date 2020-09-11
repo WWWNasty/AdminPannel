@@ -49,11 +49,13 @@
     </div>
    <div class="form-group">
        <div class="col-md-10">
+           
+           
            @{
                List<SelectListItem> lst = new List<SelectListItem>();
                for (int i = Model.QuestionaryObjectTypes.Count - 1; i >= 0; i--)
                {
-                   lst.Add(new SelectListItem { Text = Model.QuestionaryObjectTypes[i].Name, Value = Model.QuestionaryObjectTypes[i].Id.ToString() });
+                   lst.Add(new SelectListItem {Text = Model.QuestionaryObjectTypes[i].Name, Value = Model.QuestionaryObjectTypes[i].Id.ToString()});
                }
            }
            <label asp-for="QuestionaryObjectTypes"></label>
@@ -61,7 +63,10 @@
                <option selected="selected" disabled="disabled"></option>
            </select>
            <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
+
        </div>
+       
+       <div id="option-container"></div>
    </div>
     
     
@@ -72,4 +77,5 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/js/PropertiesGetObject.js"></script>
 }

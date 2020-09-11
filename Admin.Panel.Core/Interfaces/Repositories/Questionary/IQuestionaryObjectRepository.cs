@@ -13,5 +13,7 @@ namespace Admin.Panel.Core.Interfaces.Repositories.Questionary
         public Task<List<QuestionaryObject>> GetAllAsync();
         public Task<QuestionaryObject> CreateAsync(QuestionaryObject obj);
         public Task<QuestionaryObject> UpdateAsync(QuestionaryObject obj);
+        public Task<List<ObjectPropertyValues>> GetPropertiesForUpdate(int idTypeObj);
+        public Task<List<ObjectPropertyValues>> GetPropertiesForCreate(int id);
     }
 }

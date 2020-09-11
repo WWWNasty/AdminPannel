@@ -91,11 +91,11 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 SELECT QuestionaryObjectId = @@IDENTITY";
                         var objId = cn.ExecuteScalar<int>(query, obj, transaction);
                         
-                        List<ObjectProperty> objectProperties = cn.Query<ObjectProperty>(@"SELECT p.* FROM ObjectProperties AS p 
-                            INNER JOIN ObjectPropertyToObjectTypes AS tp ON tp.ObjectPropertyId = p.Id
-                            WHERE tp.QuestionaryObjectTypeId = @QuestionaryObjectTypeId ",new { QuestionaryObjectTypeId = obj.ObjectTypeId }, transaction).ToList();
+                        // List<ObjectProperty> objectProperties = cn.Query<ObjectProperty>(@"SELECT p.* FROM ObjectProperties AS p 
+                        //     INNER JOIN ObjectPropertyToObjectTypes AS tp ON tp.ObjectPropertyId = p.Id
+                        //     WHERE tp.QuestionaryObjectTypeId = @QuestionaryObjectTypeId ",new { QuestionaryObjectTypeId = obj.ObjectTypeId }, transaction).ToList();
 
-                        foreach (ObjectProperty objectProperty in objectProperties)
+                        foreach (ObjectPropertyValues objectProperty in obj.SelectedObjectPropertyValues)
                         {
                             cn.Execute(@"INSERT INTO  ObjectPropertyValues(QuestionaryObjectId,ObjectPropertyId,Value)
 		                                                VALUES (@QuestionaryObjectId,@ObjectPropertyId,@Value)",
@@ -141,6 +141,33 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                 }
             }
+        }
+
+        public async Task<List<ObjectPropertyValues>> GetPropertiesForUpdate(int idTypeObj)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    var properties = connection.Query<ObjectPropertyValues>(@"SELECT 
+                                                                     p.* 
+                                                                      FROM ObjectProperties AS p
+                                                                       INNER JOIN ObjectPropertyToObjectTypes AS po ON po.ObjectPropertyId = p.Id
+                                                                        where 
+                                                                         po.QuestionaryObjectTypeId = @QuestionaryObjectTypeId", new { QuestionaryObjectTypeId = idTypeObj }).ToList();
+                    return properties;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
+        public Task<List<ObjectPropertyValues>> GetPropertiesForCreate(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

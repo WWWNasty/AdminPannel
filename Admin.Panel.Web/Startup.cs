@@ -44,15 +44,11 @@ namespace Admin.Panel.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddScoped<IManageUserRepository, ManageUserRepository>();
             services.AddScoped<IManageUserService, ManageUserService>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IObjectPropertiesRepository, ObjectPropertiesRepository>();
+            services.AddScoped<IPropertyService, PropertyService>();
             services.AddScoped<IQuestionaryObjectRepository, QuestionaryObjectRepository>();
             services.AddScoped<IQuestionaryObjectService, QuestionaryObjectService>();
             services.AddScoped<IQuestionaryObjectTypesRepository, QuestionaryObjectTypesRepository>();
@@ -67,7 +63,7 @@ namespace Admin.Panel.Web
                 //});
                 .AddDefaultTokenProviders();
             services.AddTransient<IEmailSender, EmailSender>();
-            //TODO сложность пароля поставить true на проде
+            //TODO пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ true пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
             services.Configure<IdentityOptions>(options => {
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;

@@ -28,7 +28,7 @@ namespace Admin.Panel.Core.Services
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
         }
 
-        public async Task<QuestionaryObject> GetAllForcreate()
+        public async Task<QuestionaryObject> GetAllForCreate()
         {
             //TODO компании нужно брать доступные авторизованным пользователем
             List<ApplicationCompany> companies = await _companyRepository.GetAllAsync();
@@ -42,6 +42,29 @@ namespace Admin.Panel.Core.Services
 
             return createObj;
         }
+        
+        public async Task<QuestionaryObject> GetAllForUpdate(int id)
+        {
+            //TODO компании нужно брать доступные авторизованным пользователем
+            var model = await _questionaryObjectRepository.GetAsync(id);
 
+            List<ApplicationCompany> companies = await _companyRepository.GetAllAsync();
+            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllAsync();
+
+            model.Companies = companies;
+            model.QuestionaryObjectTypes = objTypes;
+
+            return model;
+        }
+
+        public Task<List<ObjectPropertyValues>> GetPropertiesForUpdate(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ObjectPropertyValues>> GetPropertiesForCreate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

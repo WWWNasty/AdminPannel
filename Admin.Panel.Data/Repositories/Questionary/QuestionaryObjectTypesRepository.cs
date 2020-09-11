@@ -128,12 +128,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                         connection.Execute(
                             @"DELETE FROM ObjectPropertyToObjectTypes WHERE QuestionaryObjectTypeId = @QuestionaryObjectTypeId",
                             new {QuestionaryObjectTypeId = obj.Id});
-                        // var properties = connection.Query<ObjectProperty>(@"SELECT 
-                        //                                              p.* 
-                        //                                               FROM ObjectProperties AS p
-                        //                                                INNER JOIN ObjectPropertyToObjectTypes AS po ON po.ObjectPropertyId = p.Id
-                        //                                                 where 
-                        //                                                  po.QuestionaryObjectTypeId = @QuestionaryObjectTypeId", new { QuestionaryObjectTypeId = obj.Id }).ToList();
+                        
 
                         await connection.ExecuteAsync(query, obj);
 

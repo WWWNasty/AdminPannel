@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Interfaces.Repositories.Questionary;
+using Admin.Panel.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,17 +11,28 @@ namespace Admin.Panel.Web.Controllers
     public class PropertyController : Controller
     {
         private readonly IObjectPropertiesRepository _objectPropertiesRepository;
+        private readonly IPropertyService _propertyService;
 
-        public PropertyController(IObjectPropertiesRepository objectPropertiesRepository)
+        public PropertyController(IObjectPropertiesRepository objectPropertiesRepository, IPropertyService propertyService)
         {
             _objectPropertiesRepository = objectPropertiesRepository;
+            _propertyService = propertyService;
+        }
+        
+        [HttpGet]
+        [Authorize(Roles = "Админ")]
+        public async Task<ActionResult> GetAll()
+        {
+            return View("Properties");
         }
         
         [HttpGet]
         [Authorize(Roles = "Админ")]
         public async Task<IActionResult> Create()
         {
-            return View();
+            ObjectProperty model = new ObjectProperty();
+            model.ObjectProperties = await _objectPropertiesRepository.GetAllAsync();
+            return View("Properties",model);
         }
 
         [HttpPost]
@@ -30,9 +43,9 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _objectPropertiesRepository.CreateAsync(model);
-                return RedirectToAction("GetAll", "Company");
+                return RedirectToAction("Create", "Property");
             }
-            return View(model);
+            return View("Properties", model);
         }
         
         [HttpGet]
@@ -41,7 +54,7 @@ namespace Admin.Panel.Web.Controllers
         {
             var model = await _objectPropertiesRepository.GetAsync(id);
 
-            return View(model);
+            return View("",model);
         }
 
         [HttpPost]
@@ -52,9 +65,9 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _objectPropertiesRepository.UpdateAsync(model);
-                return RedirectToAction("GetAll", "Company");
+                return RedirectToAction("Update", "Property");
             }
-            return View(model);
+            return View("Properties",model);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Admin.Panel.Web.Controllers
         {
             try
             {
-                var model =await _questionaryObjectService.GetAllForcreate();
+                var model =await _questionaryObjectService.GetAllForCreate();
                 return View(model);
             }
             catch (Exception)
@@ -79,20 +79,9 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "Админ")]
         public async Task<ActionResult> Update(int id)
         {
-            var model = await _questionaryObjectRepository.GetAsync(id);
-            //TODO получить все cjmpany , questionaryObjectTypes , objectProperties и доставать валью этого проперти - это должен делать сервис
-            //var model = new UpdateUserViewModel()
-            //{
-            //    Id = user.Id,
-            //    IsUsed = user.IsUsed,
-            //    UserName = user.UserName,
-            //    Nickname = user.Nickname,
-            //    Email = user.Email,
-            //    //CreatedDate = user.CreatedDate,
-            //    //ApplicationCompanyId = user.ApplicationCompanyId
-
-            //};
-            //return View(_mapper.Map<UpdateUserViewModel>(user));
+            var model = await _questionaryObjectService.GetAllForUpdate(id);
+            //TODO  доставать валью этого проперти - это должен делать сервис
+            
             return View(model);
         }
 
@@ -104,9 +93,20 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _questionaryObjectRepository.UpdateAsync(model);
-                return View(model);
+                return RedirectToAction("GetAll", "ObjectsPropValues");
             }
             return View(model);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Админ")]
+        public async Task<ActionResult> GetObjectProperties(int id)
+        {
+            //выбрать проперти по id типа объекта
+          List<ObjectPropertyValues> prop =  await _questionaryObjectRepository.GetPropertiesForUpdate(id);
+          QuestionaryObject model = new QuestionaryObject();
+          model.SelectedObjectPropertyValues = prop;
+          return PartialView("_Properties",model);
         }
 
     }
