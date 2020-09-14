@@ -20,14 +20,14 @@ namespace Admin.Panel.Web.Controllers
         }
         
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<ActionResult> GetAll()
         {
             return View("Properties");
         }
         
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             ObjectProperty model = new ObjectProperty();
@@ -36,7 +36,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Create(ObjectProperty model)
         {
@@ -49,7 +49,7 @@ namespace Admin.Panel.Web.Controllers
         }
         
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<IActionResult> Update(int id)
         {
             var model = await _objectPropertiesRepository.GetAsync(id);
@@ -58,7 +58,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(ObjectProperty model)
         {

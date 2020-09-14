@@ -22,5 +22,7 @@ namespace Admin.Panel.Core.Entities
         public List<int> ApplicationCompaniesId { get; set; }
         public int RoleId { get; set; }
 
+        public List<string> RolesList { get; set; }
+
     }
 }

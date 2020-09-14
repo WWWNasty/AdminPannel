@@ -20,7 +20,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<ActionResult> GetAll()
         {
             List<ApplicationCompany> model = await _companyRepository.GetAllAsync();
@@ -36,14 +36,14 @@ namespace Admin.Panel.Web.Controllers
         //}
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Админ")]
+        [Authorize(Roles = "SuperAdministrator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Create(ApplicationCompany model)
         {
@@ -56,7 +56,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Update(int id)
         {
             var model = await _companyRepository.GetAsync(id);
@@ -65,7 +65,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Админ")]
+        [Authorize(Roles = "SuperAdministrator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(ApplicationCompany model)
         {
@@ -78,7 +78,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Delete(ApplicationCompany company)
         {
             await _companyRepository.DeleteAsync(company);

@@ -31,7 +31,7 @@ namespace Admin.Panel.Core.Services
         public async Task<QuestionaryObject> GetAllForCreate()
         {
             //TODO компании нужно брать доступные авторизованным пользователем
-            List<ApplicationCompany> companies = await _companyRepository.GetAllAsync();
+            List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
             List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllAsync();
             
             QuestionaryObject createObj = new QuestionaryObject

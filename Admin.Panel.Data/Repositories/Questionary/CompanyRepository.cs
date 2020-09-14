@@ -57,6 +57,25 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 }
             }
         }
+        
+        public async Task<List<ApplicationCompany>> GetAllActiveAsync()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                try
+                {
+                    var query = "SELECT * FROM Companies c WHERE c.IsUsed = 1";
+                    var сompanies = await connection.QueryAsync<ApplicationCompany>(query);
+                    return сompanies.ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
 
         public async Task<ApplicationCompany> CreateAsync(ApplicationCompany company)
         {
@@ -66,8 +85,8 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
                 try
                 {
-                    var query = @"INSERT INTO Companies(CompanyName,CompanyDescription) 
-                    VALUES(@CompanyName, @CompanyDescription)";
+                    var query = @"INSERT INTO Companies(CompanyName,CompanyDescription,IsUsed) 
+                    VALUES(@CompanyName, @CompanyDescription,1)";
                     await connection.ExecuteAsync(query, company);
                     return company;
                 }
@@ -86,7 +105,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
                 try
                 {
-                    var query = @"UPDATE Companies SET CompanyName=@CompanyName,CompanyDescription=@CompanyDescription 
+                    var query = @"UPDATE Companies SET CompanyName=@CompanyName,CompanyDescription=@CompanyDescription,IsUsed=@IsUsed 
                      WHERE CompanyId=@CompanyId";
                     await connection.ExecuteAsync(query, company);
                     return company;

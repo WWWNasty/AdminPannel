@@ -26,7 +26,7 @@ namespace Admin.Panel.Core.Services
         
         public async Task<RegisterDto> GetCompaniesAndRoles()
         {
-            List<ApplicationCompany> companies = await _companyRepository.GetAllAsync();
+            List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
             List<ApplicationRole> roles = await _roleRepository.GetAllRolesAsync();
             
             RegisterDto registerObject = new RegisterDto

@@ -31,7 +31,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<ActionResult> Get(int id)
         {
             QuestionaryObject model = await _questionaryObjectRepository.GetAsync(id);
@@ -39,7 +39,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<ActionResult> GetAll()
         {
             List<QuestionaryObject> model = await _questionaryObjectRepository.GetAllAsync();
@@ -48,7 +48,7 @@ namespace Admin.Panel.Web.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             try
@@ -63,7 +63,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Create(QuestionaryObject model)
         {
@@ -76,7 +76,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<ActionResult> Update(int id)
         {
             var model = await _questionaryObjectService.GetAllForUpdate(id);
@@ -86,7 +86,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(QuestionaryObject model)
         {
@@ -99,7 +99,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<ActionResult> GetObjectProperties(int id)
         {
             //выбрать проперти по id типа объекта

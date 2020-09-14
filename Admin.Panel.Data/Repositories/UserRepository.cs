@@ -201,7 +201,14 @@ namespace Admin.Panel.Data.Repositories
 
                 try
                 {
-                    var query = "SELECT r.[Name] FROM [ApplicationRole] r INNER JOIN [ApplicationUser] ur ON ur.[RoleId] = r.Id WHERE ur.Id = @userId";
+                    // var query = @"SELECT r.[Name] FROM [ApplicationRole] r 
+                    // INNER JOIN [ApplicationUser] ur ON ur.[RoleId] = r.Id 
+                    // WHERE ur.Id = @userId";
+                    
+                    var query = @"SELECT f.[Name] FROM [ApplictionRoleFunctions] rf 
+                    INNER JOIN [FunctionsRoles] f ON rf.[FunctionsRolesId] = f.[Id] 
+					INNER JOIN [ApplicationUser] u ON u.[RoleId] = rf.[ApplicationRoleId]
+                    WHERE u.[Id] = @userId";
                     var queryResults = await cn.QueryAsync<string>(query, new { userId = user.Id });
 
                     return queryResults.ToList();
@@ -236,8 +243,10 @@ namespace Admin.Panel.Data.Repositories
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var queryResults = await connection.QueryAsync<User>("SELECT u.* FROM [ApplicationUser] u " +
-                                                                                "INNER JOIN [ApplicationUserRole] ur ON ur.[UserId] = u.[Id] INNER JOIN [ApplicationRole] r ON r.[Id] = ur.[RoleId] WHERE r.[NormalizedName] = @normalizedName",
+                var queryResults = await connection.QueryAsync<User>(@"SELECT u.* FROM [ApplicationUser] u 
+                                                                                INNER JOIN [ApplicationUserRole] ur ON ur.[UserId] = u.[Id] 
+                                                                                INNER JOIN [ApplicationRole] r ON r.[Id] = ur.[RoleId] 
+                                                                                WHERE r.[NormalizedName] = @normalizedName",
                     new { normalizedName = roleName.ToUpper() });
 
                 return queryResults.ToList();

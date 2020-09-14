@@ -23,7 +23,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<ActionResult> GetAll()
         {
             List<QuestionaryObjectType> model = await _questionaryObjectTypesRepository.GetAllAsync();
@@ -31,7 +31,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<ActionResult> Get(int id)
         {
             QuestionaryObjectType model = await _questionaryObjectTypesRepository.GetAsync(id);
@@ -39,7 +39,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             QuestionaryObjectType model = await _questionaryObjectTypesService.GetAllProperties();
@@ -48,7 +48,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Create(QuestionaryObjectType model)
         {
@@ -61,7 +61,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         public async Task<IActionResult> Update(int id)
         {
             QuestionaryObjectType model = await _questionaryObjectTypesService.GetObjectForUpdare(id);
@@ -70,7 +70,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Админ")]
+        [Authorize]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(QuestionaryObjectType model)
         {
