@@ -61,7 +61,7 @@ namespace Admin.Panel.Data.Repositories
             }
         }
 
-        //селать isused false пользователю
+        //делает isused false пользователю
         public async Task<int> UpdateUser(UpdateUserViewModel user)
         {
             using (var cn = new SqlConnection(_connectionString))

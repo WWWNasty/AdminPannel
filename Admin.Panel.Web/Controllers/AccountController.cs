@@ -187,7 +187,7 @@ namespace Admin.Panel.Web.Controllers
         {
             try
             {
-                RegisterDto model = await _manageUserService.GetAllCompanies();
+                RegisterDto model = await _manageUserService.GetCompaniesAndRoles();
                 return View(model);
             }
             catch (Exception)
@@ -213,7 +213,8 @@ namespace Admin.Panel.Web.Controllers
                     CreatedDate = DateTime.UtcNow, 
                     ApplicationCompaniesId = model.SelectedCompaniesId,
                     Email = model.Email.Trim(),
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    RoleId = model.RoleId
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -228,7 +229,7 @@ namespace Admin.Panel.Web.Controllers
                 }
                 AddErrors(result);
             }
-            model = await _manageUserService.GetAllCompanies();
+            model = await _manageUserService.GetCompaniesAndRoles();
             // If we got this far, something failed, redisplay form
             return View(model);
             //return RedirectToAction("Register", "Account", new { c = model.ApplicationCompanies });

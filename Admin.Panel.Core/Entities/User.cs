@@ -20,6 +20,7 @@ namespace Admin.Panel.Core.Entities
         public DateTime CreatedDate { get; set; }
         public bool IsUsed { get; set; }
         public List<int> ApplicationCompaniesId { get; set; }
+        public int RoleId { get; set; }
 
     }
 }

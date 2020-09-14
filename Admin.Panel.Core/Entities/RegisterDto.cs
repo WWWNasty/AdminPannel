@@ -30,12 +30,16 @@ namespace Admin.Panel.Core.Entities
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Поле Компания - обязательно!")]
-        [Display(Name = "Компания")]
         public List<int> SelectedCompaniesId { get; set; }
-
-        //public string CompanyName { get; set; }
         public string ConfirmationToken { get; set; }
+        
+        [Required(ErrorMessage = "Поле Роль - обязательно!")]
+        public int RoleId { get; set; }
+        
+        [Display(Name = "Роль")]
+        public List<ApplicationRole> RolesList { get; set; }
 
+        [Display(Name = "Компания")]
         public List<ApplicationCompany> ApplicationCompanies { get; set; } = new List<ApplicationCompany>();
     }
 }

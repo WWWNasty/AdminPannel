@@ -13,20 +13,26 @@ namespace Admin.Panel.Core.Services
     public class ManageUserService: IManageUserService
     {
         private readonly ICompanyRepository _companyRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly IUserRepository _userRepository;
 
-        public ManageUserService(ICompanyRepository companyRepository, IUserRepository userRepository)
+        public ManageUserService(ICompanyRepository companyRepository, IUserRepository userRepository, IRoleRepository roleRepository)
         {
             _companyRepository = companyRepository;
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
         }
-
-        public async Task<RegisterDto> GetAllCompanies()
+        
+        
+        public async Task<RegisterDto> GetCompaniesAndRoles()
         {
             List<ApplicationCompany> companies = await _companyRepository.GetAllAsync();
+            List<ApplicationRole> roles = await _roleRepository.GetAllRolesAsync();
+            
             RegisterDto registerObject = new RegisterDto
             {
-                ApplicationCompanies = companies
+                ApplicationCompanies = companies,
+                RolesList = roles
             };
 
             return registerObject;
@@ -46,5 +52,7 @@ namespace Admin.Panel.Core.Services
             }
             return false;
         }
+
+     
     }
 }

@@ -54,6 +54,7 @@ namespace Admin.Panel.Web
             services.AddScoped<IQuestionaryObjectTypesRepository, QuestionaryObjectTypesRepository>();
             services.AddScoped<IQuestionaryObjectTypesService, QuestionaryObjectTypesService>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<IUserStore<User>, UserRepository>();
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddTransient<IRoleStore<ApplicationRole>, RoleRepository>();
