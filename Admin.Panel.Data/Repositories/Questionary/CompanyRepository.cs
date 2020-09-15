@@ -77,6 +77,27 @@ namespace Admin.Panel.Data.Repositories.Questionary
             }
         }
 
+        public async Task<List<ApplicationCompany>> GetAllActiveForUserAsync(string userId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                try
+                {
+                    var query = @"SELECT * FROM Companies c 
+                                    INNER JOIN ApplicationUserCompany ac ON c.CompanyId = ac.CompanyId
+                                        WHERE c.IsUsed = 1 AND ac.UserId =@UserId";
+                    var сompanies = await connection.QueryAsync<ApplicationCompany>(query, new {@UserId = Convert.ToInt32(userId)});
+                    return сompanies.ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
         public async Task<ApplicationCompany> CreateAsync(ApplicationCompany company)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -117,22 +138,22 @@ namespace Admin.Panel.Data.Repositories.Questionary
             }
         }
 
-        public async Task DeleteAsync(ApplicationCompany company)
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                try
-                {
-                    var query = @"DELETE FROM Companies WHERE CompanyId=@CompanyId";
-                    await connection.ExecuteAsync(query, company);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
-                }
-            }
-        }
+        // public async Task DeleteAsync(ApplicationCompany company)
+        // {
+        //     using (var connection = new SqlConnection(_connectionString))
+        //     {
+        //         connection.Open();
+        //
+        //         try
+        //         {
+        //             var query = @"DELETE FROM Companies WHERE CompanyId=@CompanyId";
+        //             await connection.ExecuteAsync(query, company);
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+        //         }
+        //     }
+        // }
     }
 }

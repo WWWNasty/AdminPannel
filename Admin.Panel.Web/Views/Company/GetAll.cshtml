@@ -14,7 +14,7 @@
     <div class="card-body">
         <input type="hidden" name="CompanyId" value="@company.CompanyId" />
         <h4 class="card-title">
-            <a asp-controller="Company" asp-action="Delete" asp-route-CompanyId="@company.CompanyId" class="badge badge-pill badge-danger" data-toggle="tooltip" title="Удалить">-</a>
+            @* <a asp-controller="Company" asp-action="Delete" asp-route-CompanyId="@company.CompanyId" class="badge badge-pill badge-danger" data-toggle="tooltip" title="Удалить">-</a> *@
             <a asp-controller="Company" asp-action="Update" asp-route-Id="@company.CompanyId" class="text-success"> @Html.DisplayFor(modelItem => company.CompanyName)</a>
 
         </h4>

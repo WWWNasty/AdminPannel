@@ -9,6 +9,7 @@ namespace Admin.Panel.Core.Interfaces
     public interface IManageUserRepository
     {
         public Task<List<GetAllUsersDto>> GetAllUsers();
+        public Task<List<GetAllUsersDto>> GetAllUsersForUser(int id);
 
         public Task<int> UpdateUser(UpdateUserViewModel user);
 

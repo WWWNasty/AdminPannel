@@ -37,7 +37,8 @@ namespace Admin.Panel.Web.Controllers
             QuestionaryObjectType model = await _questionaryObjectTypesRepository.GetAsync(id);
             return View(model);
         }
-
+        
+        
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Create()

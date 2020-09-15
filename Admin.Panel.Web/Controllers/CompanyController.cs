@@ -76,15 +76,6 @@ namespace Admin.Panel.Web.Controllers
             }
             return View(model);
         }
-
         
-        [Authorize(Roles = "SuperAdministrator")]
-        public async Task<IActionResult> Delete(ApplicationCompany company)
-        {
-            await _companyRepository.DeleteAsync(company);
-
-                //string redirect = Request.Headers["Referer"].ToString();
-            return RedirectToAction("GetAll", "Company");
-        }
     }
 }

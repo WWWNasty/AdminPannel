@@ -30,8 +30,23 @@ namespace Admin.Panel.Core.Services
 
         public async Task<QuestionaryObject> GetAllForCreate()
         {
-            //TODO компании нужно брать доступные авторизованным пользователем
+            
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
+            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllAsync();
+            
+            QuestionaryObject createObj = new QuestionaryObject
+            {
+                Companies = companies,
+                QuestionaryObjectTypes = objTypes
+            };
+
+            return createObj;
+        }
+        
+        public async Task<QuestionaryObject> GetAllForCreateForUser(string userId)
+        {
+            
+            List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(userId);
             List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllAsync();
             
             QuestionaryObject createObj = new QuestionaryObject
@@ -45,7 +60,6 @@ namespace Admin.Panel.Core.Services
         
         public async Task<QuestionaryObject> GetAllForUpdate(int id)
         {
-            //TODO компании нужно брать доступные авторизованным пользователем
             var model = await _questionaryObjectRepository.GetAsync(id);
 
             List<ApplicationCompany> companies = await _companyRepository.GetAllAsync();
@@ -57,14 +71,17 @@ namespace Admin.Panel.Core.Services
             return model;
         }
 
-        public Task<List<ObjectPropertyValues>> GetPropertiesForUpdate(int id)
+        public async Task<QuestionaryObject> GetAllForUpdateForUser(int id, string userId)
         {
-            throw new NotImplementedException();
-        }
+            var model = await _questionaryObjectRepository.GetAsync(id);
 
-        public Task<List<ObjectPropertyValues>> GetPropertiesForCreate()
-        {
-            throw new NotImplementedException();
+            List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(userId);
+            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllAsync();
+
+            model.Companies = companies;
+            model.QuestionaryObjectTypes = objTypes;
+
+            return model;
         }
     }
 }

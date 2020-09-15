@@ -9,9 +9,10 @@ namespace Admin.Panel.Core.Interfaces.Services
     public interface IQuestionaryObjectService
     {
         public Task<QuestionaryObject> GetAllForCreate();
+        public Task<QuestionaryObject> GetAllForCreateForUser(string userId);
         public Task<QuestionaryObject> GetAllForUpdate(int id);
-        public Task<List<ObjectPropertyValues>> GetPropertiesForUpdate(int id);
-        public Task<List<ObjectPropertyValues>> GetPropertiesForCreate();
+        public Task<QuestionaryObject> GetAllForUpdateForUser(int id, string userId);
+     
 
     }
 }

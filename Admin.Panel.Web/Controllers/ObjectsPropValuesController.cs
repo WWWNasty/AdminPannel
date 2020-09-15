@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Entities.Questionary;
@@ -46,6 +47,14 @@ namespace Admin.Panel.Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> GetAllForUser()
+        {
+            var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            List<QuestionaryObject> model = await _questionaryObjectRepository.GetAllForUserAsync(userId);
+            return View("GetAll", model);
+        }
 
         [HttpGet]
         [Authorize]
@@ -62,6 +71,22 @@ namespace Admin.Panel.Web.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> CreateForUser()
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var model =await _questionaryObjectService.GetAllForCreateForUser(userId);
+                return View("Create", model);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("", "");
+            }
+        }
+        
         [HttpPost]
         [Authorize]
         [AutoValidateAntiforgeryToken]
@@ -80,8 +105,7 @@ namespace Admin.Panel.Web.Controllers
         public async Task<ActionResult> Update(int id)
         {
             var model = await _questionaryObjectService.GetAllForUpdate(id);
-            //TODO  доставать валью этого проперти - это должен делать сервис
-            
+
             return View(model);
         }
 
@@ -100,9 +124,18 @@ namespace Admin.Panel.Web.Controllers
 
         [HttpGet]
         [Authorize]
+        public async Task<ActionResult> UpdateForUser(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var model = await _questionaryObjectService.GetAllForUpdateForUser(id, userId);
+            return View("Update", model);
+        }
+        
+        
+        [HttpGet]
+        [Authorize]
         public async Task<ActionResult> GetObjectProperties(int id)
         {
-            //выбрать проперти по id типа объекта
           List<ObjectPropertyValues> prop =  await _questionaryObjectRepository.GetPropertiesForUpdate(id);
           QuestionaryObject model = new QuestionaryObject();
           model.SelectedObjectPropertyValues = prop;

@@ -1,16 +1,13 @@
 ﻿@using Admin.Panel.Core.Entities.Questionary
+@using System.Security.Claims
 @model Admin.Panel.Core.Entities.Questionary.QuestionaryObject
-
-@{
-    ViewData["Title"] = "Тип объекта";
-}
 
 <h2>Объект</h2>
 
 <div class="card-body">
-    <input type="hidden" name="Id" value="@Model.Id" />
+    <input type="hidden" name="UserId" value="@Model.UserId"/>
     <h4 class="card-title">
-        <a asp-controller="ObjectsPropValues" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
+        <a asp-controller="ObjectsPropValues" asp-action="UpdateForUser" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
         <div class="card-body">
             <h7 class="card-title">@Model.CompanyName</h7>
         </div>

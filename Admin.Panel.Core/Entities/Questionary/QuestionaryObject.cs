@@ -17,7 +17,7 @@ namespace Admin.Panel.Core.Entities.Questionary
         public List<ObjectPropertyValues> SelectedObjectPropertyValues { get; set; }
 
         //create
-        
+        public string UserId { get; set; }
         public List<QuestionaryObjectType> QuestionaryObjectTypes { get; set; }
         public List<ApplicationCompany> Companies { get; set; }
 

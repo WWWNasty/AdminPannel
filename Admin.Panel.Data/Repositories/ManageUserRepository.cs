@@ -41,6 +41,36 @@ namespace Admin.Panel.Data.Repositories
             }
         }
 
+        public async Task<List<GetAllUsersDto>> GetAllUsersForUser(int idUser)
+        {
+            using (var cn = new SqlConnection(_connectionString))
+            {
+                await cn.OpenAsync();
+
+                try
+                {
+                    List<int> companiesId =  cn.Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @UserId", new {@UserId = idUser}).ToList();
+
+                    List<GetAllUsersDto> result = new List<GetAllUsersDto>();
+                    foreach (var companyId in companiesId)
+                    {
+                        var users = cn.Query<GetAllUsersDto>(@"SELECT * FROM ApplicationUser u
+                                                                                        INNER JOIN ApplicationUserCompany ac ON ac.UserId = u.Id
+                                                                                        WHERE CompanyId = @CompanyId", new{@CompanyId = companyId}).ToList();
+                        foreach (var usr in users)
+                        {
+                            result.Add(usr);
+                        }
+                    }
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
         public async Task<User> GetUser(int userId)
         {
             using (var cn = new SqlConnection(_connectionString))

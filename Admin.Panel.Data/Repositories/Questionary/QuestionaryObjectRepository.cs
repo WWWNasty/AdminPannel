@@ -74,7 +74,34 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 }
             }
         }
-
+        
+        public async Task<List<QuestionaryObject>> GetAllForUserAsync(int userId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    List<QuestionaryObject> result = new List<QuestionaryObject>();
+                    List<int> companiesId = connection.Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @Id", new { @Id = userId }).ToList();
+                    foreach (var companyId in companiesId)
+                    {
+                        var objects = connection.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE CompanyId = @CompanyId", new{@CompanyId = companyId}).ToList();
+                        foreach (var obj in objects)
+                        {
+                            result.Add(obj);
+                        }
+                         
+                    }
+                    
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
         public async Task<QuestionaryObject> CreateAsync(QuestionaryObject obj)
         {
             using (var cn = new SqlConnection(_connectionString))

@@ -9,6 +9,7 @@
 
 <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
     <hr />
+    <input type="hidden" name="UserId" value="@Model.UserId"/>
     <div asp-validation-summary="All" class="text-danger"></div>
         <input type="hidden" name="Id" value="@Model.Id" />
         <div class="form-group">

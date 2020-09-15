@@ -11,9 +11,10 @@ namespace Admin.Panel.Core.Interfaces.Repositories.Questionary
         public Task<ApplicationCompany> GetAsync(int id);
         public Task<List<ApplicationCompany>> GetAllAsync();
         public Task<List<ApplicationCompany>> GetAllActiveAsync();
+        public Task<List<ApplicationCompany>> GetAllActiveForUserAsync(string userId);
         public Task<ApplicationCompany> CreateAsync(ApplicationCompany company);
         public Task<ApplicationCompany> UpdateAsync(ApplicationCompany company);
-        public Task DeleteAsync(ApplicationCompany company);
+        //public Task DeleteAsync(ApplicationCompany company);
 
     }
 }

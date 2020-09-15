@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Interfaces;
@@ -38,7 +39,23 @@ namespace Admin.Panel.Web.Controllers
                 return RedirectToAction("", "");
             }
         }
-
+        
+        [HttpGet]
+        [Authorize(Roles = "PropertiesObjectRead")]
+        public async Task<ActionResult> GetAllUsersForUser()
+        {
+            try
+            {
+                var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                List<GetAllUsersDto> model = await _manageUserRepository.GetAllUsersForUser(userId);
+                return View("GetAllUsers", model);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("", "");
+            }
+        }
+        
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> UpdateUser(int userId)
