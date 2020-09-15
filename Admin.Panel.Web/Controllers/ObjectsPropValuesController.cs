@@ -86,7 +86,7 @@ namespace Admin.Panel.Web.Controllers
                 return RedirectToAction("", "");
             }
         }
-        
+
         [HttpPost]
         [Authorize]
         [AutoValidateAntiforgeryToken]
@@ -97,9 +97,22 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectRepository.CreateAsync(model);
                 return RedirectToAction("GetAll", "ObjectsPropValues");
             }
-            return View(model);
+            return View("Create", model);
         }
-
+        
+        [HttpPost]
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> CreateForUser(QuestionaryObject model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _questionaryObjectRepository.CreateAsync(model);
+                return RedirectToAction("GetAll", "ObjectsPropValues");
+            }
+            return View("Create", model);
+        }
+        
         [HttpGet]
         [Authorize]
         public async Task<ActionResult> Update(int id)
@@ -119,9 +132,22 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectRepository.UpdateAsync(model);
                 return RedirectToAction("GetAll", "ObjectsPropValues");
             }
-            return View(model);
+            return View("Update", model);
         }
 
+        [HttpPost]
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> UpdateForUser(QuestionaryObject model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _questionaryObjectRepository.UpdateAsync(model);
+                return RedirectToAction("GetAll", "ObjectsPropValues");
+            }
+            return View("Update", model);
+        }
+        
         [HttpGet]
         [Authorize]
         public async Task<ActionResult> UpdateForUser(int id)

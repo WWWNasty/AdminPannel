@@ -41,7 +41,8 @@
                 }
             }
             <label asp-for="Companies"></label>
-            <select asp-for="CompanyId" asp-items="lst1" class="custom-select dropdown-stile">
+            <select asp-for="CompanyId" asp-items="lst1" class="selectpicker">
+                @* class="custom-select dropdown-stile" *@
                 <option selected="selected" disabled="disabled"></option>
             </select>
             <span asp-validation-for="CompanyId" class="text-danger"></span>
@@ -59,14 +60,19 @@
                }
            }
            <label asp-for="QuestionaryObjectTypes"></label>
-           <select asp-for="ObjectTypeId" asp-items="lst" class="custom-select dropdown-stile">
+           <select asp-for="ObjectTypeId" asp-items="lst" class="selectpicker">
                <option selected="selected" disabled="disabled"></option>
            </select>
            <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
 
        </div>
        
-       <div id="option-container"></div>
+       <div id="option-container">
+            @if (Model.SelectedObjectPropertyValues != null)
+                        {
+                            <partial name="_Properties"/>
+                        }
+       </div>
    </div>
     
     

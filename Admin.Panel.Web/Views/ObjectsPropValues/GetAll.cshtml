@@ -13,11 +13,11 @@
 {
     if (User.IsInRole("TypesObjectRead") || User.IsInRole("UsersRead"))
     {
-        <a asp-controller="ObjectsPropValues" asp-action="CreateForUser" class="btn btn-outline-primary">Создать объект</a>
+        <a asp-controller="ObjectsPropValues" asp-action="CreateForUser" class="btn btn-outline-primary">Создать объект простой</a>
     }
     if (User.IsInRole("SuperAdministrator") || User.IsInRole("UsersRead"))
     {
-        <a asp-controller="ObjectsPropValues" asp-action="Create" class="btn btn-outline-primary">Создать объект</a>
+        <a asp-controller="ObjectsPropValues" asp-action="Create" class="btn btn-outline-primary">Создать объект для супера</a>
     }
 }
 
