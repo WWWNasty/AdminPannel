@@ -126,7 +126,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                              new ObjectPropertyValues
                                             {
                                                QuestionaryObjectId = objId,
-                                               ObjectPropertyId = objectProperty.Id,
+                                               ObjectPropertyId = objectProperty.ObjectPropertyId,
                                                Value = objectProperty.Value
                                             }, transaction);
                                  }
@@ -151,41 +151,42 @@ namespace Admin.Panel.Data.Repositories.Questionary
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                try
+                using (var transaction = connection.BeginTransaction())
                 {
-                    var query = @"UPDATE QuestionaryObjects SET Code=@Code,Description=@Description,Updated=@Updated,Name=@Name,ObjectTypeId=@ObjectTypeId,CompanyId=@CompanyId 
-                    WHERE Id=@Id";
-
-                    await connection.ExecuteAsync(query, obj);
-                    //дропаем все валью записи объекту
-                   
-                    connection.Execute(
-                        @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
-                        new {QuestionaryObjectId = obj.Id});
-
-                    //добавляем заново все валью записи
-                    if (obj.SelectedObjectPropertyValues != null)
-                    {
-                        foreach (ObjectPropertyValues objectProperty in obj.SelectedObjectPropertyValues)
-                                            {
-                                                connection.Execute(@"INSERT INTO  ObjectPropertyValues(QuestionaryObjectId,ObjectPropertyId,Value)
-                        		                                                VALUES (@QuestionaryObjectId,@ObjectPropertyId,@Value)",
-                                                    new ObjectPropertyValues
+                  try
+                                  {
+                                      var query = @"UPDATE QuestionaryObjects SET Code=@Code,Description=@Description,Updated=@Updated,Name=@Name,ObjectTypeId=@ObjectTypeId,CompanyId=@CompanyId 
+                                      WHERE Id=@Id";
+                  
+                                       connection.Execute(query, obj, transaction);
+                                      //дропаем все валью записи объекту
+                                     
+                                       connection.Execute(
+                                          @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
+                                          new {QuestionaryObjectId = obj.Id}, transaction);
+                  
+                                      //добавляем заново все валью записи
+                                      if (obj.SelectedObjectPropertyValues != null)
+                                      {
+                                          foreach (ObjectPropertyValues objectProperty in obj.SelectedObjectPropertyValues)
+                                             {
+                                                  connection.Execute(@"INSERT INTO  ObjectPropertyValues(QuestionaryObjectId,ObjectPropertyId,Value)
+                                          		                                                VALUES (@QuestionaryObjectId,@ObjectPropertyId,@Value)", 
+                                                     new ObjectPropertyValues
                                                     {
-                                                        QuestionaryObjectId = obj.Id,
-                                                        ObjectPropertyId = objectProperty.Id,
-                                                        Value = objectProperty.Value
-                                                    });
-                        
-                                            }
-                    }
-                    
-                    
-                    return obj;
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                                                       QuestionaryObjectId = obj.Id,
+                                                       ObjectPropertyId = objectProperty.ObjectPropertyId,
+                                                       Value = objectProperty.Value
+                                                    }, transaction);
+                                             }
+                                      }
+                                      transaction.Commit();
+                                      return obj;
+                                  }
+                                  catch (Exception ex)
+                                  {
+                                      throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                                  }  
                 }
             }
         }
@@ -198,7 +199,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 try
                 {
                     var properties = connection.Query<ObjectPropertyValues>(@"SELECT 
-                                                                     p.* 
+                                                                     p.Id AS ObjectPropertyId, p.Name
                                                                       FROM ObjectProperties AS p
                                                                        INNER JOIN ObjectPropertyToObjectTypes AS po ON po.ObjectPropertyId = p.Id
                                                                         where 

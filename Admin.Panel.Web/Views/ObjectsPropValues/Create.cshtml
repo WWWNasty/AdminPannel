@@ -45,11 +45,11 @@
                     <label asp-for="Companies"></label>
                 </div>
                 <div class="row">
-                    <select asp-for="CompanyId" asp-items="lst1" class="selectpicker">
-                                    @* class="custom-select dropdown-stile" *@
-                                    <option selected="selected" disabled="disabled"></option>
-                                </select>
-                                <span asp-validation-for="CompanyId" class="text-danger"></span>
+                    <select asp-for="CompanyId" asp-items="lst1" class="custom-select dropdown-stile">
+                                    @* class="custom-select dropdown-stile" selectpicker *@
+                        <option selected="selected" disabled="disabled"></option>
+                        </select>
+                    <span asp-validation-for="CompanyId" class="text-danger"></span>
                 </div>
             </div>
         </div>

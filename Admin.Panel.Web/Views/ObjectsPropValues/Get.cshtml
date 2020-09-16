@@ -14,7 +14,7 @@
             }
             if (User.IsInRole("SuperAdministrator"))
             {
-                <a asp-controller="ObjectsPropValues" asp-action="Update" asp-route-Id="@Model.Id" class="text-success">@Html.DisplayFor(modelItem => Model.Name) для супера</a>
+                <a asp-controller="ObjectsPropValues" asp-action="Update" asp-route-Id="@Model.Id" class="text-success">@Html.DisplayFor(modelItem => Model.Name)</a>
             }
         }
         </h4>

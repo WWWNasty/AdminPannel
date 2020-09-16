@@ -8,16 +8,17 @@
         <div class="row">
                 <div class="col">
                     <div class="card-body">
-                         <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].Id" />
+                        <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].Id" />
+                        <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].ObjectPropertyId" />
                         <h7 class="card-title">@Model.SelectedObjectPropertyValues[i].Name</h7>
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
                         <input asp-for="@Model.SelectedObjectPropertyValues[i].Value" class="form-control" />
-                            <span asp-validation-for="@Model.SelectedObjectPropertyValues[i].Value" class="text-danger"></span>
+                        <span asp-validation-for="@Model.SelectedObjectPropertyValues[i].Value" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
+        </div>
     </div>
 }

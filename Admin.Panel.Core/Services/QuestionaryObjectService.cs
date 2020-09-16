@@ -62,7 +62,7 @@ namespace Admin.Panel.Core.Services
         {
             var model = await _questionaryObjectRepository.GetAsync(id);
 
-            List<ApplicationCompany> companies = await _companyRepository.GetAllAsync();
+            List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
             List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllAsync();
 
             model.Companies = companies;
