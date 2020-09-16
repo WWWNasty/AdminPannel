@@ -41,7 +41,7 @@ namespace Admin.Panel.Web.Controllers
         }
         
         [HttpGet]
-        [Authorize(Roles = "PropertiesObjectRead")]
+        [Authorize(Roles = "UsersRead")]
         public async Task<ActionResult> GetAllUsersForUser()
         {
             try
@@ -57,7 +57,7 @@ namespace Admin.Panel.Web.Controllers
         }
         
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator, UsersRead")]
         public async Task<IActionResult> UpdateUser(int userId)
         {
            var user = await _manageUserRepository.GetUser(userId);
@@ -78,7 +78,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator, UsersEdit")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> UpdateUser(UpdateUserViewModel model)
         {

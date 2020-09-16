@@ -11,11 +11,11 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    if (User.IsInRole("TypesObjectRead") || User.IsInRole("UsersRead"))
+    if (User.IsInRole("ObjectEdit"))
     {
-        <a asp-controller="ObjectsPropValues" asp-action="CreateForUser" class="btn btn-outline-primary">Создать объект простой</a>
+        <a asp-controller="ObjectsPropValues" asp-action="CreateForUser" class="btn btn-outline-primary">Создать объект</a>
     }
-    if (User.IsInRole("SuperAdministrator") || User.IsInRole("UsersRead"))
+    if (User.IsInRole("SuperAdministrator"))
     {
         <a asp-controller="ObjectsPropValues" asp-action="Create" class="btn btn-outline-primary">Создать объект для супера</a>
     }

@@ -9,7 +9,6 @@
 
 <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
     <hr />
-    <input type="hidden" name="UserId" value="@Model.UserId"/>
     <div asp-validation-summary="All" class="text-danger"></div>
         <input type="hidden" name="Id" value="@Model.Id" />
         <div class="form-group">
@@ -35,19 +34,33 @@
             </div>
     <div class="form-group">
         <div class="col-md-10">
-    
-            <select class="selectpicker" asp-for="CompanyId"
-                    asp-items="Model.Companies.Select(company => new SelectListItem(company.CompanyName, company.CompanyId.ToString(), Model.CompanyId == company.CompanyId))">
-            </select>
+            <div class="col">
+                <div class="row">
+                   <label asp-for="Companies"></label> 
+                </div>
+                <div class="row">
+                   <select class="selectpicker" asp-for="CompanyId"
+                                       asp-items="Model.Companies.Select(company => new SelectListItem(company.CompanyName, company.CompanyId.ToString(), Model.CompanyId == company.CompanyId))">
+                               </select>
+                               <span asp-validation-for="CompanyId" class="text-danger"></span> 
+                </div>
+            </div>
         </div>
     </div>
      <div class="form-group">
-            <div class="col-md-10">
-    
-                <select class="selectpicker" asp-for="ObjectTypeId"
-                        asp-items="Model.QuestionaryObjectTypes.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.ObjectTypeId == property.Id))">
-                </select>
-            </div>
+         <div class="col-md-10">
+             <div class="col">
+                 <div class="row">
+                     <label asp-for="QuestionaryObjectTypes"></label> 
+                 </div>
+                 <div class="row">
+                     <select class="selectpicker" asp-for="ObjectTypeId"
+                                          asp-items="Model.QuestionaryObjectTypes.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.ObjectTypeId == property.Id))">
+                                  </select>
+                                  <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
+                 </div>
+             </div>
+         </div>
          <div id="option-container">
              @if (Model.SelectedObjectPropertyValues != null)
              {

@@ -6,12 +6,22 @@
     ViewData["Title"] = "Тип объекта";
 }
 
-<h2>Объект</h2>
+<h2>Тип объекта</h2>
 
 <div class="card-body">
     <input type="hidden" name="Id" value="@Model.Id" />
     <h4 class="card-title">
-        <a asp-controller="ObjectTypesProperties" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
+         @if (User.Identity.IsAuthenticated)
+         {
+             if (User.IsInRole("SuperAdministrator") || User.IsInRole("TypesObjectEdit"))
+             {
+                 <a asp-controller="ObjectTypesProperties" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
+             }
+             else
+             {
+                 @Model.Name
+             }
+         }
     </h4>
     @foreach (var prop in Model.SelectedObjectProperties)
     {

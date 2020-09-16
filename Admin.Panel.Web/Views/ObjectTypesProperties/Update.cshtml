@@ -20,10 +20,19 @@
     </div>
     <div class="form-group">
         <div class="col-md-10">
-            <select class="selectpicker" asp-for="SelectedPropertiesId"
-                    asp-items="Model.ObjectProperties.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.SelectedObjectProperties.Select(selectedProperty => selectedProperty.Id).Contains(property.Id)))"
-                    multiple>
-            </select>
+            <div class="col">
+                <div class="row">
+                    <label asp-for="Name"></label>
+                </div>
+                <div class="row">
+                      <select class="selectpicker" asp-for="SelectedPropertiesId"
+                                        asp-items="Model.ObjectProperties.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.SelectedObjectProperties.Select(selectedProperty => selectedProperty.Id).Contains(property.Id)))"
+                                        multiple>
+                                </select>
+                                <span asp-validation-for="SelectedPropertiesId" class="text-danger"></span>
+                </div>
+            </div>
+          
         </div>
     </div>
     <button type="submit" class="btn btn-default">Сохранить</button>

@@ -23,7 +23,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator, TypesObjectRead")]
         public async Task<ActionResult> GetAll()
         {
             List<QuestionaryObjectType> model = await _questionaryObjectTypesRepository.GetAllAsync();
@@ -31,7 +31,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator, TypesObjectRead")]
         public async Task<ActionResult> Get(int id)
         {
             QuestionaryObjectType model = await _questionaryObjectTypesRepository.GetAsync(id);
@@ -40,7 +40,7 @@ namespace Admin.Panel.Web.Controllers
         
         
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
         public async Task<IActionResult> Create()
         {
             QuestionaryObjectType model = await _questionaryObjectTypesService.GetAllProperties();
@@ -49,7 +49,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Create(QuestionaryObjectType model)
         {
@@ -62,7 +62,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
         public async Task<IActionResult> Update(int id)
         {
             QuestionaryObjectType model = await _questionaryObjectTypesService.GetObjectForUpdare(id);
@@ -71,14 +71,15 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(QuestionaryObjectType model)
         {
             if (ModelState.IsValid)
             {
                 await _questionaryObjectTypesRepository.UpdateAsync(model);
-                return RedirectToAction("GetAll", "ObjectTypesProperties");            }
+                return RedirectToAction("GetAll", "ObjectTypesProperties");            
+            }
             return View(model);
         }
     }

@@ -19,6 +19,7 @@ namespace Admin.Panel.Core.Entities
         [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 2)]
         public string CompanyDescription { get; set; }
 
+        //update
         [Display(Name = "Активна")]
         public bool IsUsed { get; set; }
     }

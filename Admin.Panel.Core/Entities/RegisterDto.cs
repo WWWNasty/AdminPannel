@@ -14,12 +14,12 @@ namespace Admin.Panel.Core.Entities
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Поле ФИО пользователя - обязательно!")]
-        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 4)]
+        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {1} символов.", MinimumLength = 4)]
         [Display(Name = "ФИО пользователя")]
         public string Nickname { get; set; }
 
         [Required(ErrorMessage = "Поле Пароль - обязательно!")]
-        [StringLength(100, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "Длина {0} должна быть не менее {2} символов и не более {1} символов.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }

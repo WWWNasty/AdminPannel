@@ -40,18 +40,22 @@
                     lst1.Add(new SelectListItem { Text = Model.Companies[i].CompanyName, Value = Model.Companies[i].CompanyId.ToString() });
                 }
             }
-            <label asp-for="Companies"></label>
-            <select asp-for="CompanyId" asp-items="lst1" class="selectpicker">
-                @* class="custom-select dropdown-stile" *@
-                <option selected="selected" disabled="disabled"></option>
-            </select>
-            <span asp-validation-for="CompanyId" class="text-danger"></span>
+            <div class="col">
+                <div class="row">
+                    <label asp-for="Companies"></label>
+                </div>
+                <div class="row">
+                    <select asp-for="CompanyId" asp-items="lst1" class="selectpicker">
+                                    @* class="custom-select dropdown-stile" *@
+                                    <option selected="selected" disabled="disabled"></option>
+                                </select>
+                                <span asp-validation-for="CompanyId" class="text-danger"></span>
+                </div>
+            </div>
         </div>
     </div>
    <div class="form-group">
        <div class="col-md-10">
-           
-           
            @{
                List<SelectListItem> lst = new List<SelectListItem>();
                for (int i = Model.QuestionaryObjectTypes.Count - 1; i >= 0; i--)
@@ -59,12 +63,17 @@
                    lst.Add(new SelectListItem {Text = Model.QuestionaryObjectTypes[i].Name, Value = Model.QuestionaryObjectTypes[i].Id.ToString()});
                }
            }
-           <label asp-for="QuestionaryObjectTypes"></label>
-           <select asp-for="ObjectTypeId" asp-items="lst" class="selectpicker">
-               <option selected="selected" disabled="disabled"></option>
-           </select>
-           <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
-
+           <div class="col">
+               <div class="row">
+                  <label asp-for="QuestionaryObjectTypes"></label> 
+               </div>
+               <div class="row">
+                    <select asp-for="ObjectTypeId" asp-items="lst" class="selectpicker">
+                                  <option selected="selected" disabled="disabled"></option>
+                              </select>
+                              <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
+               </div>
+           </div>
        </div>
        
        <div id="option-container">
@@ -74,8 +83,6 @@
                         }
        </div>
    </div>
-    
-    
     <button type="submit" class="btn btn-default">Сохранить</button>
 </form>
 

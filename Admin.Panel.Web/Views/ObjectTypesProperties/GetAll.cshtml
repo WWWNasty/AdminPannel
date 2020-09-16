@@ -8,21 +8,24 @@
 
 <h2>@ViewBag.Title</h2>
 
-<a asp-controller="ObjectTypesProperties" asp-action="Create" class="btn btn-outline-primary">Создать тип объекта</a>
-
-@foreach (var obj in Model)
+@if (User.Identity.IsAuthenticated)
 {
-    <div class="card-body">
-        <input type="hidden" name="Id" value="@obj.Id" />
-        <h4 class="card-title">
-            
-            <a asp-controller="ObjectTypesProperties" asp-action="Get" asp-route-Id="@obj.Id" class="text-success"> @Html.DisplayFor(modelItem => obj.Name)</a>
+    if (User.IsInRole("SuperAdministrator") || User.IsInRole("TypesObjectEdit"))
+    {
+        <a asp-controller="ObjectTypesProperties" asp-action="Create" class="btn btn-outline-primary">Создать тип объекта</a>
+    }
 
-        </h4>
 
-    </div>
+    foreach (var obj in Model)
+    {
+        <div class="card-body">
+            <input type="hidden" name="Id" value="@obj.Id" />
+            <h4 class="card-title">
+                <a asp-controller="ObjectTypesProperties" asp-action="Get" asp-route-Id="@obj.Id" class="text-success"> @Html.DisplayFor(modelItem => obj.Name)</a>   
+            </h4>
+        </div>
+    }
 }
-
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

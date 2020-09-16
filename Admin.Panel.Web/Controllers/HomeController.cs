@@ -23,8 +23,7 @@ namespace Admin.Panel.Web.Controllers
         {
             return View();
         }
-
-        //[Authorize(Roles = "Админ")]
+        
         public IActionResult Privacy()
         {
             return View();

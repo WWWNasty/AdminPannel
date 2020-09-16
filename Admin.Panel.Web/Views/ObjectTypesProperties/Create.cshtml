@@ -20,10 +20,19 @@
 
     <div class="form-group">
         <div class="col-md-10">
-            <select class="selectpicker" asp-for="SelectedPropertiesId"
-                    asp-items="Model.ObjectProperties.Select(p => new SelectListItem(p.Name, p.Id.ToString()))"
-                    multiple>
-            </select>
+            <div class="col">
+                <div class="row">
+                                <label asp-for="SelectedObjectProperties"></label>
+                            </div>
+                            <div class="row">
+                                <select class="selectpicker" asp-for="SelectedPropertiesId"
+                                        asp-items="Model.ObjectProperties.Select(p => new SelectListItem(p.Name, p.Id.ToString()))"
+                                        multiple>
+                                </select>
+                                <span asp-validation-for="SelectedPropertiesId" class="text-danger"></span>
+                            </div>
+            </div>
+            
         </div>
     </div>
     <button type="submit" class="btn btn-default">Сохранить</button>
@@ -33,8 +42,6 @@
 @*     $1$ <partial name="Partials/_AddProperty" /> #1# *@
 @*     <button type="submit" class="btn btn-default">Создать Свойство</button> *@
 @* </form> *@
-
-
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

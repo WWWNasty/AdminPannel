@@ -22,7 +22,6 @@ namespace Admin.Panel.Data.Repositories.Questionary
             _connectionString = configuration.GetConnectionString("questionaryConnection");
         }
 
-
         public async Task<QuestionaryObject> GetAsync(int id)
         {
             using (var cn = new SqlConnection(_connectionString))
@@ -31,7 +30,6 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
                 try
                 {
-                    
                     var query = @"SELECT o.*, ot.Name AS ObjectTypeName, c.CompanyName  FROM QuestionaryObjects AS o 
                                           INNER JOIN QuestionaryObjectTypes AS ot ON o.ObjectTypeId = ot.Id
                                           INNER JOIN Companies AS c ON o.CompanyId = c.CompanyId
@@ -45,7 +43,6 @@ namespace Admin.Panel.Data.Repositories.Questionary
 				                                                                where 
 					                                                                po.QuestionaryObjectId = @QuestionaryObjectId", new { QuestionaryObjectId = id }).ToList();
                     
-
                     obj.SelectedObjectPropertyValues = properties;
 
                     return obj;
@@ -91,9 +88,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                         {
                             result.Add(obj);
                         }
-                         
                     }
-                    
                     return result;
                 }
                 catch (Exception ex)
@@ -125,19 +120,17 @@ namespace Admin.Panel.Data.Repositories.Questionary
                         if (obj.SelectedObjectPropertyValues != null)
                         {
                              foreach (ObjectPropertyValues objectProperty in obj.SelectedObjectPropertyValues)
-                                                    {
-                                                        cn.Execute(@"INSERT INTO  ObjectPropertyValues(QuestionaryObjectId,ObjectPropertyId,Value)
-                            		                                                VALUES (@QuestionaryObjectId,@ObjectPropertyId,@Value)",
-                                                            new ObjectPropertyValues
-                                                            {
-                                                                QuestionaryObjectId = objId,
-                                                                ObjectPropertyId = objectProperty.Id,
-                                                                Value = objectProperty.Value
-                                                            }, transaction);
-                            
-                                                    }
+                                 {
+                                       cn.Execute(@"INSERT INTO  ObjectPropertyValues(QuestionaryObjectId,ObjectPropertyId,Value)
+                            		                           VALUES (@QuestionaryObjectId,@ObjectPropertyId,@Value)",
+                                             new ObjectPropertyValues
+                                            {
+                                               QuestionaryObjectId = objId,
+                                               ObjectPropertyId = objectProperty.Id,
+                                               Value = objectProperty.Value
+                                            }, transaction);
+                                 }
                         }
-                       
 
                         var result = cn.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE Id=@Id", new { @Id = objId }, transaction).SingleOrDefault();
 

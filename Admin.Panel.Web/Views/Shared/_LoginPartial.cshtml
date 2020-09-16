@@ -23,30 +23,30 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                      @if (User.Identity.IsAuthenticated)
-                     {if (User.IsInRole("TypesObjectRead")|| User.IsInRole("UsersRead"))
+                     {
+                         if (User.IsInRole("TypesObjectRead")|| User.IsInRole("UsersRead"))
                         {
                             <a asp-controller="ObjectTypesProperties" asp-action="GetAll" class="dropdown-item">Все типы объектов</a>
                         }
-                     if (User.IsInRole("ObjectRead")|| User.IsInRole("UsersRead"))
+                         
+                        if (User.IsInRole("ObjectRead")|| User.IsInRole("UsersRead"))
                          {
                              <a asp-controller="ObjectsPropValues" asp-action="GetAllForUser" class="dropdown-item">Все Обьекты</a>
                          }
-                     if (User.IsInRole("PropertiesObjectRead")|| User.IsInRole("UsersRead"))
+                         
+                        if (User.IsInRole("PropertiesObjectRead")|| User.IsInRole("UsersRead"))
                          {
                              <a asp-controller="Property" asp-action="Create" class="dropdown-item">Все свойства типа объекта</a>
                          }
                          
                          <a asp-controller="Account" asp-action="ChangePassword" class="dropdown-item">Изменить пароль</a>
                          
-                        if (User.IsInRole("PropertiesObjectRead"))
+                        if (User.IsInRole("UsersRead"))
                         {
                             <div class="dropdown-divider"></div>
                             <a asp-controller="ManageUser" asp-action="GetAllUsersForUser" class="dropdown-item">Все пользователи</a>
                         }
-                   
-
-                    
-                   
+     
                         if (User.IsInRole("SuperAdministrator"))
                         {
                             <div class="dropdown-divider"></div>
@@ -65,7 +65,6 @@
             </li>
         </ul>
     </form>
-
 }
 else
 {

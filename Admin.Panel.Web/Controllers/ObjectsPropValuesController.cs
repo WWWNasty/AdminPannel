@@ -32,7 +32,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator, ObjectRead")]
         public async Task<ActionResult> Get(int id)
         {
             QuestionaryObject model = await _questionaryObjectRepository.GetAsync(id);
@@ -40,7 +40,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<ActionResult> GetAll()
         {
             List<QuestionaryObject> model = await _questionaryObjectRepository.GetAllAsync();
@@ -48,7 +48,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "ObjectRead")]
         public async Task<ActionResult> GetAllForUser()
         {
             var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -57,7 +57,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Create()
         {
             try
@@ -72,7 +72,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "ObjectEdit")]
         public async Task<IActionResult> CreateForUser()
         {
             try
@@ -88,7 +88,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Create(QuestionaryObject model)
         {
@@ -101,7 +101,7 @@ namespace Admin.Panel.Web.Controllers
         }
         
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "ObjectEdit")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> CreateForUser(QuestionaryObject model)
         {
@@ -114,7 +114,7 @@ namespace Admin.Panel.Web.Controllers
         }
         
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<ActionResult> Update(int id)
         {
             var model = await _questionaryObjectService.GetAllForUpdate(id);
@@ -123,7 +123,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "SuperAdministrator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(QuestionaryObject model)
         {
@@ -136,7 +136,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "ObjectEdit")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> UpdateForUser(QuestionaryObject model)
         {
@@ -149,7 +149,7 @@ namespace Admin.Panel.Web.Controllers
         }
         
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "ObjectEdit")]
         public async Task<ActionResult> UpdateForUser(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
