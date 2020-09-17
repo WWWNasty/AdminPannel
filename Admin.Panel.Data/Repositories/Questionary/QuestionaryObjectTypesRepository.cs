@@ -68,6 +68,24 @@ namespace Admin.Panel.Data.Repositories.Questionary
             }
         }
 
+        public async Task<List<QuestionaryObjectType>> GetAllActiveAsync()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    var query = "SELECT * FROM QuestionaryObjectTypes WHERE IsUsed = 1";
+                    var result = connection.Query<QuestionaryObjectType>(query).ToList();
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+        
         public async Task<QuestionaryObjectType> CreateAsync(QuestionaryObjectType obj)
         {
             using (var cn = new SqlConnection(_connectionString))
@@ -79,8 +97,8 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     try
                     {
                         var query =
-                            @"INSERT INTO QuestionaryObjectTypes(Name) 
-                                VALUES(@Name);
+                            @"INSERT INTO QuestionaryObjectTypes(Name, IsUsed) 
+                                VALUES(@Name,1);
                                 SELECT QuestionaryObjectTypeId = @@IDENTITY";
                         var objTypeId = cn.ExecuteScalar<int>(query, obj, transaction);
 
@@ -121,7 +139,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 
                     try
                     {
-                        var query = @"UPDATE QuestionaryObjectTypes SET Name=@Name 
+                        var query = @"UPDATE QuestionaryObjectTypes SET Name=@Name,IsUsed=@IsUsed 
                          WHERE Id=@Id";
 
                         //дропаем все проперти обьекту

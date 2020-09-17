@@ -72,6 +72,24 @@ namespace Admin.Panel.Data.Repositories.Questionary
             }
         }
         
+        public async Task<List<QuestionaryObject>> GetAllActiveAsync()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    var query = "SELECT * FROM QuestionaryObjects WHERE IsUsed = 1";
+                    var result = connection.Query<QuestionaryObject>(query).ToList();
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+        
         public async Task<List<QuestionaryObject>> GetAllForUserAsync(int userId)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -97,6 +115,33 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 }
             }
         }
+        
+        public async Task<List<QuestionaryObject>> GetAllActiveForUserAsync(int userId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    List<QuestionaryObject> result = new List<QuestionaryObject>();
+                    List<int> companiesId = connection.Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @Id", new { @Id = userId }).ToList();
+                    foreach (var companyId in companiesId)
+                    {
+                        var objects = connection.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE CompanyId = @CompanyId AND IsUsed = 1", new{@CompanyId = companyId}).ToList();
+                        foreach (var obj in objects)
+                        {
+                            result.Add(obj);
+                        }
+                    }
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+        
         public async Task<QuestionaryObject> CreateAsync(QuestionaryObject obj)
         {
             using (var cn = new SqlConnection(_connectionString))
@@ -108,8 +153,8 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     try
                     {
                         var query =
-                            @"INSERT INTO QuestionaryObjects(Code,Description,Updated,Name,ObjectTypeId,CompanyId) 
-                                VALUES(@Code,@Description,@Updated,@Name,@ObjectTypeId,@CompanyId);
+                            @"INSERT INTO QuestionaryObjects(Code,Description,Updated,Name,ObjectTypeId,CompanyId,IsUsed) 
+                                VALUES(@Code,@Description,@Updated,@Name,@ObjectTypeId,@CompanyId,1);
                                 SELECT QuestionaryObjectId = @@IDENTITY";
                         var objId = cn.ExecuteScalar<int>(query, obj, transaction);
                         
@@ -155,7 +200,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 {
                   try
                                   {
-                                      var query = @"UPDATE QuestionaryObjects SET Code=@Code,Description=@Description,Updated=@Updated,Name=@Name,ObjectTypeId=@ObjectTypeId,CompanyId=@CompanyId 
+                                      var query = @"UPDATE QuestionaryObjects SET Code=@Code,Description=@Description,Updated=@Updated,Name=@Name,ObjectTypeId=@ObjectTypeId,CompanyId=@CompanyId,IsUsed=@IsUsed 
                                       WHERE Id=@Id";
                   
                                        connection.Execute(query, obj, transaction);

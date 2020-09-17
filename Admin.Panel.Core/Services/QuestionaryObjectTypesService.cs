@@ -22,18 +22,17 @@ namespace Admin.Panel.Core.Services
 
         public async Task<QuestionaryObjectType> GetAllProperties()
         {
-            List<ObjectProperty> properties = await _objectPropertiesRepository.GetAllAsync();
+            List<ObjectProperty> properties = await _objectPropertiesRepository.GetAllActiveAsync();
             QuestionaryObjectType createProperties = new QuestionaryObjectType
             {
                 ObjectProperties = properties
             };
-
             return createProperties;
         }
 
         public async Task<QuestionaryObjectType> GetObjectForUpdare(int id)
         {
-            List<ObjectProperty> allProperties = await _objectPropertiesRepository.GetAllAsync();
+            List<ObjectProperty> allProperties = await _objectPropertiesRepository.GetAllActiveAsync();
 
             var obj = await _questionaryObjectTypesRepository.GetAsync(id);
            

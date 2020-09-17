@@ -32,7 +32,9 @@ namespace Admin.Panel.Core.Entities.Questionary
         
         [Required(ErrorMessage = "Поле Компания - обязательно!")]
         public int CompanyId { get; set; }
-        
+
+        [Display(Name = "Активный")]
+        public bool IsUsed { get; set; }
         public string CompanyName { get; set; }
 
         [Required(ErrorMessage = "Значения - обязательны!")]

@@ -59,6 +59,24 @@ namespace Admin.Panel.Data.Repositories.Questionary
             }
         }
 
+        public async Task<List<ObjectProperty>> GetAllActiveAsync()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    var query = "SELECT * FROM ObjectProperties WHERE IsUsed = 1";
+                    var result = connection.Query<ObjectProperty>(query).ToList();
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+        
         public async Task<ObjectProperty> CreateAsync(ObjectProperty obj)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -67,8 +85,8 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
                 try
                 {
-                    var query = @"INSERT INTO ObjectProperties(Name,NameInReport,IsUsedInReport,ReportCellStyle) 
-                    VALUES(@Name,@NameInReport,@IsUsedInReport,@ReportCellStyle)";
+                    var query = @"INSERT INTO ObjectProperties(Name,NameInReport,IsUsedInReport,ReportCellStyle,IsUsed) 
+                    VALUES(@Name,@NameInReport,@IsUsedInReport,@ReportCellStyle,1)";
                     await connection.ExecuteAsync(query, obj);
                     return obj;
                 }
@@ -87,7 +105,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
                 try
                 {
-                    var query = @"UPDATE ObjectProperties SET Name=@Name,NameInReport=@NameInReport,IsUsedInReport=@IsUsedInReport,ReportCellStyle=@ReportCellStyle 
+                    var query = @"UPDATE ObjectProperties SET Name=@Name,NameInReport=@NameInReport,IsUsedInReport=@IsUsedInReport,ReportCellStyle=@ReportCellStyle,IsUsed=@IsUsed 
                      WHERE Id=@Id";
                     await connection.ExecuteAsync(query, obj);
                     return obj;

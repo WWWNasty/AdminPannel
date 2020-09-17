@@ -32,7 +32,7 @@ namespace Admin.Panel.Core.Services
         {
             
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
-            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllAsync();
+            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
             
             QuestionaryObject createObj = new QuestionaryObject
             {
@@ -47,7 +47,7 @@ namespace Admin.Panel.Core.Services
         {
             
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(userId);
-            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllAsync();
+            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
             
             QuestionaryObject createObj = new QuestionaryObject
             {
@@ -63,7 +63,7 @@ namespace Admin.Panel.Core.Services
             var model = await _questionaryObjectRepository.GetAsync(id);
 
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
-            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllAsync();
+            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
 
             model.Companies = companies;
             model.QuestionaryObjectTypes = objTypes;
@@ -76,7 +76,7 @@ namespace Admin.Panel.Core.Services
             var model = await _questionaryObjectRepository.GetAsync(id);
 
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(userId);
-            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllAsync();
+            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
 
             model.Companies = companies;
             model.QuestionaryObjectTypes = objTypes;

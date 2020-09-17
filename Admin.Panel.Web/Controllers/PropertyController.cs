@@ -39,7 +39,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "SuperAdministrator, PropertiesObjectEdit")]
+        [Authorize(Roles = "SuperAdministrator, PropertiesObjectEdit, PropertiesObjectRead")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Create(ObjectProperty model)
         {

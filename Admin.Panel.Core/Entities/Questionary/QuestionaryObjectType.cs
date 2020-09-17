@@ -18,6 +18,9 @@ namespace Admin.Panel.Core.Entities.Questionary
         [Required(ErrorMessage = "Поле Свойства - обязательно!")]
         public List<int> SelectedPropertiesId { get; set; }
         
+        [Display(Name = "Активный")]
+        public bool IsUsed { get; set; }
+        
         [Display(Name = "Свойства")]
         public List<ObjectProperty> ObjectProperties { get; set; } = new List<ObjectProperty>();
 
