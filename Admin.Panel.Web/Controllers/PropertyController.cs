@@ -23,7 +23,10 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "SuperAdministrator, PropertiesObjectRead")]
         public async Task<ActionResult> GetAll()
         {
-            return View("Properties");
+            List<ObjectProperty> prop = await _objectPropertiesRepository.GetAllAsync();
+            ObjectProperty model = new ObjectProperty();
+            model.ObjectProperties = prop;
+            return View("Properties", model);
         }
         
         [HttpGet]
@@ -54,7 +57,7 @@ namespace Admin.Panel.Web.Controllers
         {
             var model = await _objectPropertiesRepository.GetAsync(id);
 
-            return View("",model);
+            return View("Update",model);
         }
 
         [HttpPost]
@@ -65,9 +68,9 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _objectPropertiesRepository.UpdateAsync(model);
-                return RedirectToAction("Update", "Property");
+                return RedirectToAction("GetAll", "Property");
             }
-            return View("Properties",model);
+            return RedirectToAction("GetAll", "Property");
         }
     }
 }

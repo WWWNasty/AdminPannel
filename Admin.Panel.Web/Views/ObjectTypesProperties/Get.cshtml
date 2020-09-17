@@ -11,18 +11,23 @@
 <div class="card-body">
     <input type="hidden" name="Id" value="@Model.Id" />
     <h4 class="card-title">
-         @if (User.Identity.IsAuthenticated)
-         {
-             if (User.IsInRole("SuperAdministrator") || User.IsInRole("TypesObjectEdit"))
-             {
-                 <a asp-controller="ObjectTypesProperties" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
-             }
-             else
-             {
-                 @Model.Name
-             }
-         }
+        @if (User.Identity.IsAuthenticated)
+{
+    if (User.IsInRole("SuperAdministrator") || User.IsInRole("TypesObjectEdit"))
+    {
+        <a asp-controller="ObjectTypesProperties" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
+    }
+    else
+    {
+        <h4 class="text-success">@Model.Name</h4>
+    }
+}
     </h4>
+    <div>
+        <h5>
+            Свойства типа объекта:
+        </h5>
+    </div>
     @foreach (var prop in Model.SelectedObjectProperties)
     {
         <div class="card-body">

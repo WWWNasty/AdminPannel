@@ -28,9 +28,9 @@
         <h4 class="card-title">
 
             <a asp-controller="ObjectsPropValues" asp-action="Get" asp-route-Id="@obj.Id" class="text-success"> @Html.DisplayFor(modelItem => obj.Name)</a>
-            @obj.Code
-            @obj.Description
-            @obj.Updated
+            Код: @obj.Code,
+            Описание: @obj.Description,
+            Обновлено: @obj.Updated
         </h4>
 
     </div>

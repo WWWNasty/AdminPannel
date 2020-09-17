@@ -1,15 +1,10 @@
-﻿@using Admin.Panel.Core.Entities.Questionary
+@using Admin.Panel.Core.Entities.Questionary
 @model Admin.Panel.Core.Entities.Questionary.ObjectProperty
 
 @{
-    ViewData["Title"] = "Создание свойства";
+    ViewData["Title"] = "Редактирование свойства";
 }
 
-
- @if (User.Identity.IsAuthenticated)
- {
-     if (User.IsInRole("SuperAdministrator") || User.IsInRole("PropertiesObjectEdit"))
-     {
          <h2>@ViewBag.Title</h2>
          <hr />               
          <form method="post" asp-antiforgery="true">
@@ -42,37 +37,5 @@
                      <span asp-validation-for="ReportCellStyle" class="text-danger"></span>
                  </div>
              </div>
-             <button type="submit" class="btn btn-default">Создать Свойство</button>
+             <button type="submit" class="btn btn-default">Сохранить</button>
          </form>
-     }
- <br>
-     <div class="">
-         <h2>Свойства типов объекта</h2>
-     </div>
-@foreach (var prop in Model.ObjectProperties)
-{
-    <div class="card-body">
-        <input type="hidden" name="Id" value="@prop.Id"/>
-        <h4 class="card-title">
-            <a asp-controller="Property" asp-action="Update" asp-route-Id="@prop.Id" class="text-success"> @Html.DisplayFor(modelItem => prop.Name)</a>
-            <a asp-controller="Property" asp-action="" asp-route-Id="@prop.Id" class="badge badge-pill badge-danger" data-toggle="tooltip" title="Удалить">Удалить</a>
-        </h4>
-        <table class="table table-sm">
-          <thead>
-            <tr>
-              <th class="text-bold">Название в отчете</th>
-              <th class="text-bold">Используется в отчете</th>
-              <th class="text-bold">Тип ячейки в отчете</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>@prop.NameInReport</td>
-              <td>@prop.IsUsedInReport</td>
-              <td>@prop.ReportCellStyle</td>
-            </tr>
-          </tbody>
-        </table>
-    </div>
-}
- }

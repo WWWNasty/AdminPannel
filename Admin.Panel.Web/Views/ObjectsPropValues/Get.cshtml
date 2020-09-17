@@ -17,41 +17,34 @@
                 <a asp-controller="ObjectsPropValues" asp-action="Update" asp-route-Id="@Model.Id" class="text-success">@Html.DisplayFor(modelItem => Model.Name)</a>
             }
         }
-        </h4>
-        <div class="card-body">
-            <h7 class="card-title">@Model.CompanyName</h7>
-        </div>
-        <div class="card-body">
-            <h7 class="card-title">@Model.Code</h7>
-        </div>
-        <div class="card-body">
-            <h7 class="card-title">@Model.Description</h7>
-        </div>
-        <div class="card-body">
-            <h7 class="card-title">@Model.Updated</h7>
-        </div>
-        <div class="card-body">
-            <h7 class="card-title">@Model.ObjectTypeName</h7>
-        </div>
+    </h4>
+    <ul class="list-group list-group-flush">
+          <li class="list-group-item">Компания: @Model.CompanyName</li>
+          <li class="list-group-item">Код: @Model.Code</li>
+          <li class="list-group-item">Описание: @Model.Description</li>
+          <li class="list-group-item">Обновлено: @Model.Updated</li>
+          <li class="list-group-item">Тип объекта: @Model.ObjectTypeName
+              <div class="col">
+                      @foreach (var prop in Model.SelectedObjectPropertyValues)
+                      {
+                          <div class="row">
+                              <div class="col">
+                                  <div class="card-body">
+                                      <h7 class="card-title">@prop.Name</h7>
+                                  </div>
+                              </div>
+                              <div class="col">
+                                  <div class="card-body">
+                                      <h7 class="card-title">@prop.Value</h7>
+                                  </div>
+                              </div>
+                          </div>
+                      }
+                  </div>
+              </li>
+        </ul>
     
     
-    <div class="col">
-        @foreach (var prop in Model.SelectedObjectPropertyValues)
-        {
-            <div class="row">
-                <div class="col">
-                    <div class="card-body">
-                        <h7 class="card-title">@prop.Name</h7>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card-body">
-                        <h7 class="card-title">@prop.Value</h7>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
     
  
 </div>
