@@ -8,5 +8,6 @@ namespace Admin.Panel.Core.Interfaces.Repositories
     public interface IRoleRepository: IRoleStore<ApplicationRole>
     {
         public Task<List<ApplicationRole>> GetAllRolesAsync();
+        public Task<List<ApplicationRole>> GetAllRolesAsyncButSuperAdmin();
     }
 }

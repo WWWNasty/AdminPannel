@@ -39,7 +39,25 @@ namespace Admin.Panel.Data.Repositories
                 }
             }
         }
-        
+
+        public async Task<List<ApplicationRole>> GetAllRolesAsyncButSuperAdmin()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    var query = @"SELECT * FROM ApplicationRole WHERE Name <> 'SuperAdministrator'";
+                    var roles = await connection.QueryAsync<ApplicationRole>(query);
+                    return roles.ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
         public async Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

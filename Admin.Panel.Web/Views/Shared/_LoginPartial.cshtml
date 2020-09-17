@@ -45,6 +45,7 @@
                         {
                             <div class="dropdown-divider"></div>
                             <a asp-controller="ManageUser" asp-action="GetAllUsersForUser" class="dropdown-item">Все пользователи</a>
+                            <a asp-controller="Account" asp-action="RegisterForUser" class="dropdown-item">Создать пользователя</a>
                         }
      
                         if (User.IsInRole("SuperAdministrator"))

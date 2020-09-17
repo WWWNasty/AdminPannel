@@ -71,7 +71,6 @@ namespace Admin.Panel.Web.Controllers
                Email = user.Email,
                //CreatedDate = user.CreatedDate,
                //ApplicationCompanyId = user.ApplicationCompanyId
-
            };
             //return View(_mapper.Map<UpdateUserViewModel>(user));
            return View(model);

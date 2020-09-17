@@ -20,9 +20,9 @@ namespace Admin.Panel.Web.Controllers
         private readonly IObjectPropertiesRepository _objectPropertiesRepository;
 
         public ObjectsPropValuesController(
-            IQuestionaryObjectRepository questionaryObjectRepository, 
-            ICompanyRepository companyRepository, 
-            IObjectPropertiesRepository objectPropertiesRepository, 
+            IQuestionaryObjectRepository questionaryObjectRepository,
+            ICompanyRepository companyRepository,
+            IObjectPropertiesRepository objectPropertiesRepository,
             IQuestionaryObjectService questionaryObjectService)
         {
             _questionaryObjectRepository = questionaryObjectRepository;
@@ -62,7 +62,7 @@ namespace Admin.Panel.Web.Controllers
         {
             try
             {
-                var model =await _questionaryObjectService.GetAllForCreate();
+                var model = await _questionaryObjectService.GetAllForCreate();
                 return View(model);
             }
             catch (Exception)
@@ -78,7 +78,7 @@ namespace Admin.Panel.Web.Controllers
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var model =await _questionaryObjectService.GetAllForCreateForUser(userId);
+                var model = await _questionaryObjectService.GetAllForCreateForUser(userId);
                 return View("Create", model);
             }
             catch (Exception)
@@ -97,9 +97,13 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectRepository.CreateAsync(model);
                 return RedirectToAction("GetAll", "ObjectsPropValues");
             }
+            var mod = await _questionaryObjectService.GetAllForCreate();
+            
+            model.Companies = mod.Companies;
+            model.QuestionaryObjectTypes = mod.QuestionaryObjectTypes;
             return View("Create", model);
         }
-        
+
         [HttpPost]
         [Authorize(Roles = "ObjectEdit")]
         [AutoValidateAntiforgeryToken]
@@ -108,17 +112,21 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _questionaryObjectRepository.CreateAsync(model);
-                return RedirectToAction("GetAll", "ObjectsPropValues");
+                return RedirectToAction("GetAllForUser", "ObjectsPropValues");
             }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var mod = await _questionaryObjectService.GetAllForCreateForUser(userId);
+            
+            model.Companies = mod.Companies;
+            model.QuestionaryObjectTypes = mod.QuestionaryObjectTypes;
             return View("Create", model);
         }
-        
+
         [HttpGet]
         [Authorize(Roles = "SuperAdministrator")]
         public async Task<ActionResult> Update(int id)
         {
             var model = await _questionaryObjectService.GetAllForUpdate(id);
-
             return View(model);
         }
 
@@ -132,6 +140,10 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectRepository.UpdateAsync(model);
                 return RedirectToAction("GetAll", "ObjectsPropValues");
             }
+            var mod = await _questionaryObjectService.GetAllForUpdate(model.Id);
+            
+            model.Companies = mod.Companies;
+            model.QuestionaryObjectTypes = mod.QuestionaryObjectTypes;
             return View("Update", model);
         }
 
@@ -143,11 +155,16 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _questionaryObjectRepository.UpdateAsync(model);
-                return RedirectToAction("GetAll", "ObjectsPropValues");
+                return RedirectToAction("GetAllForUser", "ObjectsPropValues");
             }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var mod = await _questionaryObjectService.GetAllForUpdateForUser(model.Id ,userId);
+            
+            model.Companies = mod.Companies;
+            model.QuestionaryObjectTypes = mod.QuestionaryObjectTypes;
             return View("Update", model);
         }
-        
+
         [HttpGet]
         [Authorize(Roles = "ObjectEdit")]
         public async Task<ActionResult> UpdateForUser(int id)
@@ -156,17 +173,15 @@ namespace Admin.Panel.Web.Controllers
             var model = await _questionaryObjectService.GetAllForUpdateForUser(id, userId);
             return View("Update", model);
         }
-        
-        
+
         [HttpGet]
         [Authorize]
         public async Task<ActionResult> GetObjectProperties(int id)
         {
-          List<ObjectPropertyValues> prop =  await _questionaryObjectRepository.GetPropertiesForUpdate(id);
-          QuestionaryObject model = new QuestionaryObject();
-          model.SelectedObjectPropertyValues = prop;
-          return PartialView("_Properties",model);
+            List<ObjectPropertyValues> prop = await _questionaryObjectRepository.GetPropertiesForUpdate(id);
+            QuestionaryObject model = new QuestionaryObject();
+            model.SelectedObjectPropertyValues = prop;
+            return PartialView("_Properties", model);
         }
-
     }
 }

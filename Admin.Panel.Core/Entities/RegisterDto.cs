@@ -19,7 +19,7 @@ namespace Admin.Panel.Core.Entities
         public string Nickname { get; set; }
 
         [Required(ErrorMessage = "Поле Пароль - обязательно!")]
-        [StringLength(100, ErrorMessage = "Длина {0} должна быть не менее {2} символов и не более {1} символов.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }

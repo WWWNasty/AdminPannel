@@ -62,7 +62,7 @@ namespace Admin.Panel.Data.Repositories
                             result.Add(usr);
                         }
                     }
-                    return result;
+                    return result.Distinct().ToList();
                 }
                 catch (Exception ex)
                 {

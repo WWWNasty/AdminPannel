@@ -10,7 +10,7 @@
 @foreach (var user in Model)
 {
     <div class="card-body">
-        @*<input type="hidden" name="Id" value="@user.Id"/>*@
+        <input type="hidden" name="Id" value="@user.Id"/>
         <h4 class="card-title">
             @if (User.Identity.IsAuthenticated)
             {

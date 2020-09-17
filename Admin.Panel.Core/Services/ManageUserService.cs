@@ -38,6 +38,20 @@ namespace Admin.Panel.Core.Services
             return registerObject;
         }
 
+        public async Task<RegisterDto> GetCompaniesAndRolesForUser(string userId)
+        {
+            List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(userId);
+            List<ApplicationRole> roles = await _roleRepository.GetAllRolesAsyncButSuperAdmin();
+            
+            RegisterDto registerObject = new RegisterDto
+            {
+                ApplicationCompanies = companies,
+                RolesList = roles
+            };
+
+            return registerObject;
+        }
+        
         public async Task<bool> IsUsed(string name, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

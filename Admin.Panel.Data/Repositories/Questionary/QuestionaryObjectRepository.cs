@@ -199,7 +199,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 try
                 {
                     var properties = connection.Query<ObjectPropertyValues>(@"SELECT 
-                                                                     p.Id AS ObjectPropertyId, p.Name
+                                                                     p.Id AS ObjectPropertyId, p.Name AS Name
                                                                       FROM ObjectProperties AS p
                                                                        INNER JOIN ObjectPropertyToObjectTypes AS po ON po.ObjectPropertyId = p.Id
                                                                         where 

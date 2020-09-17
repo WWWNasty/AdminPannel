@@ -6,6 +6,24 @@ namespace Admin.Panel.Core.Entities
 {
     public class GetAllUsersDto
     {
+        protected bool Equals(GetAllUsersDto other)
+        {
+            return Id == other.Id;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((GetAllUsersDto) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
+        }
+
         public int Id { get; set; }
 
         public string UserName { get; set; }

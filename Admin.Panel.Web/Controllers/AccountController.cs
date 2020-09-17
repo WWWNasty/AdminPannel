@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
@@ -236,6 +237,62 @@ namespace Admin.Panel.Web.Controllers
 
         }
 
+         [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> RegisterForUser()
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                RegisterDto model = await _manageUserService.GetCompaniesAndRolesForUser(userId);
+                return View("Register", model);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("", "");
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterForUser(RegisterDto model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                var user = new User
+                {
+                    UserName = model.Email.Trim(), 
+                    Nickname = model.Nickname.Trim(), 
+                    IsConfirmed = true, 
+                    ConfirmationToken = model.ConfirmationToken, 
+                    CreatedDate = DateTime.UtcNow, 
+                    ApplicationCompaniesId = model.SelectedCompaniesId,
+                    Email = model.Email.Trim(),
+                    EmailConfirmed = true,
+                    RoleId = model.RoleId
+                };
+
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+
+                    //await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToLocal(returnUrl);
+                }
+                AddErrors(result);
+            }
+            model = await _manageUserService.GetCompaniesAndRoles();
+            // If we got this far, something failed, redisplay form
+            return View("Register", model);
+            //return RedirectToAction("Register", "Account", new { c = model.ApplicationCompanies });
+
+        }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()

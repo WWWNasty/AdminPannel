@@ -10,6 +10,7 @@ namespace Admin.Panel.Core.Interfaces.Services
     public interface IManageUserService
     {
         public Task<RegisterDto> GetCompaniesAndRoles();
+        public Task<RegisterDto> GetCompaniesAndRolesForUser(string userId);
         Task<bool> IsUsed(string name, CancellationToken cancellationToken);
     }
 }
