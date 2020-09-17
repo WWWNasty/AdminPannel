@@ -226,7 +226,8 @@ namespace Admin.Panel.Web.Controllers
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
                     //await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToLocal(returnUrl);
+                    //return RedirectToLocal(returnUrl);
+                    return RedirectToAction("GetAllUsers", "ManageUser");
                 }
                 AddErrors(result);
             }
@@ -282,7 +283,8 @@ namespace Admin.Panel.Web.Controllers
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
                     //await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToLocal(returnUrl);
+                    //return RedirectToLocal(returnUrl);
+                    return RedirectToAction("GetAllUsersForUser", "ManageUser");
                 }
                 AddErrors(result);
             }

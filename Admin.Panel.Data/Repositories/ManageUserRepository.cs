@@ -54,9 +54,9 @@ namespace Admin.Panel.Data.Repositories
                     List<GetAllUsersDto> result = new List<GetAllUsersDto>();
                     foreach (var companyId in companiesId)
                     {
-                        var users = cn.Query<GetAllUsersDto>(@"SELECT * FROM ApplicationUser u
+                        var users = cn.Query<GetAllUsersDto>(@"SELECT u.* FROM ApplicationUser u
                                                                                         INNER JOIN ApplicationUserCompany ac ON ac.UserId = u.Id
-                                                                                        WHERE CompanyId = @CompanyId", new{@CompanyId = companyId}).ToList();
+                                                                                        WHERE CompanyId = @CompanyId", new{@CompanyId = companyId}).ToArray();
                         foreach (var usr in users)
                         {
                             result.Add(usr);
