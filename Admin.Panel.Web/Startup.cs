@@ -1,33 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Admin.Panel.Core.Entities;
-using Admin.Panel.Core.Interfaces;
-using Admin.Panel.Core.Interfaces.Repositories;
-using Admin.Panel.Core.Interfaces.Repositories.Questionary;
-using Admin.Panel.Core.Interfaces.Services;
-using Admin.Panel.Core.Services;
+using Admin.Panel.Core.Entities.UserManage;
+using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
+using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
+using Admin.Panel.Core.Interfaces.Repositories.UserManageRepositoryInterfaces;
+using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces;
+using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.QuestionsServiceInterfaces;
+using Admin.Panel.Core.Interfaces.Services.UserManageServiceInterfaces;
+using Admin.Panel.Core.Services.QuestionaryServices;
+using Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices;
+using Admin.Panel.Core.Services.UserManageServices;
 using Admin.Panel.Data.MapperProfiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Admin.Panel.Data.Repositories;
 using Admin.Panel.Data.Repositories.Questionary;
 using Admin.Panel.Web.Servises;
 using AutoMapper;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
-using Microsoft.Extensions.FileProviders;
-using Admin.Panel.Data.Repositories.Questionary;
+using Admin.Panel.Data.Repositories.Questionary.Questions;
+using Admin.Panel.Data.Repositories.UserManage;
 
 
 namespace Admin.Panel.Web
@@ -53,6 +46,10 @@ namespace Admin.Panel.Web
             services.AddScoped<IQuestionaryObjectService, QuestionaryObjectService>();
             services.AddScoped<IQuestionaryObjectTypesRepository, QuestionaryObjectTypesRepository>();
             services.AddScoped<IQuestionaryObjectTypesService, QuestionaryObjectTypesService>();
+            services.AddScoped<IQuestionaryService, QuestionaryService>();
+            services.AddScoped<IQuestionaryRepository, QuestionaryRepository>();
+            services.AddScoped<ISelectableAnswersListRepository, SelectableAnswersListRepository>();
+            services.AddScoped<IQuestionaryInputFieldTypesRepository, QuestionaryInputFieldsTypesRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<IUserStore<User>, UserRepository>();
@@ -64,7 +61,7 @@ namespace Admin.Panel.Web
                 //});
                 .AddDefaultTokenProviders();
             services.AddTransient<IEmailSender, EmailSender>();
-            //TODO ��������� ������ ��������� true �� �����
+            //TODO сложность пароля 
             services.Configure<IdentityOptions>(options => {
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;

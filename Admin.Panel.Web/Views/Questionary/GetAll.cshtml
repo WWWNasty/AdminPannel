@@ -1,0 +1,31 @@
+@using Admin.Panel.Core.Entities
+@using System.Security.Claims
+@model List<Admin.Panel.Core.Entities.Questionary.Questions.QuestionaryDto>
+
+@{
+    ViewData["Title"] = "Все анкеты";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (User.Identity.IsAuthenticated)
+{
+    if (User.IsInRole("SuperAdministrator") || User.IsInRole("QuestionaryEdit"))
+    {
+        <a asp-controller="Questionary" asp-action="Create" class="btn btn-outline-primary">Создать анкету</a>
+    }
+
+
+    foreach (var obj in Model)
+    {
+        <div class="card-body">
+            <input type="hidden" name="Id" value="@obj.Id" />
+            <h4 class="card-title">
+                <a asp-controller="Questionary" asp-action="Get" asp-route-Id="@obj.Id" class="text-success"> @Html.DisplayFor(modelItem => obj.Name)</a>   
+            </h4>
+        </div>
+    }
+}
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

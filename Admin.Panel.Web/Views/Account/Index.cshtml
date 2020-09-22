@@ -1,11 +1,11 @@
-﻿@model Admin.Panel.Core.Entities.IndexViewModel
+﻿@model Admin.Panel.Core.Entities.UserManage.IndexViewModel
 @{
     ViewData["Title"] = "Profile";
     //ViewData.AddActivePage(ManageNavPages.Index);
 }
 
 <h4>@ViewData["Title"]</h4>
-@Html.Partial("_StatusMessage", Model.StatusMessage)
+@await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
 <div class="row">
     <div class="col-md-6">
         <form method="post">

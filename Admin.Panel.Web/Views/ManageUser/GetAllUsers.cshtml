@@ -1,5 +1,5 @@
 ﻿@using Admin.Panel.Core.Entities
-@model List<Admin.Panel.Core.Entities.GetAllUsersDto>
+@model List<Admin.Panel.Core.Entities.UserManage.GetAllUsersDto>
 
 @{
     ViewData["Title"] = "Все пользователи";
@@ -14,9 +14,13 @@
         <h4 class="card-title">
             @if (User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole("SuperAdministrator") || User.IsInRole("UsersEdit"))
+                if (User.IsInRole("SuperAdministrator"))
                 {
                     <a asp-controller="ManageUser" asp-action="UpdateUser" asp-route-userId="@user.Id" class="text-success"> @Html.DisplayFor(modelItem => user.UserName)</a>
+                }
+                if (User.IsInRole("UsersEdit"))
+                {
+                    <a asp-controller="ManageUser" asp-action="UpdateUserForUser" asp-route-userId="@user.Id" class="text-success"> @Html.DisplayFor(modelItem => user.UserName)</a>
                 }
             }
             else

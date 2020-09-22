@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Entities.Questionary;
-using Admin.Panel.Core.Interfaces.Repositories.Questionary;
+using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Services;
+using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

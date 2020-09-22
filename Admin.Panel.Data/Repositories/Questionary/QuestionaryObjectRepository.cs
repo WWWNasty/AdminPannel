@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Entities.Questionary;
-using Admin.Panel.Core.Interfaces.Repositories.Questionary;
+using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -195,7 +195,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 using (var transaction = connection.BeginTransaction())
                 {
                   try

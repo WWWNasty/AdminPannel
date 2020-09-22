@@ -1,0 +1,61 @@
+@using Admin.Panel.Core.Entities.Questionary
+@model Admin.Panel.Core.Entities.Questionary.Questions.QuestionaryDto
+
+@{
+    ViewData["Title"] = "Создание типа объекта";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-action="Create" asp-controller="Questionary" method="post" asp-antiforgery="true" >
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <div class="col">
+                <div class="row">
+                    <label asp-for="QuestionaryObjectTypes"></label>
+                </div>
+                <div class="row">
+                    <select class="selectpicker" asp-for="ObjectTypeId"
+                            asp-items="Model.QuestionaryObjectTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
+                    </select>
+                    <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @* <div class="form-group"> TODO копирование шаблонов скриптом и вывод а так же удаление*@
+    @*     <div class="col-md-10"> *@
+    @*         <label asp-for=""></label> *@
+    @*         <input asp-for="Name" class="form-control" /> *@
+    @*         <span asp-validation-for="Name" class="text-danger"></span> *@
+    @*     </div> *@
+    @* </div> *@
+    @* <div class="form-group"> *@
+    @*     <div class="col-md-10"> *@
+    @*         <label asp-for="Name"></label> *@
+    @*         <input asp-for="Name" class="form-control" /> *@
+    @*         <span asp-validation-for="Name" class="text-danger"></span> *@
+    @*     </div> *@
+    @* </div> *@
+    
+    <button type="submit" class="btn btn-default">Сохранить</button>
+</form>
+@* TODO создание списка ответов *@
+@* <form  method="post" asp-antiforgery="true"> *@
+@*     $1$ <partial name="Partials/_AddProperty" /> #1# *@
+@*     <button type="submit" class="btn btn-default">Создать Свойство</button> *@
+@* </form> *@
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

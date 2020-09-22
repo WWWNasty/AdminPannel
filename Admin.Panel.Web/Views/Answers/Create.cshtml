@@ -1,0 +1,67 @@
+@using Admin.Panel.Core.Entities.Questionary
+@using Admin.Panel.Core.Entities.Questionary.Questions
+@model Admin.Panel.Core.Entities.Questionary.Questions.SelectableAnswersLists
+@using static System.Linq.Enumerable;
+
+@{
+    ViewData["Title"] = "Создание списка ответов";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-action="Create" asp-controller="Answers" method="post" asp-antiforgery="true" >
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+
+    @* TODO скриптом добавлять шаблоны и удалять *@
+    
+   <div class="form-group">
+       <small>
+           <h class="card-subtitle mb-2 text-muted">Варианты ответов</h>
+       </small>
+       <div class="voting-options">
+           <div class="row">
+   
+               <span style="display: none" id="voting-options-count">1</span>
+   
+               @foreach (int i in Range(0, 1))
+               {
+                   <div class="col-sm-7 mt-2">
+                       <input asp-for="SelectableAnswers[i].AnswerText" class="form-control voting-option"/>
+                       <span asp-validation-for="SelectableAnswers[i].AnswerText" class="text-danger"></span>
+                   </div>
+               }
+               <div class="col-sm-7 mt-2 add-option-container">
+                   <input type="button" value="Add option" class="addPick btn btn-outline-secondary"/>
+                   <input type="button" value="Delete option" class="deletePick btn btn-outline-secondary"/>
+               </div>
+   
+               
+                   <div class="col-sm-7 mt-2 voting-option-set" id="voting-option-template" style="display: none">
+                       <input asp-for="SelectableAnswers[0].AnswerText" value="" class="form-control"/>
+                   </div>
+               
+              
+           </div>
+       </div>
+   </div>
+
+
+   <button type="submit" class="btn btn-default">Сохранить</button>
+</form>
+@* TODO редактирование создание проперти *@
+@* <form  method="post" asp-antiforgery="true"> *@
+@*     $1$ <partial name="Partials/_AddProperty" /> #1# *@
+@*     <button type="submit" class="btn btn-default">Создать Свойство</button> *@
+@* </form> *@
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

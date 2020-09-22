@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
-using Admin.Panel.Core.Interfaces.Repositories.Questionary;
+using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 
@@ -171,7 +171,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     {
                         throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                     }
-                 }
+            }
         }
     }
 }

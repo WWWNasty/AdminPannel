@@ -1,5 +1,5 @@
 ﻿@using Admin.Panel.Core.Entities
-@model Admin.Panel.Core.Entities.UpdateUserViewModel
+@model Admin.Panel.Core.Entities.UserManage.UpdateUserViewModel
 
 @{
     ViewData["Title"] = "Редактирование";
@@ -10,7 +10,7 @@
 <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
-    @*<input type="hidden" name="Id" value="@Model.Id"/>*@
+    <input type="hidden" name="Id" value="@Model.Id"/>
     <div class="form-group">
         <div class="col-md-10">
             <label asp-for="Email"></label>

@@ -5,8 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Entities.Questionary;
-using Admin.Panel.Core.Interfaces.Repositories.Questionary;
+using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Services;
+using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -97,10 +98,7 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectRepository.CreateAsync(model);
                 return RedirectToAction("GetAll", "ObjectsPropValues");
             }
-            var mod = await _questionaryObjectService.GetAllForCreate();
-            
-            model.Companies = mod.Companies;
-            model.QuestionaryObjectTypes = mod.QuestionaryObjectTypes;
+            model = await _questionaryObjectService.GetAllForCreate();
             return View("Create", model);
         }
 
@@ -115,10 +113,7 @@ namespace Admin.Panel.Web.Controllers
                 return RedirectToAction("GetAllForUser", "ObjectsPropValues");
             }
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var mod = await _questionaryObjectService.GetAllForCreateForUser(userId);
-            
-            model.Companies = mod.Companies;
-            model.QuestionaryObjectTypes = mod.QuestionaryObjectTypes;
+            model = await _questionaryObjectService.GetAllForCreateForUser(userId);
             return View("Create", model);
         }
 

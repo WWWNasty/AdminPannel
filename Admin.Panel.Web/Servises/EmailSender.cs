@@ -19,7 +19,6 @@ namespace Admin.Panel.Web.Servises
         }
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            // return Task.CompletedTask;
 
             try
             {
@@ -29,9 +28,6 @@ namespace Admin.Panel.Web.Servises
                 const string password = "@Grysenk02";
                 string mailFrom = "gryshenko@payberry.ru";
                 const string userName = "shop.logs";
-               // var firstMail = mailTo[0];
-               //var newList = mailTo.ToList();
-                //newList.RemoveAt(0);
                 var msg = new MailMessage(new MailAddress(mailFrom, mailFrom), new MailAddress(email))
                 {
                     Subject = subject,
@@ -39,10 +35,6 @@ namespace Admin.Panel.Web.Servises
                     BodyEncoding = Encoding.UTF8,
                     IsBodyHtml = true
                 };
-                //foreach (var mail in newList)
-                //{
-                //    msg.To.Add(mail);
-                //}
 
                 var smtp = new SmtpClient(server, 9025)
                 {

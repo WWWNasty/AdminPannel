@@ -1,0 +1,69 @@
+@using Admin.Panel.Core.Entities.Questionary
+@using Admin.Panel.Core.Entities.Questionary.Questions
+@model Admin.Panel.Core.Entities.Questionary.Questions.QuestionaryDto
+
+@{
+    ViewData["Title"] = "Анкета";
+}
+
+<h2>Анкета</h2>
+
+<div class="card-body">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <h4 class="card-title">
+        @if (User.Identity.IsAuthenticated)
+        {
+            if (User.IsInRole("SuperAdministrator") || User.IsInRole("QuestionaryEdit"))
+            {
+                <a asp-controller="ObjectTypesProperties" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
+            }
+            else
+            {
+                <h4 class="text-success">@Model.Name</h4>
+            }
+        }
+    </h4>
+    <div class="card-body">
+        <h7 class="card-title">Тип объекта: @Model.ObjectTypeName</h7>
+    </div>
+    
+    
+    @foreach (var question in Model.QuestionaryQuestions)
+    {
+        <div class="card-body">
+            <h5 class="card-title">Вопрос: @question.QuestionText</h5>
+        </div>
+        <div class="card-body">
+            <h7 class="card-title">Тип ввода: @question.QuestionaryInputFieldTypeName</h7>
+        </div>
+        <div class="card-body">
+            <h7 class="card-title">Можно пропустить вопрос: @question.CanSkipQuestion</h7>
+        </div>
+        <div class="card-body">
+            <h7 class="card-title">Используется: @question.IsUsed</h7>
+        </div>
+        <div class="card-body">
+            <h7 class="card-title">Сортировка: @question.SequenceOrder</h7>
+        </div>
+        <div class="card-body">
+            <h7 class="card-title">Тип ответов: @question.SelectableAnswersListName</h7>
+        </div>
+        <div>
+            <h6>
+                Варианты ответов:
+            </h6>
+        </div>
+        foreach (SelectableAnswers answere in question.SelectableAnswers)
+        {
+            <div class="card-body">
+                <h7 class="card-title">Текст ответа: @answere.AnswerText, Ответ поумолчанию: @answere.IsDefaultAnswer, Комментарий оязательный: @answere.IsInvolvesComment, Сортировка: @answere.SequenceOrder</h7>
+            </div>
+        }
+    }
+</div>
+
+
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
