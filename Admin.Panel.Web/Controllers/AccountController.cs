@@ -515,7 +515,7 @@ namespace Admin.Panel.Web.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Privacy", "Home");
+            return RedirectToAction("GetAll", "Questionary");
         }
 
         private void AddErrors(IdentityResult result)

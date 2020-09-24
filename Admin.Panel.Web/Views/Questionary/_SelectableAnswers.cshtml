@@ -1,0 +1,16 @@
+@using Admin.Panel.Core.Entities.Questionary
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model Admin.Panel.Core.Entities.Questionary.Questions.QuestionaryDto
+
+@for (int i = 0; i < Model.QuestionaryQuestions[i].SelectableAnswers.Count ; i++)
+{
+    <div class="col-md-10">
+        <div class="row">
+            <div class="col">
+                <div class="card-body">
+                    <input asp-for="@Model.QuestionaryQuestions[i].SelectableAnswers[i].AnswerText" class="form-control"/>
+                </div>
+            </div>
+        </div>
+    </div>
+}

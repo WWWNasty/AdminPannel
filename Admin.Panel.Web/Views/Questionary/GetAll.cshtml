@@ -3,19 +3,23 @@
 @model List<Admin.Panel.Core.Entities.Questionary.Questions.QuestionaryDto>
 
 @{
-    ViewData["Title"] = "Все анкеты";
+    ViewData["Title"] = "Все Анкеты";
 }
 
 <h2>@ViewBag.Title</h2>
 
+
 @if (User.Identity.IsAuthenticated)
 {
-    if (User.IsInRole("SuperAdministrator") || User.IsInRole("QuestionaryEdit"))
+    if (User.IsInRole("QuestionaryEdit"))
     {
-        <a asp-controller="Questionary" asp-action="Create" class="btn btn-outline-primary">Создать анкету</a>
+        <a asp-controller="Questionary" asp-action="CreateForUser" class="btn btn-outline-primary">Создать Анкету</a>
     }
-
-
+    if (User.IsInRole("SuperAdministrator"))
+    {
+        <a asp-controller="Questionary" asp-action="Create" class="btn btn-outline-primary">Создать Анкету</a>
+    }
+    
     foreach (var obj in Model)
     {
         <div class="card-body">
@@ -25,6 +29,7 @@
             </h4>
         </div>
     }
+    
 }
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

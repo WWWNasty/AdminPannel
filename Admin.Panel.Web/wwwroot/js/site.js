@@ -5,38 +5,40 @@
 
 let count = 1;
 $('.addPick').click(function () {
-
+ 
     const template = document.getElementById('voting-option-template');
     const newNode = template.cloneNode(true);
 
     newNode.removeAttribute('style');
     newNode.removeAttribute('id');
 
-    const input = newNode.querySelector('input');
+    const elements = $(newNode).find('input');
 
-    input.name = input.name.replace('0', count.toString());
-    //затирает предидущий
-    input.setAttribute('id', input.id.replace('0', count.toString()));
-    input.setAttribute('name', input.name.replace('0', count.toString()));
-    //дополняет список классов
-    input.classList.add('voting-option');
+    //input.id = input.id.replace('0', count.toString()); //name.replace('0', count.toString());
+    
+    elements.each((_, input) => {
+        input.setAttribute('id', input.id.replace('0', count.toString()));
+        input.setAttribute('name', input.name.replace('0', count.toString()));
+    })
+
+    newNode.classList.add ('voting-option');
     
     if (count < 30) {
         count++;
 
         $('.add-option-container').before(newNode);
         
-    } else {
-        alert("Можно выбрать максимум 30 штук");
-    }
+    } else {                                                      
+        alert("Максимум 30 штук");
+    }                                                
 })
 
 function addDeleteButtonHandler() {
 
-    $('.deletePick').click(удолитьВоутингОпшн);
+    $('.deletePick').click(deleteVotingOption);
 }
 
-function удолитьВоутингОпшн() {
+function deleteVotingOption() {
     if (count > 1) {
         $('.voting-option').last().remove();
         count--;

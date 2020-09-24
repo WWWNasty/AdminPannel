@@ -44,6 +44,27 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
             }
         }
 
+        public async Task<SelectableAnswers[]> GetSelectableAnswersAsync(int id)
+        {
+            using (var cn = new SqlConnection(_connectionString))
+            {
+                await cn.OpenAsync();
+
+                try
+                {
+                    SelectableAnswers[] answerses = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers 
+				                                                                where SelectableAnswersListId = @SelectableAnswersListId", 
+                        new { @SelectableAnswersListId = id }).ToArray();
+                    
+                    return answerses;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+        
         public async Task<List<SelectableAnswersLists>> GetAllAsync()
         {
             using (var connection = new SqlConnection(_connectionString))

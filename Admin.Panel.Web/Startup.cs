@@ -61,7 +61,7 @@ namespace Admin.Panel.Web
                 //});
                 .AddDefaultTokenProviders();
             services.AddTransient<IEmailSender, EmailSender>();
-            //TODO сложность пароля 
+            //TODO сложность пароля сделать по сложнее
             services.Configure<IdentityOptions>(options => {
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;

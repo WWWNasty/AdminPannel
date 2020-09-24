@@ -125,11 +125,11 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             foreach (var question  in selectableAnswersList.QuestionaryQuestions)
                             {
                                 cn.Execute(
-                                    @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypes,CanSkipQuestion,SelectebleAnswersListId,SequenceOrder,IsUsed)
+                                    @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectableAnswersListId,SequenceOrder,IsUsed)
 		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,1)",
                                     new QuestionaryQuestions()
                                     {
-                                       QuestionaryId = selectableAnswersList.Id,
+                                       QuestionaryId = objTypeId,
                                        QuestionText = question.QuestionText,
                                        QuestionaryInputFieldTypeId = question.QuestionaryInputFieldTypeId,
                                        CanSkipQuestion = question.CanSkipQuestion,

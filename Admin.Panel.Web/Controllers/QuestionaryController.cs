@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
@@ -14,11 +15,13 @@ namespace Admin.Panel.Web.Controllers
     {
         private readonly IQuestionaryService _questionaryService;
         private readonly IQuestionaryRepository _questionaryRepository;
+        private readonly ISelectableAnswersListRepository _selectableAnswersListRepository;
 
-        public QuestionaryController(IQuestionaryService questionaryService, IQuestionaryRepository questionaryRepository)
+        public QuestionaryController(IQuestionaryService questionaryService, IQuestionaryRepository questionaryRepository, ISelectableAnswersListRepository selectableAnswersListRepository)
         {
             _questionaryService = questionaryService;
             _questionaryRepository = questionaryRepository;
+            _selectableAnswersListRepository = selectableAnswersListRepository;
         }
 
         [HttpGet]
@@ -98,6 +101,17 @@ namespace Admin.Panel.Web.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var model = await _questionaryRepository.GetAllForUserAsync(userId);
             return View("GetAll", model);
+        }
+        
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> AnswersGetAll(int id)
+        {
+            //TODO доставать каждому вопросу варианты ответов
+           // SelectableAnswers[] answrs = await _selectableAnswersListRepository.GetSelectableAnswersAsync(id);
+            QuestionaryDto model = new QuestionaryDto();
+            //model.QuestionaryQuestions[i].SelectableAnswers = answrs;
+            return PartialView("_SelectableAnswers", model);
         }
     }
 }

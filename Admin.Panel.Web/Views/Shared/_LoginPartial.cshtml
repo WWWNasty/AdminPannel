@@ -25,6 +25,11 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                      @if (User.Identity.IsAuthenticated)
                      {
+                        if (User.IsInRole("PropertiesObjectRead")|| User.IsInRole("UsersRead"))
+                        {
+                            <a asp-controller="Property" asp-action="Create" class="dropdown-item">Свойства типов объектов</a>
+                        }
+                         
                          if (User.IsInRole("TypesObjectRead")|| User.IsInRole("UsersRead"))
                         {
                             <a asp-controller="ObjectTypesProperties" asp-action="GetAll" class="dropdown-item">Типы объектов</a>
@@ -35,14 +40,12 @@
                              <a asp-controller="ObjectsPropValues" asp-action="GetAllForUser" class="dropdown-item">Обьекты</a>
                          }
                          
-                        if (User.IsInRole("PropertiesObjectRead")|| User.IsInRole("UsersRead"))
-                         {
-                             <a asp-controller="Property" asp-action="Create" class="dropdown-item">Свойства типа объекта</a>
-                         }
+                        
                          if (User.IsInRole("AnswerRead")|| User.IsInRole("UsersRead"))
                          {
                              <a asp-controller="Answers" asp-action="GetAll" class="dropdown-item">Ответы</a>
                          }
+                         
                          if (User.IsInRole("QuestionaryRead")|| User.IsInRole("UsersRead"))
                          {
                             <a asp-controller="Questionary" asp-action="GetAllForUser" class="dropdown-item">Анкеты</a>
@@ -60,9 +63,9 @@
                         if (User.IsInRole("SuperAdministrator"))
                         {
                             <div class="dropdown-divider"></div>
+                            <a asp-controller="Property" asp-action="Create" class="dropdown-item">Все свойства типов объектов</a>
                             <a asp-controller="ObjectTypesProperties" asp-action="GetAll" class="dropdown-item">Все типы объектов</a>
                             <a asp-controller="ObjectsPropValues" asp-action="GetAll" class="dropdown-item">Все обьекты</a>
-                            <a asp-controller="Property" asp-action="Create" class="dropdown-item">Все свойства типа объекта</a>
                             <a asp-controller="Company" asp-action="GetAll" class="dropdown-item">Все компании</a>
                             <a asp-controller="Answers" asp-action="GetAll" class="dropdown-item">Все ответы</a>
                             <a asp-controller="Questionary" asp-action="GetAll" class="dropdown-item">Все Анкеты</a>
