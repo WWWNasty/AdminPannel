@@ -52,5 +52,27 @@ namespace Admin.Panel.Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
+        public async Task<IActionResult> Update(int id)
+        {
+            SelectableAnswersLists model = await _selectableAnswersListRepository.GetAsync(id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> Update(SelectableAnswersLists model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _selectableAnswersListRepository.UpdateAsync(model);
+                return RedirectToAction("GetAll", "Answers");            
+            }
+            model = await _selectableAnswersListRepository.GetAsync(model.Id);
+            return View(model);
+        }
     }
 }

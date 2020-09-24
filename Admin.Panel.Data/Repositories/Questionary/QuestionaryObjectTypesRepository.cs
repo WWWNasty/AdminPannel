@@ -146,7 +146,6 @@ namespace Admin.Panel.Data.Repositories.Questionary
                         connection.Execute(
                             @"DELETE FROM ObjectPropertyToObjectTypes WHERE QuestionaryObjectTypeId = @QuestionaryObjectTypeId",
                             new {QuestionaryObjectTypeId = obj.Id});
-                        
 
                         await connection.ExecuteAsync(query, obj);
 

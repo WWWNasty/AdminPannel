@@ -13,7 +13,7 @@
         {
             if (User.IsInRole("SuperAdministrator") || User.IsInRole("AnswerEdit"))
             {
-                <a asp-controller="ObjectTypesProperties" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
+                <a asp-controller="Answers" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
             }
             else
             {

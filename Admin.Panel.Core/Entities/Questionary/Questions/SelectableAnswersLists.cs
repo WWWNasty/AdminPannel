@@ -9,6 +9,9 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 2)]
         [Display(Name = "Название")]
         public string Name { get; set; }
+
+        [Display(Name = "Список ответов активен")]
+        public bool IsUsed { get; set; }
         
         [Required(ErrorMessage = "Не указаны значения!")]
         [MaxLength(30)]

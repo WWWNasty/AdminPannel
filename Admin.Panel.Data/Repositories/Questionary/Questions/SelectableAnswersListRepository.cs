@@ -160,24 +160,49 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                          WHERE Id=@Id";
                     await connection.ExecuteAsync(query, answersLists);
                     
-                    //редактирование списка ответов
+                    //дропаем все ответы
+                    connection.Execute(
+                        @"DELETE FROM SelectableAnswers WHERE SelectableAnswersListId = @SelectableAnswersListId",
+                        new {SelectableAnswersListId = answersLists.Id});
+                    
+                    
+                    //добавляем ответы типу ответов
                     if (answersLists.SelectableAnswers != null)
                     {
-                        foreach (var answer in answersLists.SelectableAnswers)
+                        foreach (SelectableAnswers objectProperty in answersLists.SelectableAnswers)
                         {
                             connection.Execute(
-                                @"UPDATE SelectableAnswers SET AnswerText=@AnswerText,IsDefaultAnswer=@IsDefaultAnswer,IsInvolvesComment=@IsInvolvesComment,SequenceOrder=@SequenceOrder 
-                                        WHERE SelectableAnswersListId=@SelectableAnswersListId",
+                                @"INSERT INTO  SelectableAnswers(SelectableAnswersListId,AnswerText,IsDefaultAnswer,IsInvolvesComment,SequenceOrder)
+		                                                    VALUES (@SelectableAnswersListId,@AnswerText,@IsDefaultAnswer,@IsInvolvesComment,@SequenceOrder)",
                                 new SelectableAnswers
                                 {
                                     SelectableAnswersListId = answersLists.Id,
-                                    AnswerText = answer.AnswerText,
-                                    IsDefaultAnswer = answer.IsDefaultAnswer,
-                                    IsInvolvesComment = answer.IsInvolvesComment,
-                                    SequenceOrder = answer.SequenceOrder
+                                    AnswerText = objectProperty.AnswerText,
+                                    IsDefaultAnswer = objectProperty.IsDefaultAnswer,
+                                    IsInvolvesComment = objectProperty.IsInvolvesComment,
+                                    SequenceOrder = objectProperty.SequenceOrder
                                 });
                         }   
                     }
+                    
+                    // //редактирование списка ответов
+                    // if (answersLists.SelectableAnswers != null)
+                    // {
+                    //     foreach (var answer in answersLists.SelectableAnswers)
+                    //     {
+                    //         connection.Execute(
+                    //             @"UPDATE SelectableAnswers SET AnswerText=@AnswerText,IsDefaultAnswer=@IsDefaultAnswer,IsInvolvesComment=@IsInvolvesComment,SequenceOrder=@SequenceOrder 
+                    //                     WHERE SelectableAnswersListId=@SelectableAnswersListId",
+                    //             new SelectableAnswers
+                    //             {
+                    //                 SelectableAnswersListId = answersLists.Id,
+                    //                 AnswerText = answer.AnswerText,
+                    //                 IsDefaultAnswer = answer.IsDefaultAnswer,
+                    //                 IsInvolvesComment = answer.IsInvolvesComment,
+                    //                 SequenceOrder = answer.SequenceOrder
+                    //             });
+                    //     }   
+                    // }
                     return answersLists;
                 }
                 catch (Exception ex)
