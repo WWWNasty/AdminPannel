@@ -33,13 +33,14 @@
     </small>
     
     <div class="form-group row voting-options ">
-            <span style="display: none" id="voting-options-count">@Model.SelectableAnswers.Length</span>
+            <span style="display: none" id="voting-options-count">@Model.SelectableAnswers.Count</span>
         <div class="col-md-10 mt-3">
-            @foreach (int i in Range(0, Model.SelectableAnswers.Length))
+            @foreach (int i in Range(0, Model.SelectableAnswers.Count))
             {
                 <div class="row">
                     <div class="col form-group">
-                         <input type="hidden" name="Id" value="@Model.SelectableAnswers[i].Id"/>
+                        @* <input type="hidden" name="Id" value="@Model.SelectableAnswers[i].Id"/> *@
+                        <input type="hidden" asp-for="@Model.SelectableAnswers[i].Id" />
                         <label asp-for="SelectableAnswers[i].AnswerText"></label>
                         <input asp-for="SelectableAnswers[i].AnswerText" class="form-control"/>
                         <span asp-validation-for="SelectableAnswers[i].AnswerText" class="text-danger"></span>

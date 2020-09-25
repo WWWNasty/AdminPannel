@@ -24,7 +24,6 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         
         [Required(ErrorMessage = "Не указаны вопросы!")]
         public List<QuestionaryQuestions> QuestionaryQuestions { get; set; }
-        
 
         [Display(Name = "Компания")]
         public List<ApplicationCompany> ApplicationCompanies { get; set; }

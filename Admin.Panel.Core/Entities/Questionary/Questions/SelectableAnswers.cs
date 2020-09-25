@@ -7,7 +7,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         public int SelectableAnswersListId { get; set; }
         
         [Required(ErrorMessage = "Поле Текст ответа - обязательно!")]
-        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 4)]
+        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 1)]
         [Display(Name = "Текст ответа")]
         public string AnswerText { get; set; }
         

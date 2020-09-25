@@ -15,6 +15,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         
         [Required(ErrorMessage = "Не указаны значения!")]
         [MaxLength(30)]
-        public SelectableAnswers[] SelectableAnswers { get; set; } = new SelectableAnswers[1];
+        //public SelectableAnswers[] SelectableAnswers { get; set; } = new SelectableAnswers[1];
+        public List<SelectableAnswers> SelectableAnswers { get; set; } //= new List<SelectableAnswers>(1);
     }
 }

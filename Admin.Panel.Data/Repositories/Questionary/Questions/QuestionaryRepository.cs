@@ -164,28 +164,67 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                          WHERE Id=@Id";
 
                     await connection.ExecuteAsync(query, questionary);
+                    //
+                    // //дропаем все вопросики анкете нельзя дропать они связаны с записями в бд TODO переделать
+                    // connection.Execute(
+                    //     @"DELETE FROM QuestionaryQuestions WHERE QuestionaryId = @QuestionaryId",
+                    //     new {QuestionaryId = questionary.Id});
                     
-                    //дропаем все вопросики анкете нельзя дропать они связаны с записями в бд TODO переделать
-                    connection.Execute(
-                        @"DELETE FROM QuestionaryQuestions WHERE QuestionaryId = @QuestionaryId",
-                        new {QuestionaryId = questionary.Id});
 
-                    //добавляем вопросики анкете
-                    if (questionary.QuestionaryQuestions.Count != 0)
+                    List<QuestionaryQuestions> newQuestions = new List<QuestionaryQuestions>();
+                    List<QuestionaryQuestions> oldQuestions = new List<QuestionaryQuestions>();
+
+                    foreach (QuestionaryQuestions question in questionary.QuestionaryQuestions)
                     {
-                        foreach (var question  in questionary.QuestionaryQuestions)
+                        if (question.Id != 0)
+                        {
+                            oldQuestions.Add(question);
+                        }
+                        if (question.Id == 0)
+                        {
+                           newQuestions.Add(question);
+                        }
+                        
+                    }
+                    // редактируем существующие вопросики
+                    if (oldQuestions != null)
+                    {
+                        foreach (var question in oldQuestions)
                         {
                             connection.Execute(
-                                @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectebleAnswersListId,SequenceOrder,IsUsed)
-		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,1)",
-                                new QuestionaryQuestions()
+                                @"UPDATE QuestionaryQuestions SET QuestionaryId=@QuestionaryId,QuestionText=@QuestionText,QuestionaryInputFieldTypeId=@QuestionaryInputFieldTypeId,CanSkipQuestion=@CanSkipQuestion, 
+                                        SelectableAnswersListId=@SelectableAnswersListId,SequenceOrder=@SequenceOrder,IsUsed=@IsUsed
+                                        WHERE QuestionaryId=@QuestionaryId",
+                                new QuestionaryQuestions
                                 {
                                     QuestionaryId = questionary.Id,
                                     QuestionText = question.QuestionText,
                                     QuestionaryInputFieldTypeId = question.QuestionaryInputFieldTypeId,
                                     CanSkipQuestion = question.CanSkipQuestion,
                                     SelectableAnswersListId = question.SelectableAnswersListId,
-                                    SequenceOrder = question.SequenceOrder
+                                    SequenceOrder = question.SequenceOrder,
+                                    IsUsed = question.IsUsed
+                                });
+                        }   
+                    }
+                    
+                    //добавляем вопросики анкете
+                    if (newQuestions != null)
+                    {
+                        foreach (var question  in newQuestions)
+                        {
+                            connection.Execute(
+                                @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectableAnswersListId,SequenceOrder,IsUsed)
+		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,@IsUsed)",
+                                new QuestionaryQuestions
+                                {
+                                    QuestionaryId = questionary.Id,
+                                    QuestionText = question.QuestionText,
+                                    QuestionaryInputFieldTypeId = question.QuestionaryInputFieldTypeId,
+                                    CanSkipQuestion = question.CanSkipQuestion,
+                                    SelectableAnswersListId = question.SelectableAnswersListId,
+                                    SequenceOrder = question.SequenceOrder,
+                                    IsUsed = question.IsUsed
                                 });
                         }
                     }

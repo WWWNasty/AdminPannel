@@ -30,9 +30,9 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 {
                     var query = @"SELECT * FROM SelectableAnswersLists WHERE Id=@Id";
                     var obj = cn.Query<SelectableAnswersLists>(query, new { @Id = id }).SingleOrDefault();
-                    SelectableAnswers[] answerses = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers 
+                    List<SelectableAnswers> answerses = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers 
 				                                                                where SelectableAnswersListId = @SelectableAnswersListId", 
-                        new { @SelectableAnswersListId = id }).ToArray();
+                        new { @SelectableAnswersListId = id }).ToList();
 
                     obj.SelectableAnswers = answerses;
                     return obj;
@@ -116,7 +116,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                 SELECT QuestionaryObjectTypeId = @@IDENTITY";
                         var objTypeId = cn.ExecuteScalar<int>(query, selectableAnswersList, transaction);
 
-                        if (selectableAnswersList.SelectableAnswers.Length != 0)
+                        if (selectableAnswersList.SelectableAnswers.Count != 0)
                         {
                             foreach (var answer in selectableAnswersList.SelectableAnswers)
                             {
@@ -160,16 +160,49 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                          WHERE Id=@Id";
                     await connection.ExecuteAsync(query, answersLists);
                     
-                    //дропаем все ответы нельзя дропать свзаны с записями в бд TODO пеерделать
-                    connection.Execute(
-                        @"DELETE FROM SelectableAnswers WHERE SelectableAnswersListId = @SelectableAnswersListId",
-                        new {SelectableAnswersListId = answersLists.Id});
-                    
+                    // //дропаем все ответы нельзя дропать свзаны с записями в бд TODO пеерделать
+                    // connection.Execute(
+                    //     @"DELETE FROM SelectableAnswers WHERE SelectableAnswersListId = @SelectableAnswersListId",
+                    //     new {SelectableAnswersListId = answersLists.Id});
+ 
+                    List<SelectableAnswers> oldAnswers = new List<SelectableAnswers>();
+                    List<SelectableAnswers> newAnswers = new List<SelectableAnswers>();
+
+                    foreach (var answer in answersLists.SelectableAnswers)
+                    {
+                        if (answer.Id != 0)
+                        {
+                            oldAnswers.Add(answer);
+                        }
+
+                        if (answer.Id == 0)
+                        {
+                            newAnswers.Add(answer); 
+                        }
+                    }
+                    //редактирование списка ответов
+                    if (oldAnswers != null)
+                    {
+                        foreach (SelectableAnswers answer in oldAnswers)
+                        {
+                            connection.Execute(
+                                @"UPDATE SelectableAnswers SET AnswerText=@AnswerText,IsDefaultAnswer=@IsDefaultAnswer,IsInvolvesComment=@IsInvolvesComment,SequenceOrder=@SequenceOrder 
+                                        WHERE SelectableAnswersListId=@SelectableAnswersListId",
+                                new SelectableAnswers
+                                {
+                                    SelectableAnswersListId = answersLists.Id,
+                                    AnswerText = answer.AnswerText,
+                                    IsDefaultAnswer = answer.IsDefaultAnswer,
+                                    IsInvolvesComment = answer.IsInvolvesComment,
+                                    SequenceOrder = answer.SequenceOrder
+                                });
+                        }   
+                    }
                     
                     //добавляем ответы типу ответов
-                    if (answersLists.SelectableAnswers != null)
+                    if (newAnswers != null)
                     {
-                        foreach (SelectableAnswers objectProperty in answersLists.SelectableAnswers)
+                        foreach (SelectableAnswers objectProperty in newAnswers)
                         {
                             connection.Execute(
                                 @"INSERT INTO  SelectableAnswers(SelectableAnswersListId,AnswerText,IsDefaultAnswer,IsInvolvesComment,SequenceOrder)
@@ -184,25 +217,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                 });
                         }   
                     }
-                    
-                    // //редактирование списка ответов
-                    // if (answersLists.SelectableAnswers != null)
-                    // {
-                    //     foreach (var answer in answersLists.SelectableAnswers)
-                    //     {
-                    //         connection.Execute(
-                    //             @"UPDATE SelectableAnswers SET AnswerText=@AnswerText,IsDefaultAnswer=@IsDefaultAnswer,IsInvolvesComment=@IsInvolvesComment,SequenceOrder=@SequenceOrder 
-                    //                     WHERE SelectableAnswersListId=@SelectableAnswersListId",
-                    //             new SelectableAnswers
-                    //             {
-                    //                 SelectableAnswersListId = answersLists.Id,
-                    //                 AnswerText = answer.AnswerText,
-                    //                 IsDefaultAnswer = answer.IsDefaultAnswer,
-                    //                 IsInvolvesComment = answer.IsInvolvesComment,
-                    //                 SequenceOrder = answer.SequenceOrder
-                    //             });
-                    //     }   
-                    // }
+                   
                     return answersLists;
                 }
                 catch (Exception ex)
