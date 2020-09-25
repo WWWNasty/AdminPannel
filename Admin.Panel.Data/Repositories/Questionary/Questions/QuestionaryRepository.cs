@@ -158,7 +158,6 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                
                 try
                 {
                     var query = @"UPDATE Questionary SET Name=@Name,ObjectTypeId=@ObjectTypeId 
@@ -166,7 +165,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 
                     await connection.ExecuteAsync(query, questionary);
                     
-                    //дропаем все вопросики анкете
+                    //дропаем все вопросики анкете нельзя дропать они связаны с записями в бд TODO переделать
                     connection.Execute(
                         @"DELETE FROM QuestionaryQuestions WHERE QuestionaryId = @QuestionaryId",
                         new {QuestionaryId = questionary.Id});
@@ -177,7 +176,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                         foreach (var question  in questionary.QuestionaryQuestions)
                         {
                             connection.Execute(
-                                @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypes,CanSkipQuestion,SelectebleAnswersListId,SequenceOrder,IsUsed)
+                                @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectebleAnswersListId,SequenceOrder,IsUsed)
 		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,1)",
                                 new QuestionaryQuestions()
                                 {

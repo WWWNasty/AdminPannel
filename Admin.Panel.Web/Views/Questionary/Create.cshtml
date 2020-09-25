@@ -27,6 +27,7 @@
                 <div class="row">
                     <select class="selectpicker" asp-for="ObjectTypeId"
                             asp-items="Model.QuestionaryObjectTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
+                         <option selected="selected" disabled="disabled"></option>
                     </select>
                     <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
                 </div>
@@ -43,6 +44,7 @@
                 <div class="row">
                     <select class="selectpicker" asp-for="CompanyId"
                             asp-items="Model.ApplicationCompanies.Select(o => new SelectListItem(o.CompanyName, o.CompanyId.ToString()))">
+                         <option selected="selected" disabled="disabled"></option>
                     </select>
                     <span asp-validation-for="CompanyId" class="text-danger"></span>
                 </div>
@@ -95,6 +97,7 @@
                                 <div class="row">
                                     <select class="selectpicker" asp-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId"
                                             asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
+                                         <option selected="selected" disabled="disabled"></option>
                                     </select>
                                     <span asp-validation-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId" class="text-danger"></span>
                                 </div>
@@ -110,6 +113,7 @@
                                 <div class="row">
                                     <select class="selectpicker" asp-for="QuestionaryQuestions[i].SelectableAnswersListId"
                                             asp-items="Model.SelectableAnswersLists.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
+                                         <option selected="selected" disabled="disabled"></option>
                                     </select>
                                     <span asp-validation-for="QuestionaryQuestions[i].SelectableAnswersListId" class="text-danger"></span>
                                 </div>
@@ -161,8 +165,9 @@
                                     <label asp-for="QuestionaryInputFieldTypes"></label>
                                 </div>
                                 <div class="row">
-                                    <select class="selectpicker" asp-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId"
+                                    <select class="new-selectpicker" asp-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId"
                                             asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
+                                         <option selected="selected" disabled="disabled"></option>
                                     </select>
                                     <span asp-validation-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId" class="text-danger"></span>
                                 </div>
@@ -177,8 +182,9 @@
                                     <label asp-for="SelectableAnswersLists"></label>
                                 </div>
                                 <div class="row">
-                                    <select class="selectpicker" asp-for="QuestionaryQuestions[0].SelectableAnswersListId"
+                                    <select class="new-selectpicker" asp-for="QuestionaryQuestions[0].SelectableAnswersListId"
                                             asp-items="Model.SelectableAnswersLists.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
+                                         <option selected="selected" disabled="disabled"></option>
                                     </select>
                                     <span asp-validation-for="QuestionaryQuestions[0].SelectableAnswersListId" class="text-danger"></span>
                                 </div>
@@ -190,7 +196,6 @@
                     @*         <partial name="_SelectableAnswers"/> *@
                     @*    *@
                     @* </div> *@
-                    
                 </div>
             </div>
         </div>

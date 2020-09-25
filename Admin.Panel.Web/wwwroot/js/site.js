@@ -13,20 +13,26 @@ $('.addPick').click(function () {
     newNode.removeAttribute('id');
 
     const elements = $(newNode).find('input');
-
-    //input.id = input.id.replace('0', count.toString()); //name.replace('0', count.toString());
-    
+    // const selects = $(newNode).find('.select');
+    //
+    // //input.id = input.id.replace('0', count.toString()); //name.replace('0', count.toString());
+    //
+    // selects.each((_, select) => {
+    //     select.setAttribute('class', select.class.replace('select', 'selectpicker'));
+    // })
     elements.each((_, input) => {
         input.setAttribute('id', input.id.replace('0', count.toString()));
         input.setAttribute('name', input.name.replace('0', count.toString()));
     })
 
+    
     newNode.classList.add ('voting-option');
     
     if (count < 30) {
         count++;
 
         $('.add-option-container').before(newNode);
+        $('.new-selectpicker').selectpicker();
         
     } else {                                                      
         alert("Максимум 30 штук");

@@ -160,7 +160,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                          WHERE Id=@Id";
                     await connection.ExecuteAsync(query, answersLists);
                     
-                    //дропаем все ответы
+                    //дропаем все ответы нельзя дропать свзаны с записями в бд TODO пеерделать
                     connection.Execute(
                         @"DELETE FROM SelectableAnswers WHERE SelectableAnswersListId = @SelectableAnswersListId",
                         new {SelectableAnswersListId = answersLists.Id});

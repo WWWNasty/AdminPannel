@@ -13,9 +13,14 @@
     <h4 class="card-title">
         @if (User.Identity.IsAuthenticated)
         {
-            if (User.IsInRole("SuperAdministrator") || User.IsInRole("QuestionaryEdit"))
+            
+            if (User.IsInRole("QuestionaryEdit"))
             {
-                <a asp-controller="ObjectTypesProperties" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
+                <a asp-controller="Questionary" asp-action="UpdateForUser" class="text-success" asp-route-Id="@Model.Id">@Html.DisplayFor(modelItem => Model.Name)</a>
+            }
+            if (User.IsInRole("SuperAdministrator"))
+            {
+                <a asp-controller="Questionary" asp-action="Update" class="text-success" asp-route-Id="@Model.Id">@Html.DisplayFor(modelItem => Model.Name)</a>
             }
             else
             {
