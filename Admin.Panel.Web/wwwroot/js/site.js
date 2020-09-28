@@ -12,7 +12,7 @@ $('.addPick').click(function () {
     newNode.removeAttribute('style');
     newNode.removeAttribute('id');
 
-    const elements = $(newNode).find('input');
+    const elements = $(newNode).find('input, select');
     // const selects = $(newNode).find('.select');
     //
     // //input.id = input.id.replace('0', count.toString()); //name.replace('0', count.toString());
@@ -32,7 +32,7 @@ $('.addPick').click(function () {
         count++;
 
         $('.add-option-container').before(newNode);
-        $('.new-selectpicker').selectpicker();
+         $(newNode).find('.new-selectpicker').selectpicker();
         
     } else {                                                      
         alert("Максимум 30 штук");

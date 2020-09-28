@@ -187,16 +187,17 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                         
                     }
                     // редактируем существующие вопросики
-                    if (oldQuestions != null)
+                    if (oldQuestions.Count != 0)
                     {
                         foreach (var question in oldQuestions)
                         {
                             connection.Execute(
                                 @"UPDATE QuestionaryQuestions SET QuestionaryId=@QuestionaryId,QuestionText=@QuestionText,QuestionaryInputFieldTypeId=@QuestionaryInputFieldTypeId,CanSkipQuestion=@CanSkipQuestion, 
                                         SelectableAnswersListId=@SelectableAnswersListId,SequenceOrder=@SequenceOrder,IsUsed=@IsUsed
-                                        WHERE QuestionaryId=@QuestionaryId",
+                                        WHERE Id=@Id",
                                 new QuestionaryQuestions
                                 {
+                                    Id = question.Id,
                                     QuestionaryId = questionary.Id,
                                     QuestionText = question.QuestionText,
                                     QuestionaryInputFieldTypeId = question.QuestionaryInputFieldTypeId,
@@ -209,7 +210,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                     }
                     
                     //добавляем вопросики анкете
-                    if (newQuestions != null)
+                    if (newQuestions.Count != 0)
                     {
                         foreach (var question  in newQuestions)
                         {

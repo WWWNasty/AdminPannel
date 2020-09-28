@@ -181,15 +181,16 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                         }
                     }
                     //редактирование списка ответов
-                    if (oldAnswers != null)
+                    if (oldAnswers.Count != 0)
                     {
                         foreach (SelectableAnswers answer in oldAnswers)
                         {
                             connection.Execute(
                                 @"UPDATE SelectableAnswers SET AnswerText=@AnswerText,IsDefaultAnswer=@IsDefaultAnswer,IsInvolvesComment=@IsInvolvesComment,SequenceOrder=@SequenceOrder 
-                                        WHERE SelectableAnswersListId=@SelectableAnswersListId",
+                                        WHERE Id=@Id",
                                 new SelectableAnswers
                                 {
+                                    Id = answer.Id,
                                     SelectableAnswersListId = answersLists.Id,
                                     AnswerText = answer.AnswerText,
                                     IsDefaultAnswer = answer.IsDefaultAnswer,
@@ -200,7 +201,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                     }
                     
                     //добавляем ответы типу ответов
-                    if (newAnswers != null)
+                    if (newAnswers.Count != 0)
                     {
                         foreach (SelectableAnswers objectProperty in newAnswers)
                         {

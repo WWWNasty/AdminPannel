@@ -11,14 +11,14 @@
 <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true" >
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-10">
             <label asp-for="Name"></label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-10">
             <div class="col">
                 <div class="row">
@@ -27,7 +27,7 @@
                 <div class="row">
                     <select class="selectpicker" asp-for="ObjectTypeId"
                             asp-items="Model.QuestionaryObjectTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                         <option selected="selected" disabled="disabled"></option>
+                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
                     </select>
                     <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
                 </div>
@@ -35,7 +35,7 @@
         </div>
     </div>
     
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-10">
             <div class="col">
                 <div class="row">
@@ -44,7 +44,7 @@
                 <div class="row">
                     <select class="selectpicker" asp-for="CompanyId"
                             asp-items="Model.ApplicationCompanies.Select(o => new SelectListItem(o.CompanyName, o.CompanyId.ToString()))">
-                         <option selected="selected" disabled="disabled"></option>
+                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
                     </select>
                     <span asp-validation-for="CompanyId" class="text-danger"></span>
                 </div>
@@ -53,10 +53,10 @@
     </div>
     
     <small>
-        <h class="card-subtitle mb-2 text-muted">Вопросики: </h>
+        <h class="card-subtitle mb-2 text-muted">Вопросы: </h>
     </small>
     
-    <div class="form-group row voting-options ">
+    <div class="form-group row voting-options">
         <span style="display: none" id="voting-options-count">@Model.QuestionaryQuestions.Count</span>
         <div class="col-md-10 mt-3">
             @foreach (int i in Range(0, Model.QuestionaryQuestions.Count))
@@ -99,7 +99,7 @@
                                 <div class="row">
                                     <select class="selectpicker" asp-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId"
                                             asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                                         <option selected="selected" disabled="disabled"></option>
+                                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
                                     </select>
                                     <span asp-validation-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId" class="text-danger"></span>
                                 </div>
@@ -115,7 +115,7 @@
                                 <div class="row">
                                     <select class="selectpicker" asp-for="QuestionaryQuestions[i].SelectableAnswersListId"
                                             asp-items="Model.SelectableAnswersLists.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                                         <option selected="selected" disabled="disabled"></option>
+                                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
                                     </select>
                                     <span asp-validation-for="QuestionaryQuestions[i].SelectableAnswersListId" class="text-danger"></span>
                                 </div>
@@ -127,8 +127,8 @@
         </div>
         
         <div class="col-sm-7 mt-2 add-option-container">
-            <input type="button" value="Add option" class="addPick btn btn-outline-secondary"/>
-            <input type="button" value="Delete option" class="deletePick btn btn-outline-secondary"/>
+            <input type="button" value="Добавить вопрос" class="addPick btn btn-outline-secondary"/>
+            <input type="button" value="Удалить вопрос" class="deletePick btn btn-outline-secondary"/>
         </div>
 
         <div class="col-md-10 mt-3 voting-option-set" id="voting-option-template" style="display: none">
@@ -169,7 +169,7 @@
                                 <div class="row">
                                     <select class="new-selectpicker" asp-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId"
                                             asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                                         <option selected="selected" disabled="disabled"></option>
+                                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
                                     </select>
                                     <span asp-validation-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId" class="text-danger"></span>
                                 </div>
@@ -186,7 +186,7 @@
                                 <div class="row">
                                     <select class="new-selectpicker" asp-for="QuestionaryQuestions[0].SelectableAnswersListId"
                                             asp-items="Model.SelectableAnswersLists.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                                         <option selected="selected" disabled="disabled"></option>
+                                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
                                     </select>
                                     <span asp-validation-for="QuestionaryQuestions[0].SelectableAnswersListId" class="text-danger"></span>
                                 </div>
