@@ -32,7 +32,7 @@
         <h class="card-subtitle mb-2 text-muted">Варианты ответов</h>
     </small>
     
-    <div class="form-group row voting-options ">
+    <div class="form-group row voting-options">
             <span style="display: none" id="voting-options-count">@Model.SelectableAnswers.Count</span>
         <div class="col-md-10 mt-3">
             @if (Model.SelectableAnswers.Count != 0)
@@ -82,7 +82,6 @@
             <div class="voting-option-set mt-3" id="0">
                 <div class="row">
                     <div class="col form-check">
-                        @* <input type="hidden" name="Id" value="@Model.SelectableAnswers[0].Id"/> *@
                         <label asp-for="SelectableAnswers[0].AnswerText"></label>
                         <input asp-for="SelectableAnswers[0].AnswerText" class="form-control"/>
                         <span asp-validation-for="SelectableAnswers[0].AnswerText" class="text-danger"></span>
