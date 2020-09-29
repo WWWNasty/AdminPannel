@@ -11,6 +11,7 @@ $('.addPick').click(function () {
 
     newNode.removeAttribute('style');
     newNode.removeAttribute('id');
+    newNode.dataset.id = count.toString();
 
     const elements = $(newNode).find('input, select');
     // const selects = $(newNode).find('.select');
@@ -27,16 +28,18 @@ $('.addPick').click(function () {
 
     
     newNode.classList.add ('voting-option');
+    // newNode.classList.add ('js-remove');
     
-    if (count < 30) {
-        count++;
+    // if (count < 30) {
+    //     count++;
 
-        $('.add-option-container').before(newNode);
+        $('#simpleList').append(newNode);
+        count++;
          $(newNode).find('.new-selectpicker').selectpicker();
         
-    } else {                                                      
-        alert("Максимум 30 штук");
-    }                                                
+    // } else {                                                      
+    //     alert("Максимум 30 штук");
+    // }                                                
 })
 
 function addDeleteButtonHandler() {
