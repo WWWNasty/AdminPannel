@@ -3,7 +3,7 @@
 @using static System.Linq.Enumerable;
 
 @{
-    ViewData["Title"] = "Создание Анкеты";
+    ViewData["Title"] = "Редактирование Анкеты";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -19,6 +19,7 @@
             </button>
         </div>
     }
+
 <div asp-validation-summary="All" class="text-danger"></div>
 <div class="form-group row">
     <div class="col-md-10">
@@ -28,32 +29,26 @@
     </div>
 </div>
 
-<div class="form-group row">
-    <div class="col-md-10">
-        <label asp-for="IsUsed"></label>
-        <input asp-for="IsUsed" class="form-control" />
-    </div>
-</div>
-
-    <div class="form-group row">
-        <div class="col-md-10">
+<div class="row">
+    <div class="form-group">
             <div class="col">
-                <div class="row">
-                    <label asp-for="QuestionaryObjectTypes"></label>
-                </div>
-                <div class="row">
-                    <select class="selectpicker" asp-for="ObjectTypeId"
-                            asp-items="Model.QuestionaryObjectTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
-                    </select>
-                    <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
+                <div class="col">
+                    <div class="row">
+                        <label asp-for="QuestionaryObjectTypes"></label>
+                    </div>
+                    <div class="row">
+                        <select class="selectpicker" asp-for="ObjectTypeId"
+                                asp-items="Model.QuestionaryObjectTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
+                             <option selected="selected" disabled="disabled">Ничего не выбрано</option>
+                        </select>
+                        <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="form-group row">
-        <div class="col-md-10">
+        
+    <div class="form-group">
+        <div class="col">
             <div class="col">
                 <div class="row">
                     <label asp-for="ApplicationCompanies"></label>
@@ -61,94 +56,109 @@
                 <div class="row">
                     <select class="selectpicker" asp-for="CompanyId"
                             asp-items="Model.ApplicationCompanies.Select(o => new SelectListItem(o.CompanyName, o.CompanyId.ToString()))">
-                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
+                        <option selected="selected" disabled="disabled">Ничего не выбрано</option>
                     </select>
                     <span asp-validation-for="CompanyId" class="text-danger"></span>
                 </div>
             </div>
         </div>
     </div>
+    <div class="form-group">
+        <div class="col form-group form-check">
+            <input asp-for="IsUsed" type="checkbox" class="form-check-input" />
+            <label asp-for="IsUsed"  class="form-check-label align-bottom"></label>
+        </div>
+    </div>
+    
+</div>
+
     
     <small>
         <h class="card-subtitle mb-2 text-muted">Вопросы: </h>
     </small>
     
-    <div class="form-group row voting-options">
-        <span style="display: none" id="voting-options-count">@Model.QuestionaryQuestions.Count</span>
-        <div class="col-md-10 mt-3">
-            @foreach (int i in Range(0, Model.QuestionaryQuestions.Count))
-            {
-                <div class="row">
-                    <div class="col form-group">
-                        <input type="hidden" asp-for="@Model.QuestionaryQuestions[i].Id" />
-                        <label asp-for="QuestionaryQuestions[i].QuestionText"></label>
-                        <input asp-for="QuestionaryQuestions[i].QuestionText" class="form-control"/>
-                        <span asp-validation-for="QuestionaryQuestions[i].QuestionText" class="text-danger"></span>
-                    </div>
-                </div>
-                       
-                <div class="row">
-                    <div class="col form-group">
-                        <label asp-for="QuestionaryQuestions[i].SequenceOrder"></label>
-                        <input asp-for="QuestionaryQuestions[i].SequenceOrder" class="form-control"/>
-                        <span asp-validation-for="QuestionaryQuestions[i].SequenceOrder" class="text-danger"></span>
-                    </div>
+    @* <div class="form-group row voting-options"> *@
+    <span style="display: none" id="voting-options-count">@Model.QuestionaryQuestions.Count</span>
+<div class="form-group row voting-options " id="simpleList">
+    
+    <div class="col-md-10 mt-3 border border-primary voting-option-set" data-id="0">
 
-                    <div class="col form-group form-check">
-                        <input asp-for="QuestionaryQuestions[i].CanSkipQuestion" type="checkbox" class="form-check-input"/>
-                        <label asp-for="QuestionaryQuestions[i].CanSkipQuestion" class="form-check-label align-bottom"></label>
-                        <span asp-validation-for="QuestionaryQuestions[i].CanSkipQuestion" class="text-danger"></span>
-                    </div>
-                    
-                    <div class="col form-group form-check">
-                        <input asp-for="QuestionaryQuestions[i].IsUsed" type="checkbox" class="form-check-input"/>
-                        <label asp-for="QuestionaryQuestions[i].IsUsed" class="form-check-label align-bottom"></label>
-                        <span asp-validation-for="QuestionaryQuestions[i].IsUsed" class="text-danger"></span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            <div class="col">
-                                <div class="row">
-                                    <label asp-for="QuestionaryInputFieldTypes"></label>
-                                </div>
-                                <div class="row">
-                                    <select class="selectpicker" asp-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId"
-                                            asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
-                                    </select>
-                                    <span asp-validation-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId" class="text-danger"></span>
-                                </div>
+        @foreach (int i in Range(0, Model.QuestionaryQuestions.Count))
+        {
+            <span class="badge badge-success">@Model.QuestionaryQuestions[i].SequenceOrder</span>
+            <div class="row">
+                <div class="col form-group">
+                    <input type="hidden" asp-for="@Model.QuestionaryQuestions[i].Id"/>
+                    <label asp-for="QuestionaryQuestions[i].QuestionText"></label>
+                    <input asp-for="QuestionaryQuestions[i].QuestionText" class="form-control"/>
+                    <span asp-validation-for="QuestionaryQuestions[i].QuestionText" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="">
+                    <input type="hidden" asp-for="QuestionaryQuestions[i].SequenceOrder" class="sequence-order"/>
+                    @* <label asp-for="QuestionaryQuestions[i].SequenceOrder"></label> *@
+                    @* <input asp-for="QuestionaryQuestions[i].SequenceOrder" class="form-control"/> *@
+                    <span asp-validation-for="QuestionaryQuestions[i].SequenceOrder" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <div class="col">
+                            <div class="row">
+                                <label asp-for="QuestionaryInputFieldTypes"></label>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            <div class="col">
-                                <div class="row">
-                                    <label asp-for="SelectableAnswersLists"></label>
-                                </div>
-                                <div class="row">
-                                    <select class="selectpicker" asp-for="QuestionaryQuestions[i].SelectableAnswersListId"
-                                            asp-items="Model.SelectableAnswersLists.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
-                                    </select>
-                                    <span asp-validation-for="QuestionaryQuestions[i].SelectableAnswersListId" class="text-danger"></span>
-                                </div>
+                            <div class="row">
+                                <select class="selectpicker" asp-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId"
+                                        asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
+                                    <option selected="selected" disabled="disabled">Ничего не выбрано</option>
+                                </select>
+                                <span asp-validation-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                 </div>
-            }
-        </div>
-        
-        <div class="col-sm-7 mt-2 add-option-container">
-            <input type="button" value="Добавить вопрос" class="addPick btn btn-outline-secondary"/>
-            <input type="button" value="Удалить вопрос" class="deletePick btn btn-outline-secondary"/>
-        </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <div class="col">
+                            <div class="row">
+                                <label asp-for="SelectableAnswersLists"></label>
+                            </div>
+                            <div class="row">
+                                <select class="selectpicker" asp-for="QuestionaryQuestions[i].SelectableAnswersListId"
+                                        asp-items="Model.SelectableAnswersLists.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
+                                    <option selected="selected" disabled="disabled">Ничего не выбрано</option>
+                                </select>
+                                <span asp-validation-for="QuestionaryQuestions[i].SelectableAnswersListId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="col-md-10 mt-3 voting-option-set" id="voting-option-template" style="display: none">
-            <div class="voting-option-set mt-3" id="0">
+                <div class="col form-group form-check">
+                    <input asp-for="QuestionaryQuestions[i].CanSkipQuestion" type="checkbox" class="form-check-input"/>
+                    <label asp-for="QuestionaryQuestions[i].CanSkipQuestion" class="form-check-label align-bottom"></label>
+                    <span asp-validation-for="QuestionaryQuestions[i].CanSkipQuestion" class="text-danger"></span>
+                </div>
+
+                <div class="col form-group form-check">
+                    <input asp-for="QuestionaryQuestions[i].IsUsed" type="checkbox" class="form-check-input"/>
+                    <label asp-for="QuestionaryQuestions[i].IsUsed" class="form-check-label align-bottom"></label>
+                    <span asp-validation-for="QuestionaryQuestions[i].IsUsed" class="text-danger"></span>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+    
+    <div class="col-md-10 mt-3 voting-option-set border border-primary" id="voting-option-template" style="display: none" data-id="">
+        @* <span class="badge badge-success span-sequence">@Model.QuestionaryQuestions[0].SequenceOrder</span> *@
+         <input asp-for="QuestionaryQuestions[0].SequenceOrder" type="text" class="badge badge-success span-sequence"/>
+            @* <input type="button" value="Удалить" class="btn btn-outline-danger js-remove"/> *@
+            <a href="#" class="badge badge-pill badge-danger js-remove">&times;</a>
+            <div class="" id="0">
+            
                 <div class="row">
                     <div class="col form-group">
                         <label asp-for="QuestionaryQuestions[0].QuestionText"></label>
@@ -156,69 +166,80 @@
                         <span asp-validation-for="QuestionaryQuestions[0].QuestionText" class="text-danger"></span>
                     </div>
                 </div>
-                                      
+                                
                 <div class="row">
-                    <div class="col form-group">
-                        <label asp-for="QuestionaryQuestions[0].SequenceOrder"></label>
-                        <input asp-for="QuestionaryQuestions[0].SequenceOrder" class="form-control"/>
+
+                    <div class="">
+                        <input type="hidden" asp-for="QuestionaryQuestions[0].SequenceOrder" class="sequence-order"/>
+                        @* <label asp-for="QuestionaryQuestions[0].SequenceOrder"></label> *@
+                        @* <input asp-for="QuestionaryQuestions[0].SequenceOrder" class="form-control"/> *@
                         <span asp-validation-for="QuestionaryQuestions[0].SequenceOrder" class="text-danger"></span>
                     </div>
-               
-                    <div class="col form-group form-check">
-                        <input asp-for="QuestionaryQuestions[0].CanSkipQuestion" type="checkbox" class="form-check-input"/>
-                        <label asp-for="QuestionaryQuestions[0].CanSkipQuestion" class="form-check-label align-bottom"></label>
-                        <span asp-validation-for="QuestionaryQuestions[0].CanSkipQuestion" class="text-danger"></span>
-                    </div>
-                                   
-                    <div class="col form-group form-check">
-                        <input asp-for="QuestionaryQuestions[0].IsUsed" type="checkbox" class="form-check-input"/>
-                        <label asp-for="QuestionaryQuestions[0].IsUsed" class="form-check-label align-bottom"></label>
-                        <span asp-validation-for="QuestionaryQuestions[0].IsUsed" class="text-danger"></span>
-                    </div>
-                                   
+
                     <div class="form-group">
                         <div class="col-md-10">
                             <div class="col">
                                 <div class="row">
                                     <label asp-for="QuestionaryInputFieldTypes"></label>
                                 </div>
+
                                 <div class="row">
                                     <select class="new-selectpicker" asp-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId"
                                             asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
+                                        <option selected="selected" disabled="disabled">Ничего не выбрано</option>
                                     </select>
                                     <span asp-validation-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                                  
+
                     <div class="form-group">
                         <div class="col-md-10">
                             <div class="col">
                                 <div class="row">
                                     <label asp-for="SelectableAnswersLists"></label>
                                 </div>
+
                                 <div class="row">
                                     <select class="new-selectpicker" asp-for="QuestionaryQuestions[0].SelectableAnswersListId"
                                             asp-items="Model.SelectableAnswersLists.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                                         <option selected="selected" disabled="disabled">Ничего не выбрано</option>
+                                        <option selected="selected" disabled="disabled">Ничего не выбрано</option>
                                     </select>
                                     <span asp-validation-for="QuestionaryQuestions[0].SelectableAnswersListId" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    @* TODO доствание списка ответов <div id="option-container"> *@
-                    @*     *@
-                    @*         <partial name="_SelectableAnswers"/> *@
-                    @*    *@
-                    @* </div> *@
+
+                    <div class="col form-group form-check">
+                        <input asp-for="QuestionaryQuestions[0].CanSkipQuestion" type="checkbox" class="form-check-input"/>
+                        <label asp-for="QuestionaryQuestions[0].CanSkipQuestion" class="form-check-label align-bottom"></label>
+                        <span asp-validation-for="QuestionaryQuestions[0].CanSkipQuestion" class="text-danger"></span>
+                    </div>
+
+                    <div class="col form-group form-check">
+                        <input asp-for="QuestionaryQuestions[0].IsUsed" type="checkbox" class="form-check-input"/>
+                        <label asp-for="QuestionaryQuestions[0].IsUsed" class="form-check-label align-bottom"></label>
+                        <span asp-validation-for="QuestionaryQuestions[0].IsUsed" class="text-danger"></span>
+                    </div>
                 </div>
+                            
+                @* TODO доствание списка ответов опционально<div id="option-container"> *@
+                @*     *@
+                @*         <partial name="_SelectableAnswers"/> *@
+                @*    *@
+                @* </div> *@
+                            
             </div>
         </div>
-    </div>
-    <button type="submit" class="btn btn-default">Сохранить</button>
+        <div class="col-sm-7 mt-3 add-option-container">
+            <input type="button" value="Добавить вопрос" class="addPick btn btn-outline-secondary"/>
+            @* <input type="button" value="Добавить вопрос о" class="js-add btn-outline-secondary"/> *@
+            @* <input type="button" value="Удалить вопрос" class="deletePick btn btn-outline-secondary"/> *@
+        </div>
+
+    <button type="submit" class="btn btn-default mt-3">Сохранить</button>
 </form>
 @* TODO создание списка ответов *@
 @* <form  method="post" asp-antiforgery="true"> *@
@@ -228,4 +249,6 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+        <script src="~/js/query-sortable.js"></script>
 }
