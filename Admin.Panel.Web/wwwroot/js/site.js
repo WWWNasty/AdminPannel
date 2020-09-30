@@ -32,9 +32,23 @@ $('.addPick').click(function () {
     
     // if (count < 30) {
     //     count++;
-        //debugger;
-        $('#simpleList').append(newNode);
+        debugger;
+    
+    //откуда берем data-id
+    let votingOptionSets = $('#simpleList').find(".voting-option-set").toArray();
+    //куда записываем индекс
+    let inputs = $('#simpleList').find(".sequence-order").toArray();
+    let index = 0;
+    let i = 0;
+    for(index; index < votingOptionSets.length; index++){
+        inputs[index].value = index;
+        console.log(index, "сортировка записана в модель");
+        i = index+1;
+    }
+        let node = $('#simpleList').append(newNode);
+        $(node).find(".voting-option-set").value = i;
         count++;
+        
         $(newNode).find('.new-selectpicker').selectpicker();
     //     const el = document.getElementById("simpleList");
     //     new Sortable(el,{
