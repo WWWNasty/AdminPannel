@@ -2,8 +2,8 @@
  // import Sortable from "sortablejs";
  //import Sortable from "sortablejs";
 
-var el = document.getElementById("simpleList");
-Sortable.create(el, {
+ const el = document.getElementById("simpleList");
+ const sortable = Sortable.create(el, {
     animation: 150,
     filter: ".js-remove",
     onFilter: function (evt) {
@@ -15,6 +15,16 @@ Sortable.create(el, {
             item.parentNode.removeChild(item); // remove sortable item
         }
     },
+         //
+         // onClone: function (evt) {
+         //     var origEl = evt.item,
+         //         cloneEl = evt.target;
+         //
+         //     if (Sortable.utils.is(cloneEl, ".js-add")) {
+         //         // Click on add button
+         //         origEl.parentNode.cloneNode(origEl); // add sortable item
+         //     }
+         // },
     onEnd: () => {
         console.log('перемещен элемент');
     },
@@ -46,6 +56,20 @@ Sortable.create(el, {
         }
     }
 });
-
+console.log(sortable);
  //document.getElementById("sequence-order").value=selItem;
- 
+ // Sortable(el,{
+ //     onClone: function (evt) {
+ //         var origEl = evt.item,
+ //             cloneEl = evt.clone;
+ //
+ //         if (Sortable.utils.is(cloneEl, ".js-add")) {
+ //             // Click on add button
+ //             origEl.parentNode.append(origEl); // add sortable item
+ //         }
+ //     },
+ //     // onClone: () => {
+ //     //     debugger;
+ //     //     console.log('nastya')
+ //     // },
+ // });

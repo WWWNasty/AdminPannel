@@ -19,6 +19,9 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         [Required(ErrorMessage = "Поле Компания - обязательно!")]
         public int CompanyId { get; set; }
 
+        [Display(Name = "Активна анкета")]
+        public bool IsUsed { get; set; }
+
         [Display(Name = "Компания")]
         public string CompanyName { get; set; }
         
@@ -36,5 +39,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         
         [Display(Name = "Тип Объекта")]
         public List<QuestionaryObjectType> QuestionaryObjectTypes { get; set; }
+
+        public bool IfQuestionaryCurrentInCompany { get; set; }
     }
 }

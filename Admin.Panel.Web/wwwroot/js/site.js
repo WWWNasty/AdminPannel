@@ -32,10 +32,56 @@ $('.addPick').click(function () {
     
     // if (count < 30) {
     //     count++;
-
+        //debugger;
         $('#simpleList').append(newNode);
         count++;
-         $(newNode).find('.new-selectpicker').selectpicker();
+        $(newNode).find('.new-selectpicker').selectpicker();
+    //     const el = document.getElementById("simpleList");
+    //     new Sortable(el,{
+            // onClone: function (evt) {
+            //     var origEl = evt.item,
+            //         cloneEl = evt.clone;
+            //
+            //     if (Sortable.utils.is(cloneEl, ".js-add")) {
+            //         // Click on add button
+            //         origEl.parentNode.append(origEl); // add sortable item
+            //     }
+            // },
+            // onClone: () => {
+            //     debugger;
+            //     console.log('nastya')
+            // },
+            // onAdd: function (evt) {
+            //     var origEl = evt.item,
+            //         addEl = evt.add();
+            //
+            //             if (Sortable.utils.is(addEl, ".js-add")) {
+            //                 // Click on add button
+            //                 origEl.parentNode.append(origEl); // add sortable item
+            //             }
+            // }
+       // });
+        //var order = $('#simpleList').Sortable('toArray');
+        // debugger;
+        // //откуда берем data-id
+        // let votingOptionSets = $('#simpleList').find(".voting-option-set").toArray();
+        // //куда записываем индекс
+        // //let inputs = $('#sequence-order').toArray();
+        // let inputs = $('#simpleList').find(".sequence-order").toArray();
+        //
+        // let index = 0;
+        // for(index; index < order.length; index++){
+        //     let idVoting = votingOptionSets[index].dataset.id;
+        //     let idOrder = order[index];
+        //     if(idOrder === idVoting){
+        //         inputs[index].value = index;
+        //
+        //         console.log(index);
+        //     }else{
+        //         console.log('значения data-id не совпали');
+        //     }
+        // }
+         
         
     // } else {                                                      
     //     alert("Максимум 30 штук");

@@ -40,6 +40,13 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
+                if (current == true)
+                {
+                    model = await _questionaryService.GetAllForQuestionaryCreate();
+                    model.IfQuestionaryCurrentInCompany = true;
+                    return View(model);
+                }
                 await _questionaryRepository.CreateAsync(model);
                 return RedirectToAction("GetAll", "Questionary");
             }
@@ -70,6 +77,16 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                
+                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
+                if (current == true)
+                {
+                    var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    model = await _questionaryService.GetAllForQuestionaryForUserCreate(user);
+                    model.IfQuestionaryCurrentInCompany = true;
+                    return View("Create", model);
+                }
+                
                 await _questionaryRepository.CreateAsync(model);
                 return RedirectToAction("GetAllForUser", "Questionary");
             }
@@ -118,6 +135,13 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
+                if (current == true)
+                {
+                    model = await _questionaryService.GetAllForQuestionaryUpdate(model.Id);
+                    model.IfQuestionaryCurrentInCompany = true;
+                    return View("Update", model);
+                }
                 await _questionaryRepository.UpdateAsync(model);
                 return RedirectToAction("GetAll", "Questionary");
             }
@@ -133,6 +157,14 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
+                if (current == true)
+                {
+                    var user = User.FindFirstValue(ClaimTypes.NameIdentifier); 
+                    model = await _questionaryService.GetAllForQuestionaryForUserUpdate(user, model.Id);
+                    model.IfQuestionaryCurrentInCompany = true;
+                    return View("Create", model);
+                }
                 await _questionaryRepository.UpdateAsync(model);
                 return RedirectToAction("GetAllForUser", "Questionary");
             }

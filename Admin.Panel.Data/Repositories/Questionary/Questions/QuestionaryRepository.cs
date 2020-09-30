@@ -115,8 +115,8 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                     try
                     {
                         var query =
-                            @"INSERT INTO Questionary(Name, ObjectTypeId, CompanyId) 
-                                VALUES(@Name,@ObjectTypeId,@CompanyId);
+                            @"INSERT INTO Questionary(Name, ObjectTypeId, CompanyId, IsUsed) 
+                                VALUES(@Name,@ObjectTypeId,@CompanyId,1);
                                 SELECT QuestionaryId = @@IDENTITY";
                         var objTypeId = cn.ExecuteScalar<int>(query, selectableAnswersList, transaction);
 
@@ -160,7 +160,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 await connection.OpenAsync();
                 try
                 {
-                    var query = @"UPDATE Questionary SET Name=@Name,ObjectTypeId=@ObjectTypeId 
+                    var query = @"UPDATE Questionary SET Name=@Name,ObjectTypeId=@ObjectTypeId,IsUsed=@Isused 
                          WHERE Id=@Id";
 
                     await connection.ExecuteAsync(query, questionary);
@@ -230,6 +230,30 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                         }
                     }
                     return questionary;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
+        public async Task<bool> IfQuestionaryCurrentInCompanyAsync(int companyId,int typeObjId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                try
+                {
+                    List<QuestionaryDto> questionary =  connection.Query<QuestionaryDto>(@"SELECT * FROM Questionary q WHERE q.ObjectTypeId = @ObjecttypeId AND q.CompanyId = @CompanyId AND q.IsUsed = 1", 
+                        new {@ObjecttypeId = typeObjId, @CompanyId = companyId}).ToList();
+                    if (questionary.Count != 0)
+                    {
+                        return true;
+                    }
+                    return false; 
+                    
                 }
                 catch (Exception ex)
                 {
