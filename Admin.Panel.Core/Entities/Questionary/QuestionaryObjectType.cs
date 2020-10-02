@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Admin.Panel.Core.Entities.Questionary
 {
+    [OptionsValidationAttribute]
     public class QuestionaryObjectType: BaseEntity
     {
         [Required(ErrorMessage = "Поле Название - обязательно!")]
@@ -13,7 +14,7 @@ namespace Admin.Panel.Core.Entities.Questionary
         public string Name { get; set; }
         
         [Display(Name = "Свойства")]
-        [Required(ErrorMessage = "Поле Свойства - обязательно!")]
+        //[Required(ErrorMessage = "Поле Свойства - обязательно!")]
         public List<ObjectProperty> SelectedObjectProperties { get; set; }
         
         [Display(Name = "Создать новое свойство")]
@@ -28,5 +29,18 @@ namespace Admin.Panel.Core.Entities.Questionary
         [Display(Name = "Свойства")]
         public List<ObjectProperty> ObjectProperties { get; set; } = new List<ObjectProperty>();
 
+        public class OptionsValidationAttribute : ValidationAttribute
+        {
+            public override bool IsValid(object value)
+            {
+                QuestionaryObjectType opt = value as QuestionaryObjectType;
+                if (opt != null && opt.SelectedPropertiesId == null && opt.NewSelectedObjectProperties == null)
+                {
+                    this.ErrorMessage = "Не указаны свойства!";
+                    return false;
+                }
+                return true;
+            }
+        }
     }
 }

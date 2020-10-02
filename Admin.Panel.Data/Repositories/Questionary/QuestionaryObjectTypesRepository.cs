@@ -100,7 +100,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 SELECT QuestionaryObjectTypeId = @@IDENTITY";
                         var objTypeId = cn.ExecuteScalar<int>(query, obj, transaction);
 
-                        if (obj.SelectedPropertiesId.Count != 0)
+                        if (obj.SelectedPropertiesId != null)
                         {
                             foreach (int objectProperty in obj.SelectedPropertiesId)
                             {
@@ -115,7 +115,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                             }
                         }
 
-                        if (obj.NewSelectedObjectProperties.Count != 0)
+                        if (obj.NewSelectedObjectProperties != null)
                         {
                             foreach (ObjectProperty objectProperty in obj.NewSelectedObjectProperties)
                             {
