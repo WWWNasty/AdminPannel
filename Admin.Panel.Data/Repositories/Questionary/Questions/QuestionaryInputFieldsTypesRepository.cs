@@ -38,5 +38,10 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 }
             }
         }
+
+        public Task<List<QuestionaryInputFieldTypes>> GetAllCurrent()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

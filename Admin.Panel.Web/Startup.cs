@@ -49,6 +49,7 @@ namespace Admin.Panel.Web
             services.AddScoped<IQuestionaryService, QuestionaryService>();
             services.AddScoped<IQuestionaryRepository, QuestionaryRepository>();
             services.AddScoped<ISelectableAnswersListRepository, SelectableAnswersListRepository>();
+            services.AddScoped<IAnswersService,AnswersService>();
             services.AddScoped<IQuestionaryInputFieldTypesRepository, QuestionaryInputFieldsTypesRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();

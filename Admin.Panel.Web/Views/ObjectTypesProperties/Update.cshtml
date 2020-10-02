@@ -32,7 +32,8 @@
                 </div>
                 <div class="row">
                     <select class="selectpicker" asp-for="SelectedPropertiesId"
-                            asp-items="Model.ObjectProperties.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.SelectedObjectProperties.Select(selectedProperty => selectedProperty.Id).Contains(property.Id)))"
+                            asp-items="Model.ObjectProperties.Select(property => new SelectListItem(property.Name, property.Id.ToString(), 
+                            Model.SelectedObjectProperties.Select(selectedProperty => selectedProperty.Id).Contains(property.Id)))"
                             multiple>
                     </select>
                     <span asp-validation-for="SelectedPropertiesId" class="text-danger"></span>

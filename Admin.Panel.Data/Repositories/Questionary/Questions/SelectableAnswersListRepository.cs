@@ -30,11 +30,21 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 {
                     var query = @"SELECT * FROM SelectableAnswersLists WHERE Id=@Id";
                     var obj = cn.Query<SelectableAnswersLists>(query, new { @Id = id }).SingleOrDefault();
+                        //получение вариантов ответов
                     List<SelectableAnswers> answerses = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers 
 				                                                                where SelectableAnswersListId = @SelectableAnswersListId", 
                         new { @SelectableAnswersListId = id }).ToList();
 
                     obj.SelectableAnswers = answerses;
+                    
+                    //получение допустимых контроллов 
+                    List<QuestionaryInputFieldTypes> inputs = cn.Query<QuestionaryInputFieldTypes>(@"SELECT * FROM QuestionaryInputFieldTypes q
+                                                                                INNER JOIN  AnswersListInputType qi ON qi.QuestionaryInputFieldTypeId = q.Id
+				                                                                where SelectableAnswersListId = @SelectableAnswersListId", 
+                        new { @SelectableAnswersListId = id }).ToList();
+
+                    obj.SelectedQuestionaryInputFieldTypeses = inputs;
+                    
                     return obj;
                 }
                 catch (Exception ex)
@@ -118,12 +128,13 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 
                         if (selectableAnswersList.SelectableAnswers.Count != 0)
                         {
+                            // добавление вариантов ответа
                             foreach (var answer in selectableAnswersList.SelectableAnswers)
                             {
                                 cn.Execute(
                                     @"INSERT INTO  SelectableAnswers(SelectableAnswersListId,AnswerText,IsDefaultAnswer,IsInvolvesComment,SequenceOrder)
 		                                                VALUES (@SelectableAnswersListId,@AnswerText,@IsDefaultAnswer,@IsInvolvesComment,@SequenceOrder)",
-                                    new SelectableAnswers()
+                                    new SelectableAnswers
                                     {
                                         SelectableAnswersListId = objTypeId,
                                         AnswerText = answer.AnswerText,
@@ -132,6 +143,20 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                         SequenceOrder = answer.SequenceOrder
                                     }, transaction);
                             }
+                        }
+                        
+                        //добавлние допустимых контролов 
+                        
+                        foreach (var controlId in selectableAnswersList.InputFieldTypesesId)
+                        {
+                            cn.Execute(
+                                @"INSERT INTO  AnswersListInputType(SelectableAnswersListId,QuestionaryInputFieldTypeId)
+		                                                VALUES (@SelectableAnswersListId,@QuestionaryInputFieldTypeId)",
+                                new AnswersListInputType
+                                {
+                                 SelectableAnswersListId = selectableAnswersList.Id,
+                                 QuestionaryInputFieldTypeId = controlId
+                                }, transaction);
                         }
 
                         var result = cn.Query<SelectableAnswersLists>(@"SELECT * FROM SelectableAnswersLists WHERE Id=@Id", new { @Id = objTypeId }, transaction).SingleOrDefault();
@@ -153,77 +178,100 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                
-                try
+                using (var transaction = connection.BeginTransaction())
                 {
-                    var query = @"UPDATE SelectableAnswersLists SET Name=@Name,IsUsed=@IsUsed 
+                    try
+                    {
+                        var query = @"UPDATE SelectableAnswersLists SET Name=@Name,IsUsed=@IsUsed 
                          WHERE Id=@Id";
-                    await connection.ExecuteAsync(query, answersLists);
-                    
-                    // //дропаем все ответы нельзя дропать свзаны с записями в бд TODO пеерделать
-                    // connection.Execute(
-                    //     @"DELETE FROM SelectableAnswers WHERE SelectableAnswersListId = @SelectableAnswersListId",
-                    //     new {SelectableAnswersListId = answersLists.Id});
- 
-                    List<SelectableAnswers> oldAnswers = new List<SelectableAnswers>();
-                    List<SelectableAnswers> newAnswers = new List<SelectableAnswers>();
+                        await connection.ExecuteAsync(query, answersLists, transaction);
 
-                    foreach (var answer in answersLists.SelectableAnswers)
-                    {
-                        if (answer.Id != 0)
+                        //редактирование списка контроллов TODO 
+
+                        //дропаем контроллы
+
+                        connection.Execute(
+                            @"DELETE FROM AnswersListInputType WHERE SelectableAnswersListId = @SelectableAnswersListId",
+                            new {SelectableAnswersListId = answersLists.Id}, transaction);
+
+                        //добавляем контроллы
+                        if (answersLists.InputFieldTypesesId != null)
                         {
-                            oldAnswers.Add(answer);
+                            foreach (var inputId in answersLists.InputFieldTypesesId)
+                            {
+                                connection.Execute(
+                                    @"INSERT INTO  AnswersListInputType(SelectableAnswersListId,QuestionaryInputFieldTypeId)
+                                          		                                                VALUES (@SelectableAnswersListId,@QuestionaryInputFieldTypeId)",
+                                    new AnswersListInputType
+                                    {
+                                        SelectableAnswersListId = inputId,
+                                        QuestionaryInputFieldTypeId = answersLists.Id
+                                    }, transaction);
+                            }
                         }
 
-                        if (answer.Id == 0)
+                        List<SelectableAnswers> oldAnswers = new List<SelectableAnswers>();
+                        List<SelectableAnswers> newAnswers = new List<SelectableAnswers>();
+
+                        foreach (var answer in answersLists.SelectableAnswers)
                         {
-                            newAnswers.Add(answer); 
+                            if (answer.Id != 0)
+                            {
+                                oldAnswers.Add(answer);
+                            }
+
+                            if (answer.Id == 0)
+                            {
+                                newAnswers.Add(answer);
+                            }
                         }
-                    }
-                    //редактирование списка ответов
-                    if (oldAnswers.Count != 0)
-                    {
-                        foreach (SelectableAnswers answer in oldAnswers)
+
+                        //редактирование списка ответов
+                        if (oldAnswers.Count != 0)
                         {
-                            connection.Execute(
-                                @"UPDATE SelectableAnswers SET AnswerText=@AnswerText,IsDefaultAnswer=@IsDefaultAnswer,IsInvolvesComment=@IsInvolvesComment,SequenceOrder=@SequenceOrder 
+                            foreach (SelectableAnswers answer in oldAnswers)
+                            {
+                                connection.Execute(
+                                    @"UPDATE SelectableAnswers SET AnswerText=@AnswerText,IsDefaultAnswer=@IsDefaultAnswer,IsInvolvesComment=@IsInvolvesComment,SequenceOrder=@SequenceOrder 
                                         WHERE Id=@Id",
-                                new SelectableAnswers
-                                {
-                                    Id = answer.Id,
-                                    SelectableAnswersListId = answersLists.Id,
-                                    AnswerText = answer.AnswerText,
-                                    IsDefaultAnswer = answer.IsDefaultAnswer,
-                                    IsInvolvesComment = answer.IsInvolvesComment,
-                                    SequenceOrder = answer.SequenceOrder
-                                });
-                        }   
-                    }
-                    
-                    //добавляем ответы типу ответов
-                    if (newAnswers.Count != 0)
-                    {
-                        foreach (SelectableAnswers objectProperty in newAnswers)
+                                    new SelectableAnswers
+                                    {
+                                        Id = answer.Id,
+                                        SelectableAnswersListId = answersLists.Id,
+                                        AnswerText = answer.AnswerText,
+                                        IsDefaultAnswer = answer.IsDefaultAnswer,
+                                        IsInvolvesComment = answer.IsInvolvesComment,
+                                        SequenceOrder = answer.SequenceOrder
+                                    }, transaction);
+                            }
+                        }
+
+                        //добавляем ответы типу ответов
+                        if (newAnswers.Count != 0)
                         {
-                            connection.Execute(
-                                @"INSERT INTO  SelectableAnswers(SelectableAnswersListId,AnswerText,IsDefaultAnswer,IsInvolvesComment,SequenceOrder)
+                            foreach (SelectableAnswers objectProperty in newAnswers)
+                            {
+                                connection.Execute(
+                                    @"INSERT INTO  SelectableAnswers(SelectableAnswersListId,AnswerText,IsDefaultAnswer,IsInvolvesComment,SequenceOrder)
 		                                                    VALUES (@SelectableAnswersListId,@AnswerText,@IsDefaultAnswer,@IsInvolvesComment,@SequenceOrder)",
-                                new SelectableAnswers
-                                {
-                                    SelectableAnswersListId = answersLists.Id,
-                                    AnswerText = objectProperty.AnswerText,
-                                    IsDefaultAnswer = objectProperty.IsDefaultAnswer,
-                                    IsInvolvesComment = objectProperty.IsInvolvesComment,
-                                    SequenceOrder = objectProperty.SequenceOrder
-                                });
-                        }   
+                                    new SelectableAnswers
+                                    {
+                                        SelectableAnswersListId = answersLists.Id,
+                                        AnswerText = objectProperty.AnswerText,
+                                        IsDefaultAnswer = objectProperty.IsDefaultAnswer,
+                                        IsInvolvesComment = objectProperty.IsInvolvesComment,
+                                        SequenceOrder = objectProperty.SequenceOrder
+                                    }, transaction);
+                            }
+                        }
+                        transaction.Commit();
+
+                        return answersLists;
                     }
-                   
-                    return answersLists;
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                    }
                 }
             }
         }

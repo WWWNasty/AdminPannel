@@ -7,5 +7,7 @@ namespace Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfac
     public interface IQuestionaryInputFieldTypesRepository
     {
         public Task<List<QuestionaryInputFieldTypes>> GetAll();
+        
+        public Task<List<QuestionaryInputFieldTypes>> GetAllCurrent();
     }
 }

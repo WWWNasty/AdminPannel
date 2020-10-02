@@ -27,7 +27,23 @@
             <span asp-validation-for="IsUsed" class="text-danger"></span>
         </div>
     </div>
-    
+    <div class="form-group">
+        <div class="col-md-10">
+            <div class="col">
+                <div class="row">
+                    <label asp-for="QuestionaryInputFieldTypeses">Выбрать свойства</label>
+                </div>
+                <div class="row">
+                    <select class="selectpicker" asp-for="InputFieldTypesesId"
+                            asp-items="Model.QuestionaryInputFieldTypeses.Select(property => new SelectListItem(property.Name, property.Id.ToString(), 
+                            Model.SelectedQuestionaryInputFieldTypeses.Select(selectedProperty => selectedProperty.Id).Contains(property.Id)))"
+                            multiple>
+                    </select>
+                    <span asp-validation-for="InputFieldTypesesId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
     <small>
         <h class="card-subtitle mb-2 text-muted">Варианты ответов</h>
     </small>

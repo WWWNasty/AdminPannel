@@ -15,7 +15,14 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         
         [Required(ErrorMessage = "Не указаны значения!")]
         [MaxLength(30)]
-        //public SelectableAnswers[] SelectableAnswers { get; set; } = new SelectableAnswers[1];
-        public List<SelectableAnswers> SelectableAnswers { get; set; } //= new List<SelectableAnswers>(1);
+        public List<SelectableAnswers> SelectableAnswers { get; set; }
+
+        [Required(ErrorMessage = "Выбрать допустимые контроллы!")]
+        public List<int> InputFieldTypesesId { get; set; }
+
+        [Display(Name = "Список вариантов контроллов для ввода ответа")]
+        public List<QuestionaryInputFieldTypes> QuestionaryInputFieldTypeses { get; set; }
+        
+        public List<QuestionaryInputFieldTypes> SelectedQuestionaryInputFieldTypeses { get; set; }
     }
 }
