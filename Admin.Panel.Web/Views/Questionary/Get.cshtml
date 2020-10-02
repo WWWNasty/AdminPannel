@@ -32,38 +32,43 @@
         <h7 class="card-title">Тип объекта: @Model.ObjectTypeName</h7>
     </div>
     
+    <div> 
+        <h6>
+            Вопросы:
+        </h6>
+    </div>
     
     @foreach (var question in Model.QuestionaryQuestions)
     {
         <div class="card-body">
-            <h5 class="card-title">Вопрос: @question.QuestionText</h5>
+            <h5 class="card-title">@question.QuestionText</h5>
         </div>
-        <div class="card-body">
-            <h7 class="card-title">Тип ввода: @question.QuestionaryInputFieldTypeName</h7>
-        </div>
-        <div class="card-body">
-            <h7 class="card-title">Можно пропустить вопрос: @question.CanSkipQuestion</h7>
-        </div>
-        <div class="card-body">
-            <h7 class="card-title">Используется: @question.IsUsed</h7>
-        </div>
-        <div class="card-body">
-            <h7 class="card-title">Сортировка: @question.SequenceOrder</h7>
-        </div>
-        <div class="card-body">
-            <h7 class="card-title">Тип ответов: @question.SelectableAnswersListName</h7>
-        </div>
-        <div>
-            <h6>
-                Варианты ответов:
-            </h6>
-        </div>
-        foreach (SelectableAnswers answere in question.SelectableAnswers)
-        {
-            <div class="card-body">
-                <h7 class="card-title">Текст ответа: @answere.AnswerText, Ответ поумолчанию: @answere.IsDefaultAnswer, Комментарий оязательный: @answere.IsInvolvesComment, Сортировка: @answere.SequenceOrder</h7>
-            </div>
-        }
+@*         <div class="card-body"> *@
+@*             <h7 class="card-title">Тип ввода: @question.QuestionaryInputFieldTypeName</h7> *@
+@*         </div> *@
+@*         <div class="card-body"> *@
+@*             <h7 class="card-title">Можно пропустить вопрос: @question.CanSkipQuestion</h7> *@
+@*         </div> *@
+@*         <div class="card-body"> *@
+@*             <h7 class="card-title">Используется: @question.IsUsed</h7> *@
+@*         </div> *@
+@*         <div class="card-body"> *@
+@*             <h7 class="card-title">Сортировка: @question.SequenceOrder</h7> *@
+@*         </div> *@
+@*         <div class="card-body"> *@
+@*             <h7 class="card-title">Тип ответов: @question.SelectableAnswersListName</h7> *@
+@*         </div> *@
+@*         <div> *@
+@*             <h6> *@
+@*                 Варианты ответов: *@
+@*             </h6> *@
+@*         </div> *@
+@*         foreach (SelectableAnswers answere in question.SelectableAnswers) *@
+@*         { *@
+@*             <div class="card-body"> *@
+@*                 <h7 class="card-title">Текст ответа: @answere.AnswerText, Ответ поумолчанию: @answere.IsDefaultAnswer, Комментарий оязательный: @answere.IsInvolvesComment, Сортировка: @answere.SequenceOrder</h7> *@
+@*             </div> *@
+@*         } *@
     }
 </div>
 

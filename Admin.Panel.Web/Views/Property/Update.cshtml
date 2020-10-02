@@ -23,10 +23,10 @@
                      <span asp-validation-for="NameInReport" class="text-danger"></span>
                  </div>
              </div>
-             <div class="form-group">
+             <div class="form-group form-check">
                  <div class="col-md-10">
-                     <label asp-for="IsUsedInReport"></label>
-                     <input asp-for="IsUsedInReport" class="form-control"/>
+                     <input asp-for="IsUsedInReport" type="checkbox" class="form-check-input"/>
+                     <label asp-for="IsUsedInReport" class="form-check-label align-bottom"></label>
                      <span asp-validation-for="IsUsedInReport" class="text-danger"></span>
                  </div>
              </div>
@@ -37,11 +37,11 @@
                      <span asp-validation-for="ReportCellStyle" class="text-danger"></span>
                  </div>
              </div>
-              <div class="form-group">
+              <div class="form-group form-check">
                   <div class="col-md-10">
-                      <label asp-for="IsUsed"></label>
-                      <input asp-for="IsUsed" class="form-control"/>
-                      <span asp-validation-for="IsUsed" class="text-danger"></span>
+                       <input asp-for="IsUsed" type="checkbox" class="form-check-input"/>
+                       <label asp-for="IsUsed" class="form-check-label align-bottom"></label>
+                       <span asp-validation-for="IsUsed" class="text-danger"></span>
                   </div>
               </div>
              <button type="submit" class="btn btn-default">Сохранить</button>

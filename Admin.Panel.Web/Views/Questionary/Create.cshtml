@@ -74,11 +74,11 @@
     <span style="display: none" id="voting-options-count">1</span>
 <div class="form-group row voting-options " id="simpleList">
         
-    <div class="col-md-10 mt-3 border border-primary voting-option-set" data-id="0">
+    <div class="col-md-10 mt-3 border border-primary voting-option-set" data-id="0" data-toggle="tooltip" title="Нажмите и перетащите вопрос для изменения порядка вопросов в анкете.">
        
         @foreach (int i in Range(0, 1))
         { 
-            <span class="badge badge-success">1</span>
+@*             <span class="badge badge-success">1</span> *@
             <div class="row">
                 <div class="col form-group">
                     <label asp-for="QuestionaryQuestions[i].QuestionText"></label>
@@ -92,7 +92,7 @@
                     <input type="hidden" asp-for="QuestionaryQuestions[i].SequenceOrder" class="sequence-order" />
                     @* <label asp-for="QuestionaryQuestions[i].SequenceOrder"></label> *@
                     @* <input asp-for="QuestionaryQuestions[i].SequenceOrder" class="form-control"/> *@
-                    <span asp-validation-for="QuestionaryQuestions[i].SequenceOrder" class="text-danger"></span>
+                    @* <span asp-validation-for="QuestionaryQuestions[i].SequenceOrder" class="text-danger"></span> *@
                 </div>
 
                 <div class="form-group">
@@ -132,16 +132,15 @@
                     <label asp-for="QuestionaryQuestions[i].CanSkipQuestion" class="form-check-label align-bottom"></label>
                     <span asp-validation-for="QuestionaryQuestions[i].CanSkipQuestion" class="text-danger"></span>
                 </div>
-                
             </div>
         }
     </div>
 </div>
 
-<div class="col-md-10 mt-3 voting-option-set border border-primary" id="voting-option-template" style="display: none" data-id="">
-    <span class="badge badge-success">2</span>
+<div class="col-md-10 mt-3 voting-option-set border border-primary" id="voting-option-template" style="display: none" data-id="" data-toggle="tooltip" title="Нажмите и перетащите вопрос для изменения порядка вопросов в анкете.">
+    @* <span class="badge badge-success">2</span> *@
     @* <input type="button" value="Удалить" class="btn btn-outline-danger js-remove"/> *@
-    <a href="#" class="badge badge-pill badge-danger js-remove">&times;</a>
+    <a href="#" class="btn btn-outline-danger js-remove delete-custom mt-2">&times;</a>
     <div class="" id="0">
     
         <div class="row">
@@ -157,7 +156,7 @@
                 <input type="hidden" asp-for="QuestionaryQuestions[0].SequenceOrder" class="sequence-order" />
                 @* <label asp-for="QuestionaryQuestions[0].SequenceOrder"></label> *@
                 @* <input asp-for="QuestionaryQuestions[0].SequenceOrder" class="form-control"/> *@
-                <span asp-validation-for="QuestionaryQuestions[0].SequenceOrder" class="text-danger"></span>
+                @* <span asp-validation-for="QuestionaryQuestions[0].SequenceOrder" class="text-danger"></span> *@
             </div>
 
             <div class="form-group">
@@ -213,7 +212,6 @@
 </div>
 <div class="col-sm-7 mt-3 add-option-container">
     <input type="button" value="Добавить вопрос" class="addPick btn btn-outline-secondary"/>
-    @* <input type="button" value="Добавить вопрос о" class="js-add btn-outline-secondary"/> *@
     @* <input type="button" value="Удалить вопрос" class="deletePick btn btn-outline-secondary"/> *@
 </div>
 
@@ -235,4 +233,5 @@
     @* <script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script> *@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="~/js/query-sortable.js"></script>
+    <script src="~/js/QuestionaryQuestions.js"></script>
 }

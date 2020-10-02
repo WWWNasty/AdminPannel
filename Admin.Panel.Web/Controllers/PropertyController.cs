@@ -49,6 +49,7 @@ namespace Admin.Panel.Web.Controllers
                 await _objectPropertiesRepository.CreateAsync(model);
                 return RedirectToAction("Create", "Property");
             }
+            model.ObjectProperties = await _objectPropertiesRepository.GetAllAsync();
             return View("Properties", model);
         }
         

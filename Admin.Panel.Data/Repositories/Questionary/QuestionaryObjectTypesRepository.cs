@@ -25,7 +25,6 @@ namespace Admin.Panel.Data.Repositories.Questionary
             using (var cn = new SqlConnection(_connectionString))
             {
                 await cn.OpenAsync();
-
                 try
                 {
                     var query = @"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id";
@@ -38,8 +37,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
 			                                                                INNER JOIN ObjectPropertyToObjectTypes AS po ON po.ObjectPropertyId = p.Id
 				                                                                where 
 					                                                                po.QuestionaryObjectTypeId = @QuestionaryObjectTypeId", new { QuestionaryObjectTypeId = id }).ToList();
-
-
+                    
                     obj.SelectedObjectProperties = properties;
                     return obj;
                 }
@@ -117,6 +115,29 @@ namespace Admin.Panel.Data.Repositories.Questionary
                             }
                         }
 
+                        if (obj.NewSelectedObjectProperties.Count != 0)
+                        {
+                            foreach (ObjectProperty objectProperty in obj.NewSelectedObjectProperties)
+                            {
+                                //создание свойств
+                                var objectPropertyId = cn.ExecuteScalar<int>(
+                                    @"INSERT INTO ObjectProperties(Name,NameInReport,IsUsedInReport,ReportCellStyle,IsUsed) 
+                                            VALUES(@Name,@NameInReport,@IsUsedInReport,@ReportCellStyle,1;
+                                            SELECT QuestionaryObjectTypeId = @@IDENTITY",
+                                    objectProperty, transaction);
+                                
+                                // добавление свойств типу объекта
+                                cn.Execute(
+                                    @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
+		                                                VALUES (@QuestionaryObjectTypeId,@ObjectPropertyId)",
+                                    new ObjectPropertyToObjectTypes
+                                    {
+                                        QuestionaryObjectTypeId = objTypeId,
+                                        ObjectPropertyId = objectPropertyId,
+                                    }, transaction);
+                            }
+                        }
+
                         var result = cn.Query<QuestionaryObjectType>(@"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id", new { @Id = objTypeId }, transaction).SingleOrDefault();
 
                         transaction.Commit();
@@ -135,8 +156,10 @@ namespace Admin.Panel.Data.Repositories.Questionary
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
-                
+                await connection.OpenAsync();
+
+                using (var transaction = connection.BeginTransaction())
+                {
                     try
                     {
                         var query = @"UPDATE QuestionaryObjectTypes SET Name=@Name,IsUsed=@IsUsed 
@@ -162,14 +185,41 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                         QuestionaryObjectTypeId = obj.Id,
                                         ObjectPropertyId = Convert.ToInt32(objectProperty),
                                     });
-                            }   
+                            }
                         }
+
+                        if (obj.NewSelectedObjectProperties.Count != 0)
+                        {
+                            foreach (ObjectProperty objectProperty in obj.NewSelectedObjectProperties)
+                            {
+                                //создание свойств
+                                var objectPropertyId = connection.ExecuteScalar<int>(
+                                    @"INSERT INTO ObjectProperties(Name,NameInReport,IsUsedInReport,ReportCellStyle,IsUsed) 
+                                            VALUES(@Name,@NameInReport,@IsUsedInReport,@ReportCellStyle,1;
+                                            SELECT QuestionaryObjectTypeId = @@IDENTITY",
+                                    objectProperty, transaction);
+
+                                // добавление свойств типу объекта
+                                connection.Execute(
+                                    @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
+		                                                VALUES (@QuestionaryObjectTypeId,@ObjectPropertyId)",
+                                    new ObjectPropertyToObjectTypes
+                                    {
+                                        QuestionaryObjectTypeId = obj.Id,
+                                        ObjectPropertyId = objectPropertyId,
+                                    }, transaction);
+                            }
+                        }
+
+                        transaction.Commit();
+                        
                         return obj;
                     }
                     catch (Exception ex)
                     {
                         throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                     }
+                }
             }
         }
     }

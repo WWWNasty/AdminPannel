@@ -59,6 +59,7 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectTypesRepository.CreateAsync(model);
                 return RedirectToAction("GetAll", "ObjectTypesProperties");
             }
+            model = await _questionaryObjectTypesService.GetAllProperties();
             return View(model);
         }
 
@@ -81,6 +82,7 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectTypesRepository.UpdateAsync(model);
                 return RedirectToAction("GetAll", "ObjectTypesProperties");            
             }
+            model = await _questionaryObjectTypesService.GetObjectForUpdare(model.Id);
             return View(model);
         }
     }

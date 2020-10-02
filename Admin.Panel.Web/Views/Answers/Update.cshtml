@@ -32,53 +32,55 @@
         <h class="card-subtitle mb-2 text-muted">Варианты ответов</h>
     </small>
     
-    <div class="form-group row voting-options">
-            <span style="display: none" id="voting-options-count">@Model.SelectableAnswers.Count</span>
-        <div class="col-md-10 mt-3">
+    <div class="form-group row answers-options">
+            <span style="display: none" id="answer-options-count">@Model.SelectableAnswers.Count</span>
+       
             @if (Model.SelectableAnswers.Count != 0)
             {
                 foreach (int i in Range(0, Model.SelectableAnswers.Count))
                           {
-                              <div class="row">
-                                  <div class="col form-group">
-                                      @* <input type="hidden" name="Id" value="@Model.SelectableAnswers[i].Id"/> *@
-                                      <input type="hidden" asp-for="@Model.SelectableAnswers[i].Id"/>
-                                      <label asp-for="SelectableAnswers[i].AnswerText"></label>
-                                      <input asp-for="SelectableAnswers[i].AnswerText" class="form-control"/>
-                                      <span asp-validation-for="SelectableAnswers[i].AnswerText" class="text-danger"></span>
+                              <div class="col-md-10 mt-3 card">
+                                  <div class="voting-option-set mt-3">
+                                      <div class="row">
+                                          <div class="col form-group">
+                                              @* <input type="hidden" name="Id" value="@Model.SelectableAnswers[i].Id"/> *@
+                                              <input type="hidden" asp-for="@Model.SelectableAnswers[i].Id"/>
+                                              <label asp-for="SelectableAnswers[i].AnswerText"></label>
+                                              <input asp-for="SelectableAnswers[i].AnswerText" class="form-control"/>
+                                              <span asp-validation-for="SelectableAnswers[i].AnswerText" class="text-danger"></span>
+                                          </div>
+                                      </div>
+                                  
+                                      <div class="row">
+                                          <div class="col form-group">
+                                              <label asp-for="SelectableAnswers[i].SequenceOrder"></label>
+                                              <input asp-for="SelectableAnswers[i].SequenceOrder" class="form-control"/>
+                                              <span asp-validation-for="SelectableAnswers[i].SequenceOrder" class="text-danger"></span>
+                                          </div>
+                                      
+                                          <div class="col form-group form-check">
+                                              <input asp-for="SelectableAnswers[i].IsDefaultAnswer" type="checkbox" class="form-check-input"/>
+                                              <label asp-for="SelectableAnswers[i].IsDefaultAnswer" class="form-check-label align-bottom"></label>
+                                              <span asp-validation-for="SelectableAnswers[i].IsDefaultAnswer" class="text-danger"></span>
+                                          </div>
+                                      
+                                          <div class="col form-group form-check">
+                                              <input asp-for="SelectableAnswers[i].IsInvolvesComment" type="checkbox" class="form-check-input"/>
+                                              <label asp-for="SelectableAnswers[i].IsInvolvesComment" class="form-check-label align-bottom"></label>
+                                              <span asp-validation-for="SelectableAnswers[i].IsInvolvesComment" class="text-danger"></span>
+                                          </div>
+                                      </div>
                                   </div>
                               </div>
-              
-                              <div class="row">
-                                  <div class="col form-group">
-                                      <label asp-for="SelectableAnswers[i].SequenceOrder"></label>
-                                      <input asp-for="SelectableAnswers[i].SequenceOrder" class="form-control"/>
-                                      <span asp-validation-for="SelectableAnswers[i].SequenceOrder" class="text-danger"></span>
-                                  </div>
-              
-                                  <div class="col form-group form-check">
-                                      <input asp-for="SelectableAnswers[i].IsDefaultAnswer" type="checkbox" class="form-check-input"/>
-                                      <label asp-for="SelectableAnswers[i].IsDefaultAnswer" class="form-check-label align-bottom"></label>
-                                      <span asp-validation-for="SelectableAnswers[i].IsDefaultAnswer" class="text-danger"></span>
-                                  </div>
-              
-                                  <div class="col form-group form-check">
-                                      <input asp-for="SelectableAnswers[i].IsInvolvesComment" type="checkbox" class="form-check-input"/>
-                                      <label asp-for="SelectableAnswers[i].IsInvolvesComment" class="form-check-label align-bottom"></label>
-                                      <span asp-validation-for="SelectableAnswers[i].IsInvolvesComment" class="text-danger"></span>
-                                  </div>
-                              </div>
-                          }  
+                          }
             }
-          
-        </div>
-        
-        <div class="col-sm-7 mt-2 add-option-container">
-            <input type="button" value="Добавить ответ" class="addPick btn btn-outline-secondary"/>
-            <input type="button" value="Удалить ответ" class="deletePick btn btn-outline-secondary"/>
+
+            <div class="col-sm-7 mt-2 add-container">
+            <input type="button" value="Добавить ответ" class="add btn btn-outline-secondary"/>
+            <input type="button" value="Удалить ответ" class="delete btn btn-outline-secondary"/>
         </div>
 
-        <div class="col-md-10 mt-3 voting-option-set" id="voting-option-template" style="display: none">
+        <div class="col-md-10 mt-3 voting-option-set card" id="option-template" style="display: none">
             <div class="voting-option-set mt-3" id="0">
                 <div class="row">
                     <div class="col form-check">
@@ -115,4 +117,5 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/js/QuestionaryAnswers.js"></script>
 }

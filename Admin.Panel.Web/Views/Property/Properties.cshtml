@@ -11,13 +11,17 @@
      {
          <h2>@ViewBag.Title</h2>
          <hr />               
-         <form method="post" asp-antiforgery="true">
+         <form method="post" asp-antiforgery="true" class="needs-validation" novalidate>
              <div asp-validation-summary="All" class="text-danger"></div>
              <div class="form-group">
                  <div class="col-md-10">
                      <label asp-for="Name"></label>
-                     <input asp-for="Name" class="form-control"/>
-                     <span asp-validation-for="Name" class="text-danger"></span>
+                     <input asp-for="Name" class="form-control" required>
+                     <div class="invalid-feedback">
+                         Please provide a valid city.
+                     </div>
+                     
+                     @* <span asp-validation-for="Name" class="text-danger"></span> *@
                  </div>
              </div>
              <div class="form-group">
@@ -27,10 +31,10 @@
                      <span asp-validation-for="NameInReport" class="text-danger"></span>
                  </div>
              </div>
-             <div class="form-group">
+             <div class="form-group form-check">
                  <div class="col-md-10">
-                     <label asp-for="IsUsedInReport"></label>
-                     <input asp-for="IsUsedInReport" class="form-control"/>
+                     <input asp-for="IsUsedInReport" type="checkbox" class="form-check-input"/>
+                     <label asp-for="IsUsedInReport" class="form-check-label align-bottom"></label>
                      <span asp-validation-for="IsUsedInReport" class="text-danger"></span>
                  </div>
              </div>
@@ -43,6 +47,27 @@
              </div>
              <button type="submit" class="btn btn-default">Создать Свойство</button>
          </form>
+         
+         <script>
+         // Example starter JavaScript for disabling form submissions if there are invalid fields
+         (function() {
+           'use strict';
+           window.addEventListener('load', function() {
+             // Fetch all the forms we want to apply custom Bootstrap validation styles to
+             var forms = document.getElementsByClassName('needs-validation');
+             // Loop over them and prevent submission
+             var validation = Array.prototype.filter.call(forms, function(form) {
+               form.addEventListener('submit', function(event) {
+                 if (form.checkValidity() === false) {
+                   event.preventDefault();
+                   event.stopPropagation();
+                 }
+                 form.classList.add('was-validated');
+               }, false);
+             });
+           }, false);
+         })();
+         </script>
      }
  <br>
      <div class="">
@@ -55,7 +80,7 @@
         <input type="hidden" name="Id" value="@prop.Id"/>
         <h4 class="card-title">
             <a asp-controller="Property" asp-action="Update" asp-route-Id="@prop.Id" class="text-success"> @Html.DisplayFor(modelItem => prop.Name)</a>
-            <a asp-controller="Property" asp-action="" asp-route-Id="@prop.Id" class="badge badge-pill badge-danger" data-toggle="tooltip" title="Удалить">Удалить</a>
+            @* <a asp-controller="Property" asp-action="" asp-route-Id="@prop.Id" class="badge badge-pill badge-danger" data-toggle="tooltip" title="Удалить">Удалить</a> *@
         </h4>
         <table class="table table-sm">
           <thead>

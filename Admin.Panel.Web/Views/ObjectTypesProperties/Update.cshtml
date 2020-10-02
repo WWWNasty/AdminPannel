@@ -18,32 +18,71 @@
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group form-check">
         <div class="col-md-10">
-             <label asp-for="IsUsed"></label>
-             <input asp-for="IsUsed" class="form-control"/>
+            <input asp-for="IsUsed" type="checkbox" class="form-check-input"/>
+            <label asp-for="IsUsed" class="form-check-label align-bottom"></label>
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-10">
             <div class="col">
                 <div class="row">
-                    <label asp-for="Name"></label>
+                    <label asp-for="SelectedObjectProperties">Выбрать свойства</label>
                 </div>
                 <div class="row">
-                      <select class="selectpicker" asp-for="SelectedPropertiesId"
-                                        asp-items="Model.ObjectProperties.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.SelectedObjectProperties.Select(selectedProperty => selectedProperty.Id).Contains(property.Id)))"
-                                        multiple>
-                                </select>
-                                <span asp-validation-for="SelectedPropertiesId" class="text-danger"></span>
+                    <select class="selectpicker" asp-for="SelectedPropertiesId"
+                            asp-items="Model.ObjectProperties.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.SelectedObjectProperties.Select(selectedProperty => selectedProperty.Id).Contains(property.Id)))"
+                            multiple>
+                    </select>
+                    <span asp-validation-for="SelectedPropertiesId" class="text-danger"></span>
                 </div>
             </div>
-          
         </div>
     </div>
-    <button type="submit" class="btn btn-default">Сохранить</button>
+     
+    <span style="display: none" id="answer-options-count">@Model.SelectedObjectProperties.Count</span>
+    
+    <div class="col-sm-7 mt-2 add-container">
+        <input type="button" value="Добавить новое свойство" class="add btn btn-outline-secondary mt-3"/>
+        <input type="button" value="Удалить свойство" class="delete btn btn-outline-secondary mt-3"/>
+    </div>
+    
+    <button type="submit" class="btn btn-default mt-3">Сохранить</button>
+    
 </form>
+<div class="col-md-10 mt-4 voting-option-set card" id="option-template" style="display: none">
+    <div class="voting-option-set mt-3" id="0">
+        <div class="row">
+            <div class="col form-group">
+                <label asp-for="NewSelectedObjectProperties[0].Name"></label>
+                <input asp-for="NewSelectedObjectProperties[0].Name" class="form-control"/>
+                <span asp-validation-for="NewSelectedObjectProperties[0].Name" class="text-danger"></span>
+            </div>
+        </div>
+                
+        <div class="row mt-2">
+            <div class="col form-group">
+                <label asp-for="NewSelectedObjectProperties[0].NameInReport"></label>
+                <input asp-for="NewSelectedObjectProperties[0].NameInReport" class="form-control"/>
+                <span asp-validation-for="NewSelectedObjectProperties[0].NameInReport" class="text-danger"></span>
+            </div>
+            <div class="col form-group form-check">
+                <input asp-for="NewSelectedObjectProperties[0].IsUsedInReport" type="checkbox" class="form-check-input"/>
+                <label asp-for="NewSelectedObjectProperties[0].IsUsedInReport" class="form-check-label align-bottom"></label>
+                <span asp-validation-for="NewSelectedObjectProperties[0].IsUsedInReport" class="text-danger"></span>
+            </div>
+            <div class="col form-group">
+                <label asp-for="NewSelectedObjectProperties[0].ReportCellStyle"></label>
+                <input asp-for="NewSelectedObjectProperties[0].ReportCellStyle" class="form-control"/>
+                <span asp-validation-for="NewSelectedObjectProperties[0].ReportCellStyle" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</div> 
+
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/js/QuestionaryTypesProperties.js"></script>
 }

@@ -13,9 +13,13 @@ namespace Admin.Panel.Core.Entities.Questionary
         public string Name { get; set; }
         
         [Display(Name = "Свойства")]
+        [Required(ErrorMessage = "Поле Свойства - обязательно!")]
         public List<ObjectProperty> SelectedObjectProperties { get; set; }
         
-        [Required(ErrorMessage = "Поле Свойства - обязательно!")]
+        [Display(Name = "Создать новое свойство")]
+        public List<ObjectProperty> NewSelectedObjectProperties { get; set; }
+        
+        //[Required(ErrorMessage = "Поле Свойства - обязательно!")]
         public List<int> SelectedPropertiesId { get; set; }
         
         [Display(Name = "Активный")]
