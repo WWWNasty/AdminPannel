@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
@@ -44,6 +45,20 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             return obj;
         }
             
+        private async Task<QuestionaryDto> GetAllForQuestionaryUser(string idUser)
+        {
+            List<QuestionaryObjectType> objectTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
+            List<QuestionaryInputFieldTypes> inputFields = await _questionaryInputFieldTypesRepository.GetAll();
+            List<SelectableAnswersLists> answersListTypes = await _selectableAnswersListRepository.GetAllActiveAsync();
+            List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(idUser);
+            QuestionaryDto obj = new QuestionaryDto();
+            obj.ApplicationCompanies = companies;
+            obj.QuestionaryObjectTypes = objectTypes;
+            obj.QuestionaryInputFieldTypes = inputFields;
+            obj.SelectableAnswersLists = answersListTypes;
+            return obj;
+        }
+        
         public async Task<QuestionaryDto> GetAllForQuestionaryUpdate(int idQuestionary)
         {
             QuestionaryDto obj = new QuestionaryDto();
@@ -56,21 +71,26 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             obj.ApplicationCompanies = allForObj.ApplicationCompanies;
             obj.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes;
             obj.SelectableAnswersLists = allForObj.SelectableAnswersLists;
-            obj.QuestionaryInputFieldTypes = allForObj.QuestionaryInputFieldTypes;
+            //obj.QuestionaryInputFieldTypes = allForObj.QuestionaryInputFieldTypes;
             return obj;
         }
 
         public async Task<QuestionaryDto> GetAllForQuestionaryCreate()
         {
+            
             var obj = await GetAllForQuestionary();
-            return obj;
+            QuestionaryDto result = new QuestionaryDto();
+            result.ApplicationCompanies = obj.ApplicationCompanies;
+            result.QuestionaryObjectTypes = obj.QuestionaryObjectTypes;
+            result.SelectableAnswersLists = obj.SelectableAnswersLists;
+            return result;
         }
         
         public async Task<QuestionaryDto> GetAllForQuestionaryForUserUpdate(string idUser, int idQuestionary)
         {
            
             QuestionaryDto obj = new QuestionaryDto();
-            var allForObj = await GetAllForQuestionary();
+            var allForObj = await GetAllForQuestionaryUser(idUser);
             if (idQuestionary != null)
             {
                 obj = await _questionaryRepository.GetAsync(idQuestionary);
@@ -78,21 +98,26 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             obj.ApplicationCompanies = allForObj.ApplicationCompanies;
             obj.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes;
             obj.SelectableAnswersLists = allForObj.SelectableAnswersLists;
-            obj.QuestionaryInputFieldTypes = allForObj.QuestionaryInputFieldTypes;
+            //obj.QuestionaryInputFieldTypes = allForObj.QuestionaryInputFieldTypes;
             return obj;
         }
-
+        public async Task<QuestionaryDto> GetAllForQuestionaryForUserCreate(string idUser)
+        {
+            var obj = await GetAllForQuestionaryUser(idUser);
+            QuestionaryDto result = new QuestionaryDto();
+            result.ApplicationCompanies = obj.ApplicationCompanies;
+            result.QuestionaryObjectTypes = obj.QuestionaryObjectTypes;
+            result.SelectableAnswersLists = obj.SelectableAnswersLists;
+            return result;
+        }
+  
         public Task<bool> IfQuestionaryCurrentInCompany(int idCompany, int idObjType)
         {
             var current = _questionaryRepository.IfQuestionaryCurrentInCompanyAsync(idCompany, idObjType);
             return current;
         }
 
-        public async Task<QuestionaryDto> GetAllForQuestionaryForUserCreate(string idUser)
-        {
-            var obj = await GetAllForQuestionary();
-            return obj;
-        }
+      
         
     }
 }

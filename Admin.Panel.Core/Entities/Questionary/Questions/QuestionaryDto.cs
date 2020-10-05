@@ -40,6 +40,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         [Display(Name = "Тип Объекта")]
         public List<QuestionaryObjectType> QuestionaryObjectTypes { get; set; }
 
+        public int IndexCurrentQuestion { get; set; }
         public bool IfQuestionaryCurrentInCompany { get; set; }
     }
 }

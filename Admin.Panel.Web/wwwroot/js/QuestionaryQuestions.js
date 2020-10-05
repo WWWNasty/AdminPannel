@@ -23,6 +23,7 @@ $('.addPick').click(function () {
     // })
     elements.each((_, input) => {
         input.setAttribute('id', input.id.replace('0', count.toString()));
+        input.setAttribute('itemIndex', count.toString());
         input.setAttribute('name', input.name.replace('0', count.toString()));
     })
 
@@ -47,59 +48,10 @@ $('.addPick').click(function () {
     }
     let node = $('#simpleList').append(newNode);
     $(node).find(".voting-option-set").value = i;
+    getInputFieldTypes();
     count++;
 
     $(newNode).find('.new-selectpicker').selectpicker();
-    //     const el = document.getElementById("simpleList");
-    //     new Sortable(el,{
-    // onClone: function (evt) {
-    //     var origEl = evt.item,
-    //         cloneEl = evt.clone;
-    //
-    //     if (Sortable.utils.is(cloneEl, ".js-add")) {
-    //         // Click on add button
-    //         origEl.parentNode.append(origEl); // add sortable item
-    //     }
-    // },
-    // onClone: () => {
-    //     debugger;
-    //     console.log('nastya')
-    // },
-    // onAdd: function (evt) {
-    //     var origEl = evt.item,
-    //         addEl = evt.add();
-    //
-    //             if (Sortable.utils.is(addEl, ".js-add")) {
-    //                 // Click on add button
-    //                 origEl.parentNode.append(origEl); // add sortable item
-    //             }
-    // }
-    // });
-    //var order = $('#simpleList').Sortable('toArray');
-    // debugger;
-    // //откуда берем data-id
-    // let votingOptionSets = $('#simpleList').find(".voting-option-set").toArray();
-    // //куда записываем индекс
-    // //let inputs = $('#sequence-order').toArray();
-    // let inputs = $('#simpleList').find(".sequence-order").toArray();
-    //
-    // let index = 0;
-    // for(index; index < order.length; index++){
-    //     let idVoting = votingOptionSets[index].dataset.id;
-    //     let idOrder = order[index];
-    //     if(idOrder === idVoting){
-    //         inputs[index].value = index;
-    //
-    //         console.log(index);
-    //     }else{
-    //         console.log('значения data-id не совпали');
-    //     }
-    // }
-
-
-    // } else {                                                      
-    //     alert("Максимум 30 штук");
-    // }                                                
 })
 
 function addDeleteButtonHandler() {
@@ -119,3 +71,24 @@ $(document).ready(async () => {
 
     addDeleteButtonHandler();
 })
+
+function getInputFieldTypes() {
+
+    let input = $('.input-answers');
+
+    input.change(async event => {
+        const id = event.target.value;
+
+        const index = event.target.attributes.itemIndex.value;
+
+        debugger;
+
+        const partial = await $.get(`/Questionary/AnswersGetAll/${id}?index=${index}`);
+
+        const optionContainer = $(event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement).find('.option-container');
+
+        optionContainer.html(partial);
+        
+        $(optionContainer).find('.new-selectpicker').selectpicker();
+    })
+}

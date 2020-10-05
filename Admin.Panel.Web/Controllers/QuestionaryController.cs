@@ -16,12 +16,14 @@ namespace Admin.Panel.Web.Controllers
         private readonly IQuestionaryService _questionaryService;
         private readonly IQuestionaryRepository _questionaryRepository;
         private readonly ISelectableAnswersListRepository _selectableAnswersListRepository;
+        private readonly IQuestionaryInputFieldTypesRepository _fieldTypesRepository; 
 
-        public QuestionaryController(IQuestionaryService questionaryService, IQuestionaryRepository questionaryRepository, ISelectableAnswersListRepository selectableAnswersListRepository)
+        public QuestionaryController(IQuestionaryService questionaryService, IQuestionaryRepository questionaryRepository, ISelectableAnswersListRepository selectableAnswersListRepository, IQuestionaryInputFieldTypesRepository fieldTypesRepository)
         {
             _questionaryService = questionaryService;
             _questionaryRepository = questionaryRepository;
             _selectableAnswersListRepository = selectableAnswersListRepository;
+            _fieldTypesRepository = fieldTypesRepository;
         }
 
         [HttpGet]
@@ -185,12 +187,15 @@ namespace Admin.Panel.Web.Controllers
         
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult> AnswersGetAll(int id)
+        public async Task<ActionResult> AnswersGetAll(int id, [FromQuery] int index)
         {
             //TODO доставать каждому вопросу варианты ответов
            // SelectableAnswers[] answrs = await _selectableAnswersListRepository.GetSelectableAnswersAsync(id);
+           var inputTypes = await _fieldTypesRepository.GetAllCurrent(id);
             QuestionaryDto model = new QuestionaryDto();
             //model.QuestionaryQuestions[i].SelectableAnswers = answrs;
+            model.QuestionaryInputFieldTypes = inputTypes;
+            model.IndexCurrentQuestion = index;
             return PartialView("_SelectableAnswers", model);
         }
     }

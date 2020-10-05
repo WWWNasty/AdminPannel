@@ -2,15 +2,36 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model Admin.Panel.Core.Entities.Questionary.Questions.QuestionaryDto
 
-@for (int i = 0; i < Model.QuestionaryQuestions[i].SelectableAnswers.Count ; i++)
+@* @for (int i = 0; i < Model.QuestionaryQuestions[i].SelectableAnswers.Count ; i++) *@
+@* { *@
+@*     <div class="col-md-10"> *@
+@*         <div class="row"> *@
+@*             <div class="col"> *@
+@*                 <div class="card-body"> *@
+@*                     <input asp-for="@Model.QuestionaryQuestions[i].SelectableAnswers[i].AnswerText" class="form-control"/> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* } *@
+@{
+    var i = Model.IndexCurrentQuestion;
+}
+@if (Model.QuestionaryInputFieldTypes.Count != 0)
 {
-    <div class="col-md-10">
-        <div class="row">
+        <div class="col-md-10">
             <div class="col">
-                <div class="card-body">
-                    <input asp-for="@Model.QuestionaryQuestions[i].SelectableAnswers[i].AnswerText" class="form-control"/>
+                <div class="row">
+                    <label asp-for="QuestionaryInputFieldTypes"></label>
+                </div>
+                <div class="row">
+                    <select class="new-selectpicker" asp-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId"
+                            asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
+                        <option selected="selected" disabled="disabled">Ничего не выбрано</option>
+                    </select>
+                    <span asp-validation-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId" class="text-danger"></span>
                 </div>
             </div>
         </div>
-    </div>
 }
+
