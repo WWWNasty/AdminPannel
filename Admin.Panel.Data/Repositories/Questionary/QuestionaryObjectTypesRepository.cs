@@ -168,9 +168,9 @@ namespace Admin.Panel.Data.Repositories.Questionary
                         //дропаем все проперти обьекту
                         connection.Execute(
                             @"DELETE FROM ObjectPropertyToObjectTypes WHERE QuestionaryObjectTypeId = @QuestionaryObjectTypeId",
-                            new {QuestionaryObjectTypeId = obj.Id});
+                            new {QuestionaryObjectTypeId = obj.Id},transaction);
 
-                        await connection.ExecuteAsync(query, obj);
+                        await connection.ExecuteAsync(query, obj,transaction);
 
                         //добавляем проперти если есть обьекту
                         if (obj.SelectedPropertiesId != null)
@@ -184,11 +184,11 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                     {
                                         QuestionaryObjectTypeId = obj.Id,
                                         ObjectPropertyId = Convert.ToInt32(objectProperty),
-                                    });
+                                    },transaction);
                             }
                         }
 
-                        if (obj.NewSelectedObjectProperties.Count != 0)
+                        if (obj.NewSelectedObjectProperties != null && obj.NewSelectedObjectProperties.Count != 0)
                         {
                             foreach (ObjectProperty objectProperty in obj.NewSelectedObjectProperties)
                             {

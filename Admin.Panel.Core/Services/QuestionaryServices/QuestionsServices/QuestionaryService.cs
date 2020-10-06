@@ -71,7 +71,11 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             obj.ApplicationCompanies = allForObj.ApplicationCompanies;
             obj.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes;
             obj.SelectableAnswersLists = allForObj.SelectableAnswersLists;
-            //obj.QuestionaryInputFieldTypes = allForObj.QuestionaryInputFieldTypes;
+            foreach (QuestionaryQuestions question in obj.QuestionaryQuestions)
+            {
+                List<QuestionaryInputFieldTypes> currentInputFields = await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
+                question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+            }
             return obj;
         }
 
@@ -98,7 +102,11 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             obj.ApplicationCompanies = allForObj.ApplicationCompanies;
             obj.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes;
             obj.SelectableAnswersLists = allForObj.SelectableAnswersLists;
-            //obj.QuestionaryInputFieldTypes = allForObj.QuestionaryInputFieldTypes;
+            foreach (QuestionaryQuestions question in obj.QuestionaryQuestions)
+            {
+                List<QuestionaryInputFieldTypes> currentInputFields = await _questionaryInputFieldTypesRepository.GetAllCurrent(question.Id);
+                question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+            }
             return obj;
         }
         public async Task<QuestionaryDto> GetAllForQuestionaryForUserCreate(string idUser)

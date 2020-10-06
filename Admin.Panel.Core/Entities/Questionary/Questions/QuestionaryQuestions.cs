@@ -30,6 +30,8 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         
         [Display(Name = "Вопрос используется в анкете")]
         public bool IsUsed { get; set; }
+
+        public List<QuestionaryInputFieldTypes> CurrentQuestionaryInputFieldTypes { get; set; }
         
         public string SelectableAnswersListName { get; set; }
         

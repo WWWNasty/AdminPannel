@@ -1,16 +1,23 @@
 let input = $('.input-answers');
 
-input.change(async event => {
+const loadAnswers = async event => {
     const id = event.target.value;
-    
+
     const index = event.target.attributes.itemIndex.value;
-    
+
     debugger;
 
     const partial = await $.get(`/Questionary/AnswersGetAll/${id}?index=${index}`);
 
-    const optionContainer = $(event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode).find('.option-container');
-    
-    optionContainer.html(partial);
-    $(optionContainer).find('.new-selectpicker').selectpicker();
-}) 
+
+    const parent = $(event.target).parents('.aa-container');
+
+    const element = parent.find('.input-field-type');
+
+    element.html(partial);
+
+    $(element).find('.new-selectpicker').selectpicker();
+};
+
+
+input.change(loadAnswers); 

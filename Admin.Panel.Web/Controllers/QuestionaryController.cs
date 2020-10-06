@@ -138,7 +138,7 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
-                if (current == true)
+                if (current == true && model.IsUsed == true)
                 {
                     model = await _questionaryService.GetAllForQuestionaryUpdate(model.Id);
                     model.IfQuestionaryCurrentInCompany = true;

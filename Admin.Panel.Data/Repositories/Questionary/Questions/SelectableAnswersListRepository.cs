@@ -38,7 +38,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                     obj.SelectableAnswers = answerses;
                     
                     //получение допустимых контроллов 
-                    List<QuestionaryInputFieldTypes> inputs = cn.Query<QuestionaryInputFieldTypes>(@"SELECT * FROM QuestionaryInputFieldTypes q
+                    List<QuestionaryInputFieldTypes> inputs = cn.Query<QuestionaryInputFieldTypes>(@"SELECT q.* FROM QuestionaryInputFieldTypes q
                                                                                 INNER JOIN  AnswersListInputType qi ON qi.QuestionaryInputFieldTypeId = q.Id
 				                                                                where SelectableAnswersListId = @SelectableAnswersListId", 
                         new { @SelectableAnswersListId = id }).ToList();
@@ -204,8 +204,8 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                           		                                                VALUES (@SelectableAnswersListId,@QuestionaryInputFieldTypeId)",
                                     new AnswersListInputType
                                     {
-                                        SelectableAnswersListId = inputId,
-                                        QuestionaryInputFieldTypeId = answersLists.Id
+                                        SelectableAnswersListId = answersLists.Id,
+                                        QuestionaryInputFieldTypeId = inputId
                                     }, transaction);
                             }
                         }

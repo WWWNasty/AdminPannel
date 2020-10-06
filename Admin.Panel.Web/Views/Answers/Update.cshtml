@@ -51,7 +51,7 @@
     <div class="form-group row answers-options">
             <span style="display: none" id="answer-options-count">@Model.SelectableAnswers.Count</span>
        
-            @if (Model.SelectableAnswers.Count != 0)
+            @if (Model.SelectableAnswers != null && Model.SelectableAnswers.Count != 0)
             {
                 foreach (int i in Range(0, Model.SelectableAnswers.Count))
                           {
