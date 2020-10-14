@@ -8,8 +8,7 @@ const loadAnswers = async event => {
     debugger;
 
     const partial = await $.get(`/Questionary/AnswersGetAll/${id}?index=${index}`);
-
-
+    
     const parent = $(event.target).parents('.aa-container');
 
     const element = parent.find('.input-field-type');
@@ -18,6 +17,5 @@ const loadAnswers = async event => {
 
     $(element).find('.new-selectpicker').selectpicker();
 };
-
 
 input.change(loadAnswers); 

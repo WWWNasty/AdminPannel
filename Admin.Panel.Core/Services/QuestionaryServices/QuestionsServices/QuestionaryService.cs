@@ -22,7 +22,8 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             IQuestionaryObjectTypesRepository questionaryObjectTypesRepository, 
             ISelectableAnswersListRepository selectableAnswersListRepository, 
             IQuestionaryInputFieldTypesRepository questionaryInputFieldTypesRepository, 
-            ICompanyRepository companyRepository, IQuestionaryRepository questionaryRepository)
+            ICompanyRepository companyRepository, 
+            IQuestionaryRepository questionaryRepository)
         {
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
             _selectableAnswersListRepository = selectableAnswersListRepository;
@@ -59,15 +60,57 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             return obj;
         }
         
-        public async Task<QuestionaryDto> GetAllForQuestionaryUpdate(int idQuestionary)
+        public async Task<QuestionaryDto> GetAllForQuestionaryUpdate(QuestionaryDto model)
         {
-            QuestionaryDto obj = new QuestionaryDto();
-            var allForObj = await GetAllForQuestionary();
-            if (idQuestionary != null)
+            //QuestionaryDto obj = new QuestionaryDto();
+            var obj = await GetAllForQuestionary();
+            //obj = await _questionaryRepository.GetAsync(model);
+
+            model.ApplicationCompanies = obj.ApplicationCompanies;
+            model.QuestionaryObjectTypes = obj.QuestionaryObjectTypes;
+            model.SelectableAnswersLists = obj.SelectableAnswersLists;
+            if (model.QuestionaryQuestions != null)
             {
-                obj = await _questionaryRepository.GetAsync(idQuestionary);
+                foreach (QuestionaryQuestions question in model.QuestionaryQuestions)
+                {
+                    if (question.SelectableAnswersListId != 0)
+                    {
+                        List<QuestionaryInputFieldTypes> currentInputFields =
+                            await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
+                        question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+                    }
+                }
             }
 
+            return model;
+        }
+
+        public async Task<QuestionaryDto> GetAllForQuestionaryCreate(QuestionaryDto model)
+        {
+            var allForQuestionary = await GetAllForQuestionary();
+                //QuestionaryDto result = new QuestionaryDto();
+            model.ApplicationCompanies = allForQuestionary.ApplicationCompanies;
+            model.QuestionaryObjectTypes = allForQuestionary.QuestionaryObjectTypes;
+            model.SelectableAnswersLists = allForQuestionary.SelectableAnswersLists;
+            if (model.QuestionaryQuestions != null)
+            {
+               foreach (QuestionaryQuestions question in model.QuestionaryQuestions)
+               {
+                   if (question.SelectableAnswersListId != 0)
+                   {
+                       List<QuestionaryInputFieldTypes> currentInputFields = await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
+                       question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+                   }
+               }
+            }
+            return model;
+        }
+        
+        public async Task<QuestionaryDto> GetAllForQuestionaryForUserUpdate(string idUser, int idQuestionary)
+        {
+            QuestionaryDto obj = new QuestionaryDto();
+            var allForObj = await GetAllForQuestionaryUser(idUser);
+            obj = await _questionaryRepository.GetAsync(idQuestionary);
             obj.ApplicationCompanies = allForObj.ApplicationCompanies;
             obj.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes;
             obj.SelectableAnswersLists = allForObj.SelectableAnswersLists;
@@ -78,45 +121,19 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             }
             return obj;
         }
-
-        public async Task<QuestionaryDto> GetAllForQuestionaryCreate()
-        {
-            
-            var obj = await GetAllForQuestionary();
-            QuestionaryDto result = new QuestionaryDto();
-            result.ApplicationCompanies = obj.ApplicationCompanies;
-            result.QuestionaryObjectTypes = obj.QuestionaryObjectTypes;
-            result.SelectableAnswersLists = obj.SelectableAnswersLists;
-            return result;
-        }
-        
-        public async Task<QuestionaryDto> GetAllForQuestionaryForUserUpdate(string idUser, int idQuestionary)
-        {
-           
-            QuestionaryDto obj = new QuestionaryDto();
-            var allForObj = await GetAllForQuestionaryUser(idUser);
-            if (idQuestionary != null)
-            {
-                obj = await _questionaryRepository.GetAsync(idQuestionary);
-            }
-            obj.ApplicationCompanies = allForObj.ApplicationCompanies;
-            obj.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes;
-            obj.SelectableAnswersLists = allForObj.SelectableAnswersLists;
-            foreach (QuestionaryQuestions question in obj.QuestionaryQuestions)
-            {
-                List<QuestionaryInputFieldTypes> currentInputFields = await _questionaryInputFieldTypesRepository.GetAllCurrent(question.Id);
-                question.CurrentQuestionaryInputFieldTypes = currentInputFields;
-            }
-            return obj;
-        }
-        public async Task<QuestionaryDto> GetAllForQuestionaryForUserCreate(string idUser)
+        public async Task<QuestionaryDto> GetAllForQuestionaryForUserCreate(QuestionaryDto model, string idUser)
         {
             var obj = await GetAllForQuestionaryUser(idUser);
-            QuestionaryDto result = new QuestionaryDto();
-            result.ApplicationCompanies = obj.ApplicationCompanies;
-            result.QuestionaryObjectTypes = obj.QuestionaryObjectTypes;
-            result.SelectableAnswersLists = obj.SelectableAnswersLists;
-            return result;
+            //QuestionaryDto result = new QuestionaryDto();
+            model.ApplicationCompanies = obj.ApplicationCompanies;
+            model.QuestionaryObjectTypes = obj.QuestionaryObjectTypes;
+            model.SelectableAnswersLists = obj.SelectableAnswersLists;
+            foreach (QuestionaryQuestions question in model.QuestionaryQuestions)
+            {
+                List<QuestionaryInputFieldTypes> currentInputFields = await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
+                question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+            }
+            return model;
         }
   
         public Task<bool> IfQuestionaryCurrentInCompany(int idCompany, int idObjType)

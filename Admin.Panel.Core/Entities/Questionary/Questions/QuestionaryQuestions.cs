@@ -13,19 +13,21 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         public string QuestionText { get; set; }
         
         [Required(ErrorMessage = "Выберите Тип ввода!")]
+        [Range(1, 99999, ErrorMessage = "Выберите Тип ввода!")]
         public int QuestionaryInputFieldTypeId { get; set; }
         
         [Display(Name = "Вопрос обязательный")]
         public bool CanSkipQuestion { get; set; }
         
         [Required(ErrorMessage = "Тип списка ответов!")]
+        [Range(1, 99999, ErrorMessage = "Тип списка ответов!")]
         public int SelectableAnswersListId { get; set; }
         
         public string QuestionaryInputFieldTypeName { get; set; }
         
-        [Required(ErrorMessage = "Укажите порядок следования!")]
-        [Range(0, 29, ErrorMessage = "Недопустимый индекс")]
-        [Display(Name = "Сортировка")]
+        // [Required(ErrorMessage = "Укажите порядок следования!")]
+        // [Range(0, 29, ErrorMessage = "Недопустимый индекс")]
+        // [Display(Name = "Сортировка")]
         public int SequenceOrder { get; set; }
         
         [Display(Name = "Вопрос используется в анкете")]

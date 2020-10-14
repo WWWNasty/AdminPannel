@@ -11,22 +11,6 @@
 
 <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
 <hr/>
-@* @{ *@
-@*     var results = new List<ValidationResult>(); *@
-@*     // var context = new ValidationContext(Model); *@
-@*     // if (!Validator.TryValidateObject(Model, context, results, true)) *@
-@*     // { *@
-@*         foreach (var error in results) *@
-@*         { *@
-@*             <div class="alert alert-danger alert-dismissible fade show" role="alert"> *@
-@*                 @error.ErrorMessage *@
-@*                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"> *@
-@*                     <span aria-hidden="true">&times;</span> *@
-@*                 </button> *@
-@*             </div> *@
-@*         } *@
-@*    // } *@
-@* } *@
 @if (Model.IfQuestionaryCurrentInCompany == true)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -36,7 +20,7 @@
         </button>
     </div>
 }
-
+<input type="hidden" name="Id" value="@Model.Id" />
 <div asp-validation-summary="All" class="text-danger"></div>
 <div class="form-group row">
     <div class="col-md-10">
@@ -102,6 +86,11 @@
     {
         <div class="col-md-10 mt-3 border border-primary voting-option-set" data-id="0" data-toggle="tooltip" title="Нажмите и перетащите вопрос для изменения порядка вопросов в анкете.">
             @* <span class="badge badge-success">@Model.QuestionaryQuestions[i].SequenceOrder</span> *@
+            @if (Model.QuestionaryQuestions[i].Id == 0)
+            {
+                 <a href="#" class="btn btn-outline-danger js-remove delete-custom mt-2">&times;</a>
+            }
+           
             <div class="row">
                 <div class="col form-group">
                     <input type="hidden" asp-for="@Model.QuestionaryQuestions[i].Id"/>
@@ -136,8 +125,8 @@
                     </div>
                 </div>
 
-                <div class="form-group input-field-type">
-                    @if (Model.QuestionaryQuestions[i].QuestionaryInputFieldTypeId != null)
+                <div class=" input-field-type">
+                    @if (Model.QuestionaryQuestions[i].QuestionaryInputFieldTypeId != 0 || Model.QuestionaryQuestions[i].CurrentQuestionaryInputFieldTypes != null)
                     {
                         <div class="col-md-10">
                             <div class="col">
@@ -154,37 +143,56 @@
                             </div>
                         </div>
                     }
+                    else
+                    {
+                        <div class=" input-field-type">
+                            <div class="col-md-10">
+                                <div class="col">
+                                    <div class="row">
+                                        <label asp-for="QuestionaryInputFieldTypes"></label>
+                                    </div>
+                                    <div class="row">
+                                        @* <select class="selectpicker" asp-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId" *@
+                                        @*         asp-items="Model.QuestionaryQuestions[0].CurrentQuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))"> *@
+                                        @*     <option selected="selected" disabled="disabled">Ничего не выбрано</option> *@
+                                        @* </select> *@
+                                        <select class="selectpicker" asp-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId">
+                                            <option selected="selected" disabled="disabled">Ничего не выбрано</option>
+                                        </select>
+                                        <span asp-validation-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
-
-
-                <div class="form-group option-container">
+                
+                <div class="option-container">
 
                 </div>
 
                 <div class="col form-group form-check">
-                    <input asp-for="QuestionaryQuestions[i].CanSkipQuestion" type="checkbox" class="form-check-input"/>
+                    <input asp-for="QuestionaryQuestions[i].CanSkipQuestion" type="checkbox" class="form-check-input chk-skip-input"/>
                     <label asp-for="QuestionaryQuestions[i].CanSkipQuestion" class="form-check-label align-bottom"></label>
                     <span asp-validation-for="QuestionaryQuestions[i].CanSkipQuestion" class="text-danger"></span>
                 </div>
 
                 <div class="col form-group form-check">
-                    <input asp-for="QuestionaryQuestions[i].IsUsed" type="checkbox" class="form-check-input"/>
+                    <input asp-for="QuestionaryQuestions[i].IsUsed" type="checkbox" class="form-check-input chk-used-input"/>
                     <label asp-for="QuestionaryQuestions[i].IsUsed" class="form-check-label align-bottom"></label>
                     <span asp-validation-for="QuestionaryQuestions[i].IsUsed" class="text-danger"></span>
                 </div>
             </div>
         </div>
     }
-
 </div>
 
 <div class="col-md-10 mt-3 voting-option-set border border-primary" id="voting-option-template" style="display: none" data-id="" data-toggle="tooltip" title="Нажмите и перетащите вопрос для изменения порядка вопросов в анкете.">
     @* <span class="badge badge-success span-sequence">@Model.QuestionaryQuestions[0].SequenceOrder</span> *@
-    <input asp-for="QuestionaryQuestions[0].SequenceOrder" type="text" class="badge badge-success span-sequence"/>
+    @* <input asp-for="QuestionaryQuestions[0].SequenceOrder" type="text" class="badge badge-success span-sequence"/> *@
     @* <input type="button" value="Удалить" class="btn btn-outline-danger js-remove"/> *@
     <a href="#" class="btn btn-outline-danger js-remove delete-custom mt-2">&times;</a>
     <div class="" id="0">
-
         <div class="row">
             <div class="col form-group">
                 <label asp-for="QuestionaryQuestions[0].QuestionText"></label>
@@ -219,11 +227,43 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group input-field-type">
-         
-            </div>
+            @* <div class="form-group input-field-type"> *@
+            @*     <div class="col-md-10"> *@
+            @*         <div class="col"> *@
+            @*             <div class="row"> *@
+            @*                 <label asp-for="QuestionaryInputFieldTypes"></label> *@
+            @*             </div> *@
+            @*             <div class="row"> *@
+            @*                 $1$ <select class="selectpicker" asp-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId" #1# *@
+            @*                 $1$         asp-items="Model.QuestionaryQuestions[0].CurrentQuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))"> #1# *@
+            @*                 $1$     <option selected="selected" disabled="disabled">Ничего не выбрано</option> #1# *@
+            @*                 $1$ </select> #1# *@
+            @*                 <select class="new-selectpicker" asp-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId"> *@
+            @*                     <option selected="selected" disabled="disabled">Ничего не выбрано</option> *@
+            @*                 </select> *@
+            @*                 <span asp-validation-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId" class="text-danger"></span> *@
+            @*             </div> *@
+            @*         </div> *@
+            @*     </div> *@
+            @* </div> *@
+            <div class="form-group option-container input-field-type">
+                <div class="col-md-10">
+                    <div class="col">
+                        <div class="row">
+                            <label asp-for="QuestionaryInputFieldTypes"></label>
+                        </div>
             
-            <div class="form-group option-container">
+                        <div class="row">
+                            <select class="new-selectpicker" asp-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId">
+                                <option selected="selected" disabled="disabled">Ничего не выбрано</option>
+                            </select>
+                            <span asp-validation-for="QuestionaryQuestions[0].QuestionaryInputFieldTypeId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-container">
 
             </div>
 
@@ -256,11 +296,6 @@
 
 <button type="submit" class="btn btn-default mt-3">Сохранить</button>
 </form>
-@* TODO создание списка ответов *@
-@* <form  method="post" asp-antiforgery="true"> *@
-@*     $1$ <partial name="Partials/_AddProperty" /> #1# *@
-@*     <button type="submit" class="btn btn-default">Создать Свойство</button> *@
-@* </form> *@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

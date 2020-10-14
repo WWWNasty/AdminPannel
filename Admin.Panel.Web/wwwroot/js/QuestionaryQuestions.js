@@ -14,6 +14,15 @@ $('.addPick').click(function () {
     newNode.dataset.id = count.toString();
 
     const elements = $(newNode).find('input, select');
+    let i1 = $(newNode).find('select.input-answers option');
+    $.each(i1, function (index , item){
+        item.removeAttribute('selected');
+        if(index===0){
+            item.setAttribute('selected', 'selected');
+        }
+    });
+    
+    console.log(i1);
     // const selects = $(newNode).find('.select');
     //
     // //input.id = input.id.replace('0', count.toString()); //name.replace('0', count.toString());
@@ -26,8 +35,7 @@ $('.addPick').click(function () {
         input.setAttribute('itemIndex', count.toString());
         input.setAttribute('name', input.name.replace('0', count.toString()));
     })
-
-
+    
     newNode.classList.add ('voting-option');
     // newNode.classList.add ('js-remove');
 
@@ -47,15 +55,15 @@ $('.addPick').click(function () {
         i = index+1;
     }
     let node = $('#simpleList').append(newNode);
-    $(node).find(".voting-option-set").value = i;
+    let seq = $(node).find(".sequence-order").last();
+    seq.val(i);
+    let z = seq.value;
     getInputFieldTypes();
     count++;
-
     $(newNode).find('.new-selectpicker').selectpicker();
 })
 
 function addDeleteButtonHandler() {
-
     $('.deletePick').click(deleteVotingOption);
 }
 
@@ -68,13 +76,19 @@ function deleteVotingOption() {
 
 $(document).ready(async () => {
     count = parseInt($('#voting-options-count').text());
-
+    firstSequenceOrder();
     addDeleteButtonHandler();
 })
 
+function firstSequenceOrder(){
+    debugger;
+    const container = $('#simpleList');
+    let inputContainer = $(container).find(".aa-container");
+    let input = $(inputContainer).find("#init-sequence-order")
+    input.val("0");
+}
+
 function getInputFieldTypes() {
-
     let input = $('.input-answers');
-
     input.change(loadAnswers);
 }

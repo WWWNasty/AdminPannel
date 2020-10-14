@@ -1,5 +1,6 @@
 @using Admin.Panel.Core.Entities.Questionary
 @using Admin.Panel.Core.Entities.Questionary.Questions
+@using Microsoft.AspNetCore.Mvc.Rendering
 @model Admin.Panel.Core.Entities.Questionary.Questions.SelectableAnswersLists
 @using static System.Linq.Enumerable;
 
@@ -85,6 +86,8 @@
                                               <label asp-for="SelectableAnswers[i].IsInvolvesComment" class="form-check-label align-bottom"></label>
                                               <span asp-validation-for="SelectableAnswers[i].IsInvolvesComment" class="text-danger"></span>
                                           </div>
+                                          
+                                          
                                       </div>
                                   </div>
                               </div>
