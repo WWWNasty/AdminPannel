@@ -12,16 +12,16 @@
     <input type="hidden" name="Id" value="@Model.Id" />
     <h4 class="card-title">
         @if (User.Identity.IsAuthenticated)
-{
-    if (User.IsInRole("SuperAdministrator") || User.IsInRole("TypesObjectEdit"))
-    {
-        <a asp-controller="ObjectTypesProperties" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
-    }
-    else
-    {
-        <h4 class="text-success">@Model.Name</h4>
-    }
-}
+        {
+            if (User.IsInRole("SuperAdministrator"))
+            {
+                <a asp-controller="ObjectTypesProperties" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
+            }
+            if(!User.IsInRole("SuperAdministrator"))
+            {
+                <h4 class="text-success">@Model.Name</h4>
+            }
+        }
     </h4>
     <div>
         <h5>

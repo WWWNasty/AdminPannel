@@ -64,7 +64,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Update(int id)
         {
             QuestionaryObjectType model = await _questionaryObjectTypesService.GetObjectForUpdare(id);
@@ -73,7 +73,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
+        [Authorize(Roles = "SuperAdministrator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(QuestionaryObjectType model)
         {

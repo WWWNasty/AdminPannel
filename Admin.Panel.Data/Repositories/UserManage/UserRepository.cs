@@ -271,6 +271,43 @@ namespace Admin.Panel.Data.Repositories.UserManage
             }
         }
 
+        public string IsUserInRoleAsync(int idUser)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = @"SELECT f.[Name] FROM [ApplictionRoleFunctions] rf 
+                    INNER JOIN [FunctionsRoles] f ON rf.[FunctionsRolesId] = f.[Id] 
+					INNER JOIN [ApplicationUser] u ON u.[RoleId] = rf.[ApplicationRoleId]
+                    WHERE u.[Id] = @userId";
+                string queryResults = connection.Query<string>(query, new { userId = idUser }).FirstOrDefault();
+
+                return queryResults;
+            }
+        }
+
+        public int GetIdByName(string name)
+        {
+            using (var cn = new SqlConnection(_connectionString))
+            {
+                cn.Open();
+                try
+                {
+                    //var query = "SELECT * FROM ApplicationUser WHERE LOWER(UserName)=LOWER(@UserName)";
+                    var query = @"SELECT Id FROM [ApplicationUser]
+                    WHERE [UserName] = @UserName";
+                    int user = cn.Query<int>(query, new { @UserName = name}).FirstOrDefault();
+
+                    return user;
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception($"{GetType().FullName}.наверное такой пользователь уже есть", ex);
+                }
+
+            }
+        }
+        
         public Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

@@ -86,7 +86,13 @@ namespace Admin.Panel.Web.Controllers
 
                     if (result.Succeeded)
                     {
-                        return RedirectToLocal(returnUrl);
+                        var userId = _userRepository.GetIdByName(model.Email);
+                        var userRole = _userRepository.IsUserInRoleAsync(userId);
+                        if (userRole == "SuperAdministrator")
+                        {
+                            return RedirectToAction("GetAll", "Questionary"); 
+                        }
+                        return RedirectToAction("GetAllForUser", "Questionary"); 
                     }
 
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -515,7 +521,16 @@ namespace Admin.Panel.Web.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("GetAll", "Questionary");
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userRole = _userRepository.IsUserInRoleAsync(Convert.ToInt32(userId));
+       
+            if (userRole == "SuperAdmin")
+            {
+               return RedirectToAction("GetAll", "Questionary"); 
+            }
+            return RedirectToAction("GetAllForUser", "Questionary"); 
+            
         }
 
         private void AddErrors(IdentityResult result)

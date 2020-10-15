@@ -54,7 +54,7 @@ namespace Admin.Panel.Web.Controllers
         }
         
         [HttpGet]
-        [Authorize(Roles = "SuperAdministrator, PropertiesObjectEdit")]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Update(int id)
         {
             var model = await _objectPropertiesRepository.GetAsync(id);
@@ -63,7 +63,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "SuperAdministrator, PropertiesObjectEdit")]
+        [Authorize(Roles = "SuperAdministrator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(ObjectProperty model)
         {
