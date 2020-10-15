@@ -6,12 +6,11 @@
 @{
     ViewData["Title"] = "Создание Анкеты";
 }
-
 <h2>@ViewBag.Title</h2>
 
 <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
 <hr/>
-@if (Model.IfQuestionaryCurrentInCompany == true && Model.IsUsed == true)
+@if (Model.IfQuestionaryCurrentInCompany == true)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>В компании уже есть анкета для такого объекта!</strong> Деактивируйте её, если хотите создать новую.
@@ -70,8 +69,15 @@
 <small>
     <h class="card-subtitle mb-2 text-muted">Вопросы: </h>
 </small>
+@if (Model.QuestionaryQuestions != null)
+{
+  <span style="display: none" id="voting-options-count">@Model.QuestionaryQuestions.Count</span>  
+}
+else
+{
+    <span style="display: none" id="voting-options-count">1</span>  
+}
 
-<span style="display: none" id="voting-options-count">1</span>
 <div class="form-group row voting-options " id="simpleList">
 
     <div class="col-md-10 mt-3 border border-primary voting-option-set" data-id="0" data-toggle="tooltip" title="Нажмите и перетащите вопрос для изменения порядка вопросов в анкете.">
@@ -223,26 +229,7 @@
                             </div>
         
                             <div class="option-container input-field-type">
-                                @if (Model.QuestionaryInputFieldTypes != null)
-                                {
-                                    <div class="form-group ">
-                                        <div class="col-md-10">
-                                            <div class="col">
-                                                <div class="row">
-                                                    <label asp-for="QuestionaryInputFieldTypes"></label>
-                                                </div>
-                                                <div class="row">
-                                                    <select class="selectpicker" asp-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId"
-                                                            asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                                                        <option selected="selected" disabled="disabled">Ничего не выбрано</option>
-                                                    </select>
-                                                    <span asp-validation-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                                @if (Model.QuestionaryQuestions[i].QuestionaryInputFieldTypeId != 0)
+                                @if (Model.QuestionaryQuestions[i].SelectableAnswersListId != 0)
                                 {
                                     <div class="col-md-10">
                                         <div class="col">

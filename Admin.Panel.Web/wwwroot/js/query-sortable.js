@@ -17,6 +17,10 @@ const sortable = Sortable.create(el, {
             let nameInputUsed = $(item).find(".chk-used-input").attr("name");
             //let hiddens = $(inputs).find(`input[name="${nameInput}"]`);
             item.parentNode.removeChild(item); // remove sortable item
+            let count = parseInt($('#voting-options-count').text());
+            count--;
+            console.log(count);
+            $('#voting-options-count').text(count);
             $.each(inputs, function (index) {
                 
 
@@ -32,7 +36,7 @@ const sortable = Sortable.create(el, {
             let setsSimpleList = $('#simpleList').children('.voting-option-set');
             $(setsSimpleList).each((index, element) => {
                 
-                $(element).find('input').each((i, input) => {
+                $(element).find('input, select').each((i, input) => {
                     const replaceIndexInName = (element) => {
 
                             const attribute = element.attributes.name?.value;

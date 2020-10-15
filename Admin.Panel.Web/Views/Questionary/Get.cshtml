@@ -22,7 +22,7 @@
             {
                 <a asp-controller="Questionary" asp-action="Update" class="text-success" asp-route-Id="@Model.Id">@Html.DisplayFor(modelItem => Model.Name)</a>
             }
-            else
+            if(!User.IsInRole("QuestionaryEdit") && !User.IsInRole("SuperAdministrator"))
             {
                 <h4 class="text-success">@Model.Name</h4>
             }

@@ -55,34 +55,14 @@ namespace Admin.Panel.Web.Controllers
                 var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
                 if (current == true)
                 {
-                    //QuestionaryDto allForModel = new QuestionaryDto();
                     model = await _questionaryService.GetAllForQuestionaryCreate(model);
-                    // model.ApplicationCompanies = allForModel.ApplicationCompanies;
-                    // model.QuestionaryObjectTypes = allForModel.QuestionaryObjectTypes;
-                    // model.SelectableAnswersLists = allForModel.SelectableAnswersLists;
-                    // int i = 0; int j = 0;
-                    // for (i=0,j=0; i < model.QuestionaryQuestions.Count; i++, j++)
-                    // {
-                    //     model.QuestionaryQuestions[i].CurrentQuestionaryInputFieldTypes = allForModel
-                    //         .QuestionaryQuestions[j].CurrentQuestionaryInputFieldTypes;
-                    // }
                     model.IfQuestionaryCurrentInCompany = true;
                     return View(model);
                 }
                 await _questionaryRepository.CreateAsync(model);
                 return RedirectToAction("GetAll", "Questionary");
             }
-            //QuestionaryDto allForModel1 = new QuestionaryDto();
             model = await _questionaryService.GetAllForQuestionaryCreate(model);
-            // model.ApplicationCompanies = allForModel1.ApplicationCompanies;
-            // model.QuestionaryObjectTypes = allForModel1.QuestionaryObjectTypes;
-            // model.SelectableAnswersLists = allForModel1.SelectableAnswersLists;
-            // int a = 0; int x = 0;
-            // for (a=0,x=0; a < model.QuestionaryQuestions.Count; a++, x++)
-            // {
-            //     model.QuestionaryQuestions[a].CurrentQuestionaryInputFieldTypes = allForModel1
-            //         .QuestionaryQuestions[x].CurrentQuestionaryInputFieldTypes;
-            // }
             return View(model);
         }
         
@@ -113,36 +93,16 @@ namespace Admin.Panel.Web.Controllers
                 var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
                 if (current == true)
                 {
-                    QuestionaryDto allForModel = new QuestionaryDto();
                     var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    allForModel = await _questionaryService.GetAllForQuestionaryForUserCreate(model, user);
-                    model.ApplicationCompanies = allForModel.ApplicationCompanies;
-                    model.QuestionaryObjectTypes = allForModel.QuestionaryObjectTypes;
-                    model.SelectableAnswersLists = allForModel.SelectableAnswersLists;
-                    int i = 0; int j = 0;
-                    for (i=0,j=0; i < model.QuestionaryQuestions.Count; i++, j++)
-                    {
-                        model.QuestionaryQuestions[i].CurrentQuestionaryInputFieldTypes = allForModel
-                            .QuestionaryQuestions[j].CurrentQuestionaryInputFieldTypes;
-                    }
+                    model = await _questionaryService.GetAllForQuestionaryForUserCreate(model, user);
                     model.IfQuestionaryCurrentInCompany = true;
                     return View("Create", model);
                 }
                 await _questionaryRepository.CreateAsync(model);
                 return RedirectToAction("GetAllForUser", "Questionary");
             }
-            QuestionaryDto allForModel1 = new QuestionaryDto();
-            var user1 = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            allForModel1 = await _questionaryService.GetAllForQuestionaryForUserCreate(model, user1);
-            model.ApplicationCompanies = allForModel1.ApplicationCompanies;
-            model.QuestionaryObjectTypes = allForModel1.QuestionaryObjectTypes;
-            model.SelectableAnswersLists = allForModel1.SelectableAnswersLists;
-            int a = 0; int x = 0;
-            for (a=0,x=0; a < model.QuestionaryQuestions.Count; a++, x++)
-            {
-                model.QuestionaryQuestions[a].CurrentQuestionaryInputFieldTypes = allForModel1
-                    .QuestionaryQuestions[x].CurrentQuestionaryInputFieldTypes;
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            model = await _questionaryService.GetAllForQuestionaryForUserCreate(model, userId);
             return View("Create", model);
         }
         
@@ -204,34 +164,14 @@ namespace Admin.Panel.Web.Controllers
                 var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
                 if (current == true && model.IsUsed == true)
                 {
-                    //QuestionaryDto allForQuestionary = new QuestionaryDto();
                     model = await _questionaryService.GetAllForQuestionaryUpdate(model);
-                    // model.ApplicationCompanies = allForQuestionary.ApplicationCompanies;
-                    // model.QuestionaryObjectTypes = allForQuestionary.QuestionaryObjectTypes;
-                    // model.SelectableAnswersLists = allForQuestionary.SelectableAnswersLists;
-                    // int i = 0; int j = 0;
-                    // for (i=0,j=0; i < model.QuestionaryQuestions.Count; i++, j++)
-                    // {
-                    //     model.QuestionaryQuestions[i].CurrentQuestionaryInputFieldTypes = allForQuestionary
-                    //         .QuestionaryQuestions[j].CurrentQuestionaryInputFieldTypes;
-                    // }
                     model.IfQuestionaryCurrentInCompany = true;
                     return View("Update", model);
                 }
                 await _questionaryRepository.UpdateAsync(model);
                 return RedirectToAction("GetAll", "Questionary");
             }
-            
-            //QuestionaryDto allForQuestionary1 = new QuestionaryDto();
             model = await _questionaryService.GetAllForQuestionaryUpdate(model);
-            // model.ApplicationCompanies = allForQuestionary1.ApplicationCompanies;
-            // model.QuestionaryObjectTypes = allForQuestionary1.QuestionaryObjectTypes;
-            // model.SelectableAnswersLists = allForQuestionary1.SelectableAnswersLists;
-            // int a = 0; int y = 0;
-            // for (a=0,y=0; a < allForQuestionary1.QuestionaryQuestions.Count; a++, y++)
-            // {
-            //     model.QuestionaryQuestions[a].CurrentQuestionaryInputFieldTypes = allForQuestionary1.QuestionaryQuestions[y].CurrentQuestionaryInputFieldTypes;
-            // }
             return View("Update", model);
         }
         
@@ -245,37 +185,16 @@ namespace Admin.Panel.Web.Controllers
                 var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
                 if (current == true && model.IsUsed == true)
                 {
-                    var user = User.FindFirstValue(ClaimTypes.NameIdentifier); 
-                    QuestionaryDto allForQuestionary = new QuestionaryDto();
-                    allForQuestionary = await _questionaryService.GetAllForQuestionaryForUserUpdate(user, model.Id);
-                    model.ApplicationCompanies = allForQuestionary.ApplicationCompanies;
-                    model.QuestionaryObjectTypes = allForQuestionary.QuestionaryObjectTypes;
-                    model.SelectableAnswersLists = allForQuestionary.SelectableAnswersLists;
-                    int i = 0; int j = 0;
-                    for (i=0,j=0; i < model.QuestionaryQuestions.Count; i++, j++)
-                    {
-                        model.QuestionaryQuestions[i].CurrentQuestionaryInputFieldTypes = allForQuestionary
-                            .QuestionaryQuestions[j].CurrentQuestionaryInputFieldTypes;
-                    }
+                    var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    model = await _questionaryService.GetAllForQuestionaryForUserUpdate(model, user);
                     model.IfQuestionaryCurrentInCompany = true;
-                    return View("Create", model);
+                    return View("Update", model);
                 }
                 await _questionaryRepository.UpdateAsync(model);
                 return RedirectToAction("GetAllForUser", "Questionary");
             }
-              
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
-            QuestionaryDto allForQuestionary1 = new QuestionaryDto();
-            allForQuestionary1 = await _questionaryService.GetAllForQuestionaryForUserUpdate(userId, model.Id);
-            model.ApplicationCompanies = allForQuestionary1.ApplicationCompanies;
-            model.QuestionaryObjectTypes = allForQuestionary1.QuestionaryObjectTypes;
-            model.SelectableAnswersLists = allForQuestionary1.SelectableAnswersLists;
-            int a = 0; int y = 0;
-            for (a=0,y=0; a < allForQuestionary1.QuestionaryQuestions.Count; a++, y++)
-            {
-                model.QuestionaryQuestions[a].CurrentQuestionaryInputFieldTypes = allForQuestionary1.QuestionaryQuestions[y].CurrentQuestionaryInputFieldTypes;
-            }
-
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            model = await _questionaryService.GetAllForQuestionaryForUserUpdate(model, userId);
             return View("Update", model);
         }
 
@@ -284,7 +203,22 @@ namespace Admin.Panel.Web.Controllers
         public async Task<ActionResult> UpdateForUser(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var model = await _questionaryService.GetAllForQuestionaryForUserUpdate(userId, id);
+            var model = await _questionaryRepository.GetAsync(id);
+            model.ApplicationCompanies = await _companyRepository.GetAllActiveForUserAsync(userId);
+            model.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
+            model.SelectableAnswersLists = await _selectableAnswersListRepository.GetAllActiveAsync();
+            if (model.QuestionaryQuestions != null)
+            {
+                foreach (QuestionaryQuestions question in model.QuestionaryQuestions)
+                {
+                    if (question.SelectableAnswersListId != 0)
+                    {
+                        List<QuestionaryInputFieldTypes> currentInputFields =
+                            await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
+                        question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+                    }
+                }
+            }
             return View("Update", model);
         }
         

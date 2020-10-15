@@ -30,10 +30,12 @@ $('.addPick').click(function () {
     // selects.each((_, select) => {
     //     select.setAttribute('class', select.class.replace('select', 'selectpicker'));
     // })
+    count = parseInt($('#voting-options-count').text());
     elements.each((_, input) => {
-        input.setAttribute('id', input.id.replace('0', count.toString()));
-        input.setAttribute('itemIndex', count.toString());
-        input.setAttribute('name', input.name.replace('0', count.toString()));
+        let index = count;
+        input.setAttribute('id', input.id.replace('0', index.toString()));
+        input.setAttribute('itemIndex', index.toString());
+        input.setAttribute('name', input.name.replace('0', index.toString()));
     })
     
     newNode.classList.add ('voting-option');
@@ -56,10 +58,12 @@ $('.addPick').click(function () {
     }
     let node = $('#simpleList').append(newNode);
     let seq = $(node).find(".sequence-order").last();
-    seq.val(i);
+    seq.val(i.toString());
     let z = seq.value;
     getInputFieldTypes();
     count++;
+    $('#voting-options-count').text(count);
+    console.log(count);
     $(newNode).find('.new-selectpicker').selectpicker();
 })
 
@@ -76,6 +80,7 @@ function deleteVotingOption() {
 
 $(document).ready(async () => {
     count = parseInt($('#voting-options-count').text());
+   
     firstSequenceOrder();
     addDeleteButtonHandler();
 })
