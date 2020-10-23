@@ -84,7 +84,11 @@
             <input type="button" value="Удалить ответ" class="delete btn btn-outline-secondary"/>
         </div>
 
-        <div class="col-md-10 mt-3 voting-option-set card" id="option-template" style="display: none">
+       
+    </div>
+    <button type="submit" class="btn btn-default">Сохранить</button>
+</form>
+ <div class="col-md-10 mt-3 voting-option-set card" id="option-template" style="display: none">
             <div class="voting-option-set mt-3" id="0">
                 <div class="row">
                     <div class="col form-group">
@@ -115,10 +119,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <button type="submit" class="btn btn-default">Сохранить</button>
-</form>
-
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
     <script src="~/js/QuestionaryAnswers.js"></script>

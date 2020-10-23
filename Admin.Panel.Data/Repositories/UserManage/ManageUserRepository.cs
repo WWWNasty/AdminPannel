@@ -8,15 +8,18 @@ using Admin.Panel.Core.Interfaces;
 using Admin.Panel.Core.Interfaces.Repositories.UserManageRepositoryInterfaces;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Data.Repositories.UserManage
 {
     public class ManageUserRepository: IManageUserRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<ManageUserRepository> _logger;
 
-        public ManageUserRepository(IConfiguration configuration)
+        public ManageUserRepository(IConfiguration configuration, ILogger<ManageUserRepository> logger)
         {
+            _logger = logger;
             _connectionString = configuration.GetConnectionString("questionaryConnection");
         }
 
@@ -101,15 +104,15 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 {
                     await cn.ExecuteAsync(@"UPDATE ApplicationUser SET UserName=@UserName,NickName=@NickName,
                     Email=@Email,IsUsed=@IsUsed WHERE Id=@Id", user);
-
+                    _logger.LogInformation("Пользователь с Id: {0} успешно отредактирован в бд.", user.Id);
                     return user.Id;
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError("Пользователь с Id: {0} не отредактирован с ошибкой в бд: {1}.", user.Id);
                     throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                 }
             }
         }
-
     }
 }

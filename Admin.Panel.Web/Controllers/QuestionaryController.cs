@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Entities.Questionary.Questions;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.QuestionsServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGeneration;
+using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Web.Controllers
 {
@@ -22,9 +21,18 @@ namespace Admin.Panel.Web.Controllers
         private readonly IQuestionaryObjectTypesRepository _questionaryObjectTypesRepository;
         private readonly IQuestionaryInputFieldTypesRepository _questionaryInputFieldTypesRepository;
         private readonly ICompanyRepository _companyRepository;
+        private readonly ILogger<QuestionaryController> _logger;
         
 
-        public QuestionaryController(IQuestionaryService questionaryService, IQuestionaryRepository questionaryRepository, ISelectableAnswersListRepository selectableAnswersListRepository, IQuestionaryInputFieldTypesRepository fieldTypesRepository, IQuestionaryObjectTypesRepository questionaryObjectTypesRepository, IQuestionaryInputFieldTypesRepository questionaryInputFieldTypesRepository, ICompanyRepository companyRepository)
+        public QuestionaryController(
+            IQuestionaryService questionaryService, 
+            IQuestionaryRepository questionaryRepository, 
+            ISelectableAnswersListRepository selectableAnswersListRepository, 
+            IQuestionaryInputFieldTypesRepository fieldTypesRepository, 
+            IQuestionaryObjectTypesRepository questionaryObjectTypesRepository, 
+            IQuestionaryInputFieldTypesRepository questionaryInputFieldTypesRepository, 
+            ICompanyRepository companyRepository, 
+            ILogger<QuestionaryController> logger)
         {
             _questionaryService = questionaryService;
             _questionaryRepository = questionaryRepository;
@@ -33,6 +41,7 @@ namespace Admin.Panel.Web.Controllers
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
             _questionaryInputFieldTypesRepository = questionaryInputFieldTypesRepository;
             _companyRepository = companyRepository;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -59,8 +68,17 @@ namespace Admin.Panel.Web.Controllers
                     model.IfQuestionaryCurrentInCompany = true;
                     return View(model);
                 }
-                await _questionaryRepository.CreateAsync(model);
-                return RedirectToAction("GetAll", "Questionary");
+
+                try
+                { 
+                    await _questionaryRepository.CreateAsync(model); 
+                    _logger.LogInformation("Анкета {0} успешно создана для компании с Id: {1}.", model.Name, model.CompanyId);
+                    return RedirectToAction("GetAll", "Questionary");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("Ошибка при создании анкеты {1} для компании с ID {2} : {0}.", e, model.Name, model.CompanyId);
+                }
             }
             model = await _questionaryService.GetAllForQuestionaryCreate(model);
             return View(model);
@@ -98,8 +116,17 @@ namespace Admin.Panel.Web.Controllers
                     model.IfQuestionaryCurrentInCompany = true;
                     return View("Create", model);
                 }
-                await _questionaryRepository.CreateAsync(model);
-                return RedirectToAction("GetAllForUser", "Questionary");
+
+                try
+                {
+                    await _questionaryRepository.CreateAsync(model); 
+                    _logger.LogInformation("Анкета {0} успешно создана для компании с Id: {1}.", model.Name, model.CompanyId);
+                    return RedirectToAction("GetAllForUser", "Questionary");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("Ошибка при создании анкеты {1} для компании с ID {2} : {0}.", e, model.Name, model.CompanyId);
+                }
             }
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             model = await _questionaryService.GetAllForQuestionaryForUserCreate(model, userId);
@@ -168,8 +195,18 @@ namespace Admin.Panel.Web.Controllers
                     model.IfQuestionaryCurrentInCompany = true;
                     return View("Update", model);
                 }
-                await _questionaryRepository.UpdateAsync(model);
-                return RedirectToAction("GetAll", "Questionary");
+
+                try
+                {
+                    await _questionaryRepository.UpdateAsync(model);
+                    _logger.LogInformation("Анкета с Id {0} успешно отредактирована.", model.Id);
+                    return RedirectToAction("GetAll", "Questionary");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogInformation("Анкета с Id {0} не отредактирована с ошибкой: {1}.", model.Id, e);
+                }
+                
             }
             model = await _questionaryService.GetAllForQuestionaryUpdate(model);
             return View("Update", model);
@@ -190,8 +227,18 @@ namespace Admin.Panel.Web.Controllers
                     model.IfQuestionaryCurrentInCompany = true;
                     return View("Update", model);
                 }
-                await _questionaryRepository.UpdateAsync(model);
-                return RedirectToAction("GetAllForUser", "Questionary");
+
+                try
+                {
+                    await _questionaryRepository.UpdateAsync(model);
+                    _logger.LogInformation("Анкета с Id {0} успешно отредактирована.", model.Id);
+                    return RedirectToAction("GetAllForUser", "Questionary");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogInformation("Анкета с Id {0} не отредактирована с ошибкой: {1}.", model.Id, e);
+                }
+                
             }
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             model = await _questionaryService.GetAllForQuestionaryForUserUpdate(model, userId);

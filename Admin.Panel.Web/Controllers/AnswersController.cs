@@ -4,6 +4,7 @@ using Admin.Panel.Core.Entities.Questionary.Questions;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Web.Controllers
 {
@@ -11,11 +12,16 @@ namespace Admin.Panel.Web.Controllers
     {
         private readonly ISelectableAnswersListRepository _selectableAnswersListRepository;
         private readonly IQuestionaryInputFieldTypesRepository _fieldTypesRepository;
+        private readonly ILogger<AnswersController> _logger;
 
-        public AnswersController(ISelectableAnswersListRepository selectableAnswersListRepository, IQuestionaryInputFieldTypesRepository fieldTypesRepository)
+        public AnswersController(
+            ISelectableAnswersListRepository selectableAnswersListRepository, 
+            IQuestionaryInputFieldTypesRepository fieldTypesRepository, 
+            ILogger<AnswersController> logger)
         {
             _selectableAnswersListRepository = selectableAnswersListRepository;
             _fieldTypesRepository = fieldTypesRepository;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -60,7 +66,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Update(int id)
         {
             var inputs = await _fieldTypesRepository.GetAll();
@@ -70,7 +76,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
+        [Authorize(Roles = "SuperAdministrator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(SelectableAnswersLists model)
         {

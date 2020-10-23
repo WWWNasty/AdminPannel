@@ -22,7 +22,7 @@ const sortable = Sortable.create(el, {
             console.log(count);
             $('#voting-options-count').text(count);
             $.each(inputs, function (index) {
-                
+
 
                 let nameHidden = $(this).attr("name");
                 if (nameInputSkip === nameHidden || nameInputUsed === nameHidden) {
@@ -35,25 +35,27 @@ const sortable = Sortable.create(el, {
             debugger;
             let setsSimpleList = $('#simpleList').children('.voting-option-set');
             $(setsSimpleList).each((index, element) => {
-                
+
                 $(element).find('input, select').each((i, input) => {
                     const replaceIndexInName = (element) => {
 
-                            const attribute = element.attributes.name?.value;
-                            if(!attribute)
-                                return;
+                        const attribute = element.attributes.name?.value;
+                        if (!attribute)
+                            return;
 
-                            const startIndex = attribute.indexOf('[');
-                            const endIndex = attribute.indexOf(']');
+                        const startIndex = attribute.indexOf('[');
+                        const endIndex = attribute.indexOf(']');
 
-                            if(startIndex === -1 || endIndex === -1)
-                                return ;
+                        if (startIndex === -1 || endIndex === -1)
+                            return;
 
-                            const attributeStart = attribute.slice(0, startIndex + 1);
-                            const attributeEnd = attribute.slice(endIndex);
-
-                            element.attributes.name.value = attributeStart + index + attributeEnd;
+                        const attributeStart = attribute.slice(0, startIndex + 1);
+                        const attributeEnd = attribute.slice(endIndex);
+                        if (element.attributes.itemIndex){
+                            element.attributes.itemIndex.value = index;
                         }
+                        element.attributes.name.value = attributeStart + index + attributeEnd;
+                    }
 
                     //пересчет индекса в неймах у  элементов
                     replaceIndexInName(input);
@@ -61,7 +63,7 @@ const sortable = Sortable.create(el, {
                     //конец
                 })
             })
-            
+
             // for(let i = 0; i < inputs.length ;i++){
             //     let nameHidden = inputs[i].attr("name");
             //     if(nameHidden!== null){

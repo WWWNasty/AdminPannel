@@ -7,15 +7,18 @@ using Admin.Panel.Core.Entities.Questionary.Questions;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Data.Repositories.Questionary.Questions
 {
     public class QuestionaryRepository: IQuestionaryRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<QuestionaryRepository> _logger;
 
-        public QuestionaryRepository(IConfiguration configuration)
+        public QuestionaryRepository(IConfiguration configuration, ILogger<QuestionaryRepository> logger)
         {
+            _logger = logger;
             _connectionString = configuration.GetConnectionString("questionaryConnection");
         }
         
@@ -24,7 +27,6 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
             using (var cn = new SqlConnection(_connectionString))
             {
                 await cn.OpenAsync();
-
                 try
                 { 
                     var query = @"SELECT q.*, t.Name AS ObjectTypeName FROM Questionary q 
@@ -43,15 +45,18 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                     {
                         var answ = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers
 				                                                              where SelectableAnswersListId = @SelectableAnswersListId", new { SelectableAnswersListId = question.SelectableAnswersListId }).ToList();
-                        question.SelectableAnswers = answ;  
+                        question.SelectableAnswers = answ;
+                        //инвертирование из можно пропустить вопрос в вопрос обязателен ли
+                        question.CanSkipQuestion = !question.CanSkipQuestion;
                     }
 
                     obj.QuestionaryQuestions = questions;
-
+                    
                     return obj;
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError("Ошибка при получении анкеты {0} в бд: {1}", id, ex);
                     throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                 }
             }
@@ -64,12 +69,15 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 await connection.OpenAsync();
                 try
                 {
-                    var query = "SELECT * FROM Questionary";
+                    var query = @"SELECT q.*, c.CompanyName AS CompanyName, o.Name AS ObjectTypeName FROM Questionary q
+                    INNER JOIN Companies AS c ON c.CompanyId = q.CompanyId
+					INNER JOIN QuestionaryObjectTypes AS o ON o.Id = q.ObjectTypeId";
                     var result = connection.Query<QuestionaryDto>(query).ToList();
                     return result;
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError("Ошибка при получении анкет в бд: {0}", ex);
                     throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                 }
             } 
@@ -99,6 +107,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError("Ошибка при получении анкет в бд: {0}", ex);
                     throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                 }
             }
@@ -132,7 +141,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                        QuestionaryId = objTypeId,
                                        QuestionText = question.QuestionText,
                                        QuestionaryInputFieldTypeId = question.QuestionaryInputFieldTypeId,
-                                       CanSkipQuestion = question.CanSkipQuestion,
+                                       CanSkipQuestion = !question.CanSkipQuestion,
                                        SelectableAnswersListId = question.SelectableAnswersListId,
                                        SequenceOrder = question.SequenceOrder
                                     }, transaction);
@@ -142,11 +151,12 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                         QuestionaryDto result = cn.Query<QuestionaryDto>(@"SELECT * FROM Questionary WHERE Id=@Id", new { @Id = objTypeId }, transaction).FirstOrDefault();
 
                         transaction.Commit();
-
+                        _logger.LogInformation("Анкета {0} успешно добавлена в бд.", selectableAnswersList.Name);
                         return result;
                     }
                     catch (Exception ex)
                     {
+                        _logger.LogError("Ошибка при создании анкеты {1} в бд: {0}", ex, selectableAnswersList.Name);
                         throw new Exception($"{GetType().FullName}.WithConnection()", ex);
                     }
                 }
@@ -167,12 +177,6 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                          WHERE Id=@Id";
 
                         await connection.ExecuteAsync(query, questionary, transaction);
-                        //
-                        // //дропаем все вопросики анкете нельзя дропать они связаны с записями в бд TODO переделать
-                        // connection.Execute(
-                        //     @"DELETE FROM QuestionaryQuestions WHERE QuestionaryId = @QuestionaryId",
-                        //     new {QuestionaryId = questionary.Id});
-
 
                         List<QuestionaryQuestions> newQuestions = new List<QuestionaryQuestions>();
                         List<QuestionaryQuestions> oldQuestions = new List<QuestionaryQuestions>();
@@ -206,7 +210,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                         QuestionaryId = questionary.Id,
                                         QuestionText = question.QuestionText,
                                         QuestionaryInputFieldTypeId = question.QuestionaryInputFieldTypeId,
-                                        CanSkipQuestion = question.CanSkipQuestion,
+                                        CanSkipQuestion = !question.CanSkipQuestion,
                                         SelectableAnswersListId = question.SelectableAnswersListId,
                                         SequenceOrder = question.SequenceOrder,
                                         IsUsed = question.IsUsed
@@ -227,7 +231,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                         QuestionaryId = questionary.Id,
                                         QuestionText = question.QuestionText,
                                         QuestionaryInputFieldTypeId = question.QuestionaryInputFieldTypeId,
-                                        CanSkipQuestion = question.CanSkipQuestion,
+                                        CanSkipQuestion = !question.CanSkipQuestion,
                                         SelectableAnswersListId = question.SelectableAnswersListId,
                                         SequenceOrder = question.SequenceOrder,
                                         IsUsed = question.IsUsed
@@ -235,13 +239,13 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             }
                         }
 
-                        
                         transaction.Commit();
-                        
+                        _logger.LogInformation("Анкета с Id :{0} успешно отредактирована в бд.",questionary.Id);
                         return questionary;
                     }
                     catch (Exception ex)
                     {
+                        _logger.LogInformation("Анкета с Id :{0} не отредактирована в бд с ошибкой : {1}.",questionary.Id, ex);
                         throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                     }
                 }
@@ -267,6 +271,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogInformation("Не удалось выполнить проверку на наличие такой анкеты в компании c Id:{1} в бд с ошибкой: {0}", ex, companyId);
                     throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                 }
             }

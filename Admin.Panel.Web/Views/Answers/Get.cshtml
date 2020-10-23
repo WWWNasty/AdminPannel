@@ -5,35 +5,39 @@
 }
 
 <h2>Список ответов</h2>
-
-<div class="card-body">
-    <input type="hidden" name="Id" value="@Model.Id" />
-    <h4 class="card-title">
-        @if (User.Identity.IsAuthenticated)
+ @if (User.Identity.IsAuthenticated)
         {
-            if (User.IsInRole("SuperAdministrator") || User.IsInRole("AnswerEdit"))
-            {
-                <a asp-controller="Answers" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
-            }
-            else
-            {
-                <h4 class="text-success">@Model.Name</h4>
-            }
+            <div class="card-body">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <h4 class="card-title">
+       
+                    @if (User.IsInRole("SuperAdministrator"))
+                    {
+                    <a asp-controller="Answers" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
+                    }
+                    else
+                    {
+                    <h4 class="text-success">@Model.Name</h4>
+                    }
+                </h4>
+                <div>
+                    <h5>
+                        Варианты ответов:
+                    </h5>
+                </div>
+                @foreach (var answer in Model.SelectableAnswers)
+                {
+                    <div class="card-body">
+                        <h7 class="card-title">@answer.AnswerText</h7>
+                    </div>
+                }
+            </div>
+            
+            <div class="form-group col-md-10 mt-5">
+                <a class="btn btn-outline-primary" asp-controller="Answers" asp-action="GetAll">Назад</a>
+            </div>
+            
         }
-    </h4>
-    <div>
-        <h5>
-            Варианты ответов:
-        </h5>
-    </div>
-    @foreach (var answer in Model.SelectableAnswers)
-    {
-        <div class="card-body">
-            <h7 class="card-title">@answer.AnswerText</h7>
-        </div>
-    }
-</div>
-
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

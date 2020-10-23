@@ -11,6 +11,7 @@ using Admin.Panel.Core.Interfaces.Repositories.UserManageRepositoryInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Web.Controllers
 {
@@ -19,12 +20,18 @@ namespace Admin.Panel.Web.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IManageUserRepository _manageUserRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<ManageUserController> _logger;
 
-        public ManageUserController(IManageUserRepository manageUserRepository, IUserRepository userRepository, IMapper mapper)
+        public ManageUserController(
+            IManageUserRepository manageUserRepository, 
+            IUserRepository userRepository, 
+            IMapper mapper, 
+            ILogger<ManageUserController> logger)
         {
             _manageUserRepository = manageUserRepository;
             _userRepository = userRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -85,8 +92,17 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _manageUserRepository.UpdateUser(model);
-                return View("GetAllUsers");
+                try
+                {
+                    _logger.LogInformation("Пользователь с Id:{0} успешно отредактирован", model.Id);
+                    await _manageUserRepository.UpdateUser(model);
+                    return View("GetAllUsers");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("Не удалось редактировать пользователя с Id: {0} c ошибкой: {1}", model.Id, e);
+                }
+               
             }
             var user = await _manageUserRepository.GetUser(model.Id);
 
@@ -130,10 +146,19 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _manageUserRepository.UpdateUser(model);
-                var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                List<GetAllUsersDto> model1 = await _manageUserRepository.GetAllUsersForUser(userId);
-                return RedirectToAction("GetAllUsersForUser", model1);
+                try
+                { 
+                    await _manageUserRepository.UpdateUser(model);
+                    _logger.LogInformation("Пользователь с Id:{0} успешно отредактирован", model.Id);
+                    var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                    List<GetAllUsersDto> model1 = await _manageUserRepository.GetAllUsersForUser(userId);
+                    return RedirectToAction("GetAllUsersForUser", model1);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("Не удалось редактировать пользователя с Id: {0} c ошибкой: {1}", model.Id, e);
+                }
+                
             }
             var user = await _manageUserRepository.GetUser(model.Id);
 

@@ -26,10 +26,9 @@
                 </div>
                 <div class="row">
                     <select class="new-selectpicker" asp-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId"
-                            asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))">
-                        <option selected="selected" disabled="disabled">Ничего не выбрано</option>
+                            asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))" required>
+                        <option selected="selected" disabled="disabled"></option>
                     </select>
-                    <span asp-validation-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId" class="text-danger"></span>
                 </div>
             </div>
         </div>

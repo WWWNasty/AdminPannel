@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Web.Controllers
 {
@@ -24,6 +25,7 @@ namespace Admin.Panel.Web.Controllers
     public class AccountController : Controller
     {
 
+        private readonly ILogger<AccountController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly IManageUserService _manageUserService;
         private readonly IUserRepository _userRepository;
@@ -35,7 +37,8 @@ namespace Admin.Panel.Web.Controllers
             IUserRepository userRepository,
             SignInManager<User> signInManager,
             IEmailSender emailSender, 
-            IManageUserService manageUserService)
+            IManageUserService manageUserService, 
+            ILogger<AccountController> logger)
 
         {
             _userManager = userManager;
@@ -43,6 +46,7 @@ namespace Admin.Panel.Web.Controllers
             _signInManager = signInManager;
             _emailSender = emailSender;
             _manageUserService = manageUserService;
+            _logger = logger;
         }
 
         [TempData]
@@ -88,21 +92,22 @@ namespace Admin.Panel.Web.Controllers
                     {
                         var userId = _userRepository.GetIdByName(model.Email);
                         var userRole = _userRepository.IsUserInRoleAsync(userId);
+                        _logger.LogInformation("Пользователь {0} с Id {1} был успешно авторизован.",userId, model.Email);
                         if (userRole == "SuperAdministrator")
                         {
                             return RedirectToAction("GetAll", "Questionary"); 
                         }
-                        return RedirectToAction("GetAllForUser", "Questionary"); 
+                        return RedirectToAction("GetAllForUser", "Questionary");
                     }
-
+                    _logger.LogInformation("Пользователь {0} не был авторизован.", model.Email);
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return View(model);
                 }
+                _logger.LogInformation("Попытка авторизации неактивного пользователя {0}.", model.Email);
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
                 //return RedirectToAction(nameof(Lockout));
             }
-
             // If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -257,8 +262,9 @@ namespace Admin.Panel.Web.Controllers
                 RegisterDto model = await _manageUserService.GetCompaniesAndRolesForUser(userId);
                 return View("Register", model);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError("Пользователья не удалось создать с ошибкой: {0}", ex);
                 return RedirectToAction("", "");
             }
         }
@@ -287,6 +293,7 @@ namespace Admin.Panel.Web.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation("Пользователь {0} был успешно создан.", model.Email);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
@@ -308,8 +315,18 @@ namespace Admin.Panel.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            try
+            {
+                _logger.LogInformation($"Пользователь {_userManager.GetUserName(User)} с ID: {_userManager.GetUserId(User)} вышел.");
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Не удалось выполнить выход с ошибкой: {0}", ex);
+                return RedirectToAction("", "");
+            }
+           
         }
 
         [HttpGet]
@@ -329,6 +346,7 @@ namespace Admin.Panel.Web.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
+                    _logger.LogInformation("Пароль не может быть изменен, пользователя {0} нет в системе.", model.Email);
                     // Don't reveal that the user does not exist or is not confirmed
                     return RedirectToAction(nameof(ForgotPasswordConfirmation));
                 }
@@ -339,6 +357,7 @@ namespace Admin.Panel.Web.Controllers
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
                 await _emailSender.SendEmailAsync(model.Email, "Reset Password",
                     $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                _logger.LogInformation("Ссылка на восстановление паролдя была отпрпавлена на почту {0}.", model.Email);
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 
@@ -401,14 +420,17 @@ namespace Admin.Panel.Web.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
+                _logger.LogInformation("Пароль не может быть изменен, пользователя {0} нет в системе.", model.Email);
                 // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
             var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
             if (result.Succeeded)
             {
+                _logger.LogInformation("Пароль был успешно изменен пользователю {0}.", model.Email);
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
+            _logger.LogInformation("Не удалось изменить пароль пользователю {0}.", model.Email);
             AddErrors(result);
             return View();
         }
@@ -419,6 +441,7 @@ namespace Admin.Panel.Web.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
+                _logger.LogError($"Пароль не может быть изменен, пользователя с Id: {_userManager.GetUserId(User)} невозможно загрузить.");
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
@@ -444,16 +467,19 @@ namespace Admin.Panel.Web.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
+                _logger.LogError($"Пароль не может быть изменен, пользователя с Id: {_userManager.GetUserId(User)} невозможно загрузить.");
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             if (!changePasswordResult.Succeeded)
             {
+                _logger.LogWarning($"Пароль не может быть изменен, пользователя с Id: {_userManager.GetUserId(User)} нет в системе.");
                 AddErrors(changePasswordResult);
                 return View(model);
             }
 
+            _logger.LogInformation($"Пароль был успешно измнен пользователю с Id: {_userManager.GetUserId(User)}.");
             await _signInManager.SignInAsync(user, isPersistent: false);
             StatusMessage = "Your password has been changed.";
 

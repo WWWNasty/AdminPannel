@@ -10,8 +10,8 @@ namespace Admin.Panel.Core.Entities.Questionary
         public int QuestionaryObjectId { get; set; }
         public int ObjectPropertyId { get; set; }
         
-        [Required(ErrorMessage = "Значение - обязательно!")]
-        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 2)]
+        [Required(ErrorMessage = "Поле обязательно!")]
+        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 1)]
         [Display(Name = "Значения")]
         public string Value { get; set; }
         

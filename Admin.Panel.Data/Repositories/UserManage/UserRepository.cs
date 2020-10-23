@@ -10,15 +10,18 @@ using Admin.Panel.Core.Interfaces.Repositories.UserManageRepositoryInterfaces;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Data.Repositories.UserManage
 {
     public class UserRepository: IUserRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<UserRepository> _logger;
 
-        public UserRepository(IConfiguration configuration)
+        public UserRepository(IConfiguration configuration, ILogger<UserRepository> logger)
         {
+            _logger = logger;
             _connectionString = configuration.GetConnectionString("questionaryConnection");
         }
 
@@ -74,10 +77,12 @@ namespace Admin.Panel.Data.Repositories.UserManage
                     //
                     // await cn.ExecuteAsync(queryAddCompanyToUser, userCompany);
 
+                    _logger.LogInformation("Пользователь {0} успешно добавлен в бд.", user.Email);
                     return IdentityResult.Success;
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError("Пользователь {1} не добавлен в бд с ошибкой: {0}", ex, user.Email);
                     throw new Exception($"{GetType().FullName}.WithConnection()", ex);
                 }
             }
@@ -100,6 +105,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError("Пользователь {1} не найден по email в бд с ошибкой: {0}", ex, normalizedEmail);
                     throw new Exception($"{GetType().FullName}.WithConnection()", ex);
                 }
             }
@@ -122,6 +128,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError("Пользователь с Id: {1} не найден в бд с ошибкой: {0}", ex, userId);
                     throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                 }
             }
@@ -152,8 +159,8 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 }
                 catch (Exception ex)
                 {
-
-                    throw new Exception($"{GetType().FullName}.наверное такой пользователь уже есть", ex);
+                    _logger.LogError("Пользователь {1} не найден по имени в бд с ошибкой: {0}", ex, normalizedUserName);
+                    throw new Exception($"{GetType().FullName}", ex);
                 }
 
             }
@@ -301,8 +308,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 }
                 catch (Exception ex)
                 {
-
-                    throw new Exception($"{GetType().FullName}.наверное такой пользователь уже есть", ex);
+                    throw new Exception($"{GetType().FullName}", ex);
                 }
 
             }
@@ -384,12 +390,13 @@ namespace Admin.Panel.Data.Repositories.UserManage
                     await cn.ExecuteAsync(@"UPDATE ApplicationUser SET UserName=@UserName,PasswordHash=@PasswordHash,NickName=@NickName,SecurityStamp=@SecurityStamp,IsConfirmed=@IsConfirmed,
                     NormalizedUserName=@NormalizedUserName,NormalizedEmail=@NormalizedEmail,Email=@Email,
                     EmailConfirmed=@EmailConfirmed,IsUsed=@IsUsed WHERE Id=@Id", user);
-
+                    _logger.LogInformation("Пользователь с Id: {0} успешно отредактирован в бд.", user.Id);
                     return IdentityResult.Success;
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                    _logger.LogError("Пользователь с Id: {0} не отредактирован с ошибкой в бд: {1}", user.Id, ex);
+                    throw new Exception($"{GetType().FullName}", ex);
                 }
             }
         }

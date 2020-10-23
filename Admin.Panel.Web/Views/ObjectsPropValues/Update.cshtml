@@ -5,77 +5,89 @@
     ViewData["Title"] = "Редактирование объекта";
 }
 
-<h2>@ViewBag.Title</h2>
+<div class="form-group mt-5">
+    <div class="col-md-10">
+        @* <h4>@ViewBag.Title</h4> *@
+        <h4>Привязка объекта</h4>
+    </div>
+</div>
 
-<form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
-    <hr />
-    <div asp-validation-summary="All" class="text-danger"></div>
-        <input type="hidden" name="Id" value="@Model.Id" />
-        <div class="form-group">
-            <div class="col-md-10">
-                <label asp-for="Name"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+<form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true" class="needs-validation" novalidate>
+    
+    <div asp-validation-summary="All" class="text-danger"></div> 
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <div class="form-group mt-4">
+        <div class="col-md-10">
+            <label asp-for="Name">Название объекта</label>
+            <input asp-for="Name" class="form-control" required>
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <div class="col-md-10">
+                    <div class="col">
+                        <div class="row">
+                            <label asp-for="QuestionaryObjectTypes"></label> 
+                        </div>
+                        <div class="row">
+                            <select class="selectpicker" asp-for="ObjectTypeId"
+                                    asp-items="Model.QuestionaryObjectTypes.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.ObjectTypeId == property.Id))" required>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="col">
+            <div class="form-group">
+                <div class="col-md-10">
+                    <div class="col">
+                        <div class="row">
+                            <label asp-for="Companies"></label> 
+                        </div>
+                        <div class="row">
+                            <select class="selectpicker" asp-for="CompanyId"
+                                    asp-items="Model.Companies.Select(company => new SelectListItem(company.CompanyName, company.CompanyId.ToString(), Model.CompanyId == company.CompanyId))" required>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group form-check">
+        <div class="col-md-10">
+            <input asp-for="IsUsed" type="checkbox" class="form-check-input">
+            <label asp-for="IsUsed" class="form-check-label align-bottom">Этот объект используется</label>
+        </div>
+    </div>
     <div class="form-group">
         <div class="col-md-10">
-            <label asp-for="Code"></label>
-            <input asp-for="Code" class="form-control" />
-            <span asp-validation-for="Code" class="text-danger"></span>
+            <label asp-for="Code">Код объекта</label>
+            <input asp-for="Code" class="form-control" required>
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-10">
             <label asp-for="Description"></label>
-            <input asp-for="Description" class="form-control" />
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group form-check">
-        <div class="col-md-10">
-            <input asp-for="IsUsed" type="checkbox" class="form-check-input"/>
-            <label asp-for="IsUsed" class="form-check-label align-bottom"></label>
+            <textarea asp-for="Description" class="form-control" required></textarea>
         </div>
     </div>
     
-    <div class="form-group">
-        <div class="col-md-10">
-            <div class="col">
-                <div class="row">
-                   <label asp-for="Companies"></label> 
-                </div>
-                <div class="row">
-                   <select class="selectpicker" asp-for="CompanyId"
-                                       asp-items="Model.Companies.Select(company => new SelectListItem(company.CompanyName, company.CompanyId.ToString(), Model.CompanyId == company.CompanyId))">
-                               </select>
-                               <span asp-validation-for="CompanyId" class="text-danger"></span> 
-                </div>
-            </div>
-        </div>
+    <div id="option-container">
+        @if (Model.SelectedObjectPropertyValues != null)
+        {
+            <partial name="_Properties"/>
+        }
     </div>
-     <div class="form-group">
-         <div class="col-md-10">
-             <div class="col">
-                 <div class="row">
-                     <label asp-for="QuestionaryObjectTypes"></label> 
-                 </div>
-                 <div class="row">
-                     <select class="selectpicker" asp-for="ObjectTypeId"
-                        asp-items="Model.QuestionaryObjectTypes.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.ObjectTypeId == property.Id))">
-                     </select>
-                     <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
-                 </div>
-             </div>
-         </div>
-         <div id="option-container">
-             @if (Model.SelectedObjectPropertyValues != null)
-             {
-                 <partial name="_Properties"/>
-             }
-         </div>
-        </div>
-    <button type="submit" class="btn btn-default">Сохранить</button>
+
+    <div class="form-group col-md-10 mt-5">
+        <button type="button" class="btn btn-outline-primary" id="back-button">Отмена</button>
+        <button type="submit" class="btn btn-primary ml-2">Сохранить</button>
+    </div>
 </form>
 
 @section Scripts {

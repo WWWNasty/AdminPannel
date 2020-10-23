@@ -1,3 +1,4 @@
+using System.IO;
 using Admin.Panel.Core.Entities.UserManage;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
@@ -21,6 +22,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Admin.Panel.Data.Repositories.Questionary.Questions;
 using Admin.Panel.Data.Repositories.UserManage;
+using Microsoft.Extensions.Logging;
 
 
 namespace Admin.Panel.Web
@@ -81,8 +83,11 @@ namespace Admin.Panel.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            var path = Directory.GetCurrentDirectory();  
+            loggerFactory.AddFile($"{path}\\Logs\\Log.txt");
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
