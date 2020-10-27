@@ -27,14 +27,6 @@ namespace Admin.Panel.Web.Controllers
             return View(model);
         }
 
-        //[HttpGet]
-        //[Authorize(Roles = "Админ")]
-        //public async Task<ActionResult> Get(int id)
-        //{
-        //    ApplicationCompany model = await _companyRepository.GetAsync(id);
-        //    return View(model);
-        //}
-
         [HttpGet]
         [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Create()

@@ -8,31 +8,41 @@
     ViewData["Title"] = "Редактирование списка ответов";
 }
 
-<h2>@ViewBag.Title</h2>
-
-<form asp-action="Update" asp-controller="Answers" method="post" asp-antiforgery="true" >
-    <hr />
-    <div asp-validation-summary="All" class="text-danger"></div>
+<form asp-action="Update" asp-controller="Answers" method="post" asp-antiforgery="true" class="needs-validation" novalidate>
+    <div class="form-group mt-5">
+        <div class="row">
+            <div class="col">
+                <div class="col">
+                    <h4>Редактирование списка ответов"@Model.Name"</h4>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="col form-group form-check">
+                    <div class="col">
+                        <input asp-for="IsUsed" type="checkbox" class="form-check-input">
+                        <label asp-for="IsUsed" class="form-check-label align-bottom">Этот список активен</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <input type="hidden" name="Id" value="@Model.Id"/>
+    
     <div class="form-group row">
-        <div class="col-md-10">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control"/>
-            <span asp-validation-for="Name" class="text-danger"></span>
+        <div class="col">
+            <div class="col-md-10">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" required>
+            </div>
         </div>
     </div>
-    <div class="form-group row">
-        <div class="col-md-10">
-            <label asp-for="IsUsed"></label>
-            <input asp-for="IsUsed" class="form-control"/>
-            <span asp-validation-for="IsUsed" class="text-danger"></span>
-        </div>
-    </div>
+
     <div class="form-group">
         <div class="col-md-10">
             <div class="col">
                 <div class="row">
-                    <label asp-for="QuestionaryInputFieldTypeses">Выбрать свойства</label>
+                    <label asp-for="QuestionaryInputFieldTypeses">Список вариантов контроллов для ввода ответа</label>
                 </div>
                 <div class="row">
                     <select class="selectpicker" asp-for="InputFieldTypesesId"
@@ -57,34 +67,35 @@
             foreach (int i in Range(0, Model.SelectableAnswers.Count))
             {
                 <div class="col-md-10 mt-3 card">
-                    <div class="voting-option-set mt-3">
-                        <div class="row">
-                            <div class="col form-group">
-                                @* <input type="hidden" name="Id" value="@Model.SelectableAnswers[i].Id"/> *@
-                                <input type="hidden" asp-for="@Model.SelectableAnswers[i].Id"/>
-                                <label asp-for="SelectableAnswers[i].AnswerText"></label>
-                                <input asp-for="SelectableAnswers[i].AnswerText" class="form-control"/>
-                                <span asp-validation-for="SelectableAnswers[i].AnswerText" class="text-danger"></span>
+                    <div class="col">
+                        <div class="voting-option-set mt-3">
+                            <div class="row">
+                                <div class="col form-group">
+                                    @* <input type="hidden" name="Id" value="@Model.SelectableAnswers[i].Id"/> *@
+                                    <input type="hidden" asp-for="@Model.SelectableAnswers[i].Id"/>
+                                    <label asp-for="SelectableAnswers[i].AnswerText"></label>
+                                    <input asp-for="SelectableAnswers[i].AnswerText" class="form-control" required>
+                                </div>
                             </div>
-                        </div>
-                                  
-                        <div class="row">
-                            <div class="col form-group">
-                                <label asp-for="SelectableAnswers[i].SequenceOrder"></label>
-                                <input asp-for="SelectableAnswers[i].SequenceOrder" class="form-control"/>
-                                <span asp-validation-for="SelectableAnswers[i].SequenceOrder" class="text-danger"></span>
-                            </div>
-                                      
-                            <div class="col form-group form-check">
-                                <input asp-for="SelectableAnswers[i].IsDefaultAnswer" type="checkbox" class="form-check-input"/>
-                                <label asp-for="SelectableAnswers[i].IsDefaultAnswer" class="form-check-label align-bottom"></label>
-                                <span asp-validation-for="SelectableAnswers[i].IsDefaultAnswer" class="text-danger"></span>
-                            </div>
-                                      
-                            <div class="col form-group form-check">
-                                <input asp-for="SelectableAnswers[i].IsInvolvesComment" type="checkbox" class="form-check-input"/>
-                                <label asp-for="SelectableAnswers[i].IsInvolvesComment" class="form-check-label align-bottom"></label>
-                                <span asp-validation-for="SelectableAnswers[i].IsInvolvesComment" class="text-danger"></span>
+                        
+                            <div class="row">
+                                <div class="col form-group">
+                                    <label asp-for="SelectableAnswers[i].SequenceOrder"></label>
+                                    <input asp-for="SelectableAnswers[i].SequenceOrder" class="form-control" required>
+                                    <span asp-validation-for="SelectableAnswers[i].SequenceOrder" class="text-danger"></span>
+                                </div>
+                        
+                                <div class="col form-group form-check">
+                                    <input asp-for="SelectableAnswers[i].IsDefaultAnswer" type="checkbox" class="form-check-input"/>
+                                    <label asp-for="SelectableAnswers[i].IsDefaultAnswer" class="form-check-label align-bottom"></label>
+                                    <span asp-validation-for="SelectableAnswers[i].IsDefaultAnswer" class="text-danger"></span>
+                                </div>
+                        
+                                <div class="col form-group form-check">
+                                    <input asp-for="SelectableAnswers[i].IsInvolvesComment" type="checkbox" class="form-check-input"/>
+                                    <label asp-for="SelectableAnswers[i].IsInvolvesComment" class="form-check-label align-bottom"></label>
+                                    <span asp-validation-for="SelectableAnswers[i].IsInvolvesComment" class="text-danger"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -105,7 +116,7 @@
     
 </form>
 <div class="col-md-10 mt-3 voting-option-set card" id="option-template" style="display: none">
-            <div class="voting-option-set mt-3" id="0">
+            <div class="voting-option-set col mt-3" id="0">
                 <div class="row">
                     <div class="col form-check">
                         <label asp-for="SelectableAnswers[0].AnswerText"></label>
@@ -114,10 +125,10 @@
                     </div>
                 </div>
                 
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col form-check">
                         <label asp-for="SelectableAnswers[0].SequenceOrder"></label>
-                        <input asp-for="SelectableAnswers[0].SequenceOrder" class="form-control"/>
+                        <input asp-for="SelectableAnswers[0].SequenceOrder" class="form-control" required>
                         <span asp-validation-for="SelectableAnswers[0].SequenceOrder" class="text-danger"></span>
                     </div>
                                   

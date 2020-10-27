@@ -16,11 +16,11 @@
     <form asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right" asp-antiforgery="true">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a class="nav-link">Привет, @User.Identity.Name!</a>
+                @* <a class="nav-link">Привет, @User.Identity.Name!</a> *@
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Инструменты
+                     @User.Identity.Name
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                      @if (User.Identity.IsAuthenticated)
@@ -57,7 +57,7 @@
                         {
                             <div class="dropdown-divider"></div>
                             <a asp-controller="ManageUser" asp-action="GetAllUsersForUser" class="dropdown-item">Все пользователи</a>
-                            <a asp-controller="Account" asp-action="RegisterForUser" class="dropdown-item">Создать пользователя</a>
+@*                             <a asp-controller="Account" asp-action="RegisterForUser" class="dropdown-item">Создать пользователя</a> *@
                         }
      
                         if (User.IsInRole("SuperAdministrator"))
@@ -70,7 +70,7 @@
                             <a asp-controller="Answers" asp-action="GetAll" class="dropdown-item">Все ответы</a>
                             <a asp-controller="Questionary" asp-action="GetAll" class="dropdown-item">Все Анкеты</a>
                             <a asp-controller="ManageUser" asp-action="GetAllUsers" class="dropdown-item">Все пользователи</a>
-                            <a asp-controller="Account" asp-action="Register" class="dropdown-item">Создать пользователя</a>
+@*                             <a asp-controller="Account" asp-action="Register" class="dropdown-item">Создать пользователя</a> *@
                            
                         }
                     }

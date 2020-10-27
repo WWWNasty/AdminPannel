@@ -21,7 +21,7 @@ namespace Admin.Panel.Web.Controllers
         }
         
         [HttpGet]
-        [Authorize(Roles = "SuperAdministrator, PropertiesObjectRead")]
+        [Authorize(Roles = "SuperAdministrator, PropertiesObjectRead, PropertiesObjectEdit")]
         public async Task<ActionResult> GetAll()
         {
             List<ObjectProperty> prop = await _objectPropertiesRepository.GetAllAsync();
@@ -47,7 +47,7 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _objectPropertiesRepository.CreateAsync(model);
-                return RedirectToAction("Create", "Property");
+                return RedirectToAction("GetAll", "Property");
             }
             model.ObjectProperties = await _objectPropertiesRepository.GetAllAsync();
             return View("Properties", model);

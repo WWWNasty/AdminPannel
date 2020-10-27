@@ -13,8 +13,7 @@
 </div>
 
 <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true" class="needs-validation" novalidate>
-    
-    <div asp-validation-summary="All" class="text-danger"></div> 
+
     <input type="hidden" name="Id" value="@Model.Id" />
     <div class="form-group mt-4">
         <div class="col-md-10">
