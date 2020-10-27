@@ -265,7 +265,7 @@ namespace Admin.Panel.Web.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("Пользователья не удалось создать с ошибкой: {0}", ex);
-                return RedirectToAction("", "");
+                return RedirectToAction("Error", "Error");
             }
         }
 

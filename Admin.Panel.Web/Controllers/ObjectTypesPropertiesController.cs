@@ -67,9 +67,16 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Update(int id)
         {
-            QuestionaryObjectType model = await _questionaryObjectTypesService.GetObjectForUpdare(id);
+            try
+            {
+                QuestionaryObjectType model = await _questionaryObjectTypesService.GetObjectForUpdare(id);
 
-            return View(model);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("Error", "Error");
+            }
         }
 
         [HttpPost]
