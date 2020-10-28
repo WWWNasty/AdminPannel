@@ -252,7 +252,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
             }
         }
 
-        public async Task<bool> IfQuestionaryCurrentInCompanyAsync(int companyId,int typeObjId)
+        public async Task<bool> IfQuestionaryCurrentInCompanyAsync(int companyId,int typeObjId, int questionaryId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -263,11 +263,17 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                     List<QuestionaryDto> questionary =  connection.Query<QuestionaryDto>(@"SELECT * FROM Questionary q WHERE q.ObjectTypeId = @ObjecttypeId AND q.CompanyId = @CompanyId AND q.IsUsed = 1", 
                         new {@ObjecttypeId = typeObjId, @CompanyId = companyId}).ToList();
                     if (questionary.Count != 0)
-                    {
-                        return true;
+                    { 
+                        foreach (QuestionaryDto q in questionary)
+                        {
+                            if (q.Id == questionaryId)
+                            {
+                                return false; 
+                            }
+                            return true;
+                        }
                     }
-                    return false; 
-                    
+                    return false;
                 }
                 catch (Exception ex)
                 {

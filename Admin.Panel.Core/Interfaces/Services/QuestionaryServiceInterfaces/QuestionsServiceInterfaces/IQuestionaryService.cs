@@ -9,6 +9,6 @@ namespace Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.Ques
         public Task<QuestionaryDto> GetAllForQuestionaryUpdate(QuestionaryDto model);
         public Task<QuestionaryDto> GetAllForQuestionaryForUserCreate(QuestionaryDto model, string idUser);
         public Task<QuestionaryDto> GetAllForQuestionaryForUserUpdate(QuestionaryDto model, string idUser);
-        public Task<bool> IfQuestionaryCurrentInCompany(int idCompany, int idObjType);
+        public Task<bool> IfQuestionaryCurrentInCompany(int idCompany, int idObjType, int idQuestionary);
     }
 }

@@ -61,7 +61,7 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
+                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId, model.Id);
                 if (current == true)
                 {
                     model = await _questionaryService.GetAllForQuestionaryCreate(model);
@@ -108,7 +108,7 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
+                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId, model.Id);
                 if (current == true)
                 {
                     var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -188,7 +188,7 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
+                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId, model.Id);
                 if (current == true && model.IsUsed == true)
                 {
                     model = await _questionaryService.GetAllForQuestionaryUpdate(model);
@@ -219,7 +219,7 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId);
+                var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId, model.Id);
                 if (current == true && model.IsUsed == true)
                 {
                     var user = User.FindFirstValue(ClaimTypes.NameIdentifier);

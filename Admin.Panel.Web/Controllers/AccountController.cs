@@ -197,7 +197,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<ActionResult> Register()
         {
             try
@@ -212,7 +212,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "SuperAdministrator")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterDto model, string returnUrl = null)
         {
@@ -252,8 +252,8 @@ namespace Admin.Panel.Web.Controllers
 
         }
 
-         [HttpGet]
-        [AllowAnonymous]
+        [HttpGet]
+        [Authorize(Roles = "UsersEdit")]
         public async Task<ActionResult> RegisterForUser()
         {
             try
@@ -265,12 +265,12 @@ namespace Admin.Panel.Web.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("Пользователья не удалось создать с ошибкой: {0}", ex);
-                return RedirectToAction("Error", "Error");
+                return RedirectToAction("Error", "Home");
             }
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "UsersEdit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterForUser(RegisterDto model, string returnUrl = null)
         {

@@ -73,9 +73,9 @@ namespace Admin.Panel.Web.Controllers
 
                 return View(model);
             }
-            catch (Exception e)
+            catch (Exception e)   
             {
-                return RedirectToAction("Error", "Error");
+                return RedirectToAction("Error", "Home");
             }
         }
 

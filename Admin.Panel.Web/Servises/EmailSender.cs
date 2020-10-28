@@ -25,8 +25,8 @@ namespace Admin.Panel.Web.Servises
                 ServicePointManager.ServerCertificateValidationCallback = TrustAllCertificateCallback;
 
                 const string server = "mail.payberry.ru";
-                const string password = "@Grysenk02";
-                string mailFrom = "gryshenko@payberry.ru";
+                const string password = "Fhgfh@45G6HG";
+                string mailFrom = "poll@payberry.ru";
                 const string userName = "shop.logs";
                 var msg = new MailMessage(new MailAddress(mailFrom, mailFrom), new MailAddress(email))
                 {

@@ -12,6 +12,6 @@ namespace Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfac
         public Task<List<QuestionaryDto>> GetAllForUserAsync(string userId);
         public Task<QuestionaryDto> CreateAsync(QuestionaryDto selectableAnswersList);
         public Task<QuestionaryDto> UpdateAsync(QuestionaryDto questionary);
-        public Task<bool> IfQuestionaryCurrentInCompanyAsync(int companyId, int typeObjId);
+        public Task<bool> IfQuestionaryCurrentInCompanyAsync(int companyId, int typeObjId, int questionaryId);
     }
 }

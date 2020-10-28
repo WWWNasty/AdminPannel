@@ -142,9 +142,9 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             return model;
         }
   
-        public Task<bool> IfQuestionaryCurrentInCompany(int idCompany, int idObjType)
+        public Task<bool> IfQuestionaryCurrentInCompany(int idCompany, int idObjType, int idQuestionary)
         {
-            var current = _questionaryRepository.IfQuestionaryCurrentInCompanyAsync(idCompany, idObjType);
+            var current = _questionaryRepository.IfQuestionaryCurrentInCompanyAsync(idCompany, idObjType, idQuestionary);
             return current;
         }
 
