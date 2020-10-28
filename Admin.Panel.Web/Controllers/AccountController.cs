@@ -237,7 +237,7 @@ namespace Admin.Panel.Web.Controllers
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                    //await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
                     //await _signInManager.SignInAsync(user, isPersistent: false);
                     //return RedirectToLocal(returnUrl);
@@ -296,7 +296,7 @@ namespace Admin.Panel.Web.Controllers
                     _logger.LogInformation("Пользователь {0} был успешно создан.", model.Email);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                    //await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
                     //await _signInManager.SignInAsync(user, isPersistent: false);
                     //return RedirectToLocal(returnUrl);

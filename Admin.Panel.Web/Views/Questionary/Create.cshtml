@@ -13,7 +13,6 @@
 </div>
 
 <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true" class="needs-validation" novalidate>
-<div asp-validation-summary="All" class="text-danger"></div>
 @if (Model.IfQuestionaryCurrentInCompany == true)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">

@@ -11,7 +11,7 @@ namespace Admin.Panel.Core.Entities.UserManage
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Поле ФИО пользователя - обязательно!")]
-        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 4)]
+        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 2)]
         [Display(Name = "ФИО пользователя")]
         public string Nickname { get; set; }
 

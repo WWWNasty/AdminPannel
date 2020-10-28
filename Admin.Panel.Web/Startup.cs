@@ -62,6 +62,7 @@ namespace Admin.Panel.Web
                 //.AddDapperStores(options => {
                 //    options.AddRolesTable<ExtendedRolesTable, ExtendedIdentityRole>();
                 //});
+                .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
                 .AddDefaultTokenProviders();
             services.AddTransient<IEmailSender, EmailSender>();
             //TODO сложность пароля сделать по сложнее
