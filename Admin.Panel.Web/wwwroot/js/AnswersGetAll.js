@@ -7,7 +7,7 @@ const loadAnswers = async event => {
 
     debugger;
 
-    const partial = await $.get(`/Questionary/AnswersGetAll/${id}?index=${index}`);
+    const partial = await $.get(global.GetUri(`Questionary/AnswersGetAll/${id}?index=${index}`));
     
     const parent = $(event.target).parents('.aa-container');
 
