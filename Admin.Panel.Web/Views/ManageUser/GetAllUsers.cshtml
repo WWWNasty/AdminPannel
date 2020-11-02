@@ -26,17 +26,23 @@
     <div class="card">
         <div class="card-header">
             <div class="row">
-                <div class="col">
+                <div class="col-md-2">
                     Имя пользователя
                 </div>
-                <div class="col">
+                <div class="col-md-2">
                     Статус
                 </div>
-                <div class="col">
+                <div class="col-md-2">
                     Email
                 </div>
-                <div class="col">
+                <div class="col-md-2">
                     Создан
+                </div>
+                <div class="col-md-1">
+                    Роль
+                </div>
+                <div class="col">
+                    Компания
                 </div>
             </div>
         </div>
@@ -51,7 +57,7 @@
                     <div class="row">
                         @if (obj.IsUsed)
                         {
-                            <div class="col">
+                            <div class="col-md-2">
                                 
                                 @if (User.IsInRole("SuperAdministrator"))
                                 {
@@ -66,22 +72,33 @@
                                     @obj.Nickname 
                                 }
                             </div>
-                            <div class="col">
+                            <div class="col-md-2">
                                 <div class="row">
                                     <div style="width: 8px; height: 8px; background-color: #5BD148; border-radius: 4px" class="my-auto mr-1"></div>
                                     <h7>активен</h7>
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col-md-2">
                                 @obj.Email
                             </div>
-                            <div class="col">
+                            <div class="col-md-2">
                                 @obj.CreatedDate
+                            </div>
+                            <div class="col-md-1">
+                                @obj.Role
+                            </div>
+                            <div class="col">
+                                <ul>
+                                    @foreach (var company in obj.Companies)
+                                    {
+                                        <li>@company.CompanyName</li>
+                                    }
+                                </ul>
                             </div>
                         }
                         else
                         {
-                            <div class="col">
+                            <div class="col-md-2">
                                  @if (User.IsInRole("SuperAdministrator"))
                                  {
                                      <a asp-controller="ManageUser" asp-action="UpdateUser" asp-route-userId="@obj.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => obj.Nickname)</a>
@@ -95,17 +112,28 @@
                                      @obj.Nickname
                                  }
                             </div>
-                            <div class="col">
+                            <div class="col-md-2">
                                 <div class="row">
                                     <div style="width: 8px; height: 8px; background-color: #CDCDCD; border-radius: 4px" class="my-auto mr-1"></div>
                                     <h7 style="color: #CDCDCD;">не активен</h7>
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col-md-2">
                                 <h7 style="color: #CDCDCD;">@obj.Email</h7>
                             </div>
-                            <div class="col text-secondary">
+                            <div class="col-md-2">
                                 <h7 style="color: #CDCDCD;">@obj.CreatedDate</h7>
+                            </div>
+                            <div class="col-md-1" style="color: #CDCDCD;">
+                                @obj.Role
+                            </div>
+                            <div class="col" style="color: #CDCDCD;">
+                                <ul>
+                                    @foreach (var company in obj.Companies)
+                                    {
+                                        <li>@company.CompanyName</li>
+                                    }
+                                </ul>
                             </div>
                         }
                     </div>

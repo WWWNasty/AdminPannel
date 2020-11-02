@@ -4,12 +4,15 @@
 @{
     ViewData["Title"] = "Создание типа объекта";
 }
-
-<h2>@ViewBag.Title</h2>
+<div class="form-group mt-5">
+    <div class="col-md-10">
+        <h4>@ViewBag.Title</h4> 
+    </div>
+</div>
 
 <form asp-action="Create" asp-controller="ObjectTypesProperties" method="post" asp-antiforgery="true" class="needs-validation" novalidate>
-    <hr />
-    <div asp-validation-summary="All" class="text-danger"></div>
+  
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
         <div class="col-md-10">
             <label asp-for="Name"></label>
@@ -52,26 +55,22 @@
         <div class="row">
             <div class="col form-group">
                 <label asp-for="NewSelectedObjectProperties[0].Name"></label>
-                <input asp-for="NewSelectedObjectProperties[0].Name" class="form-control"/>
-                <span asp-validation-for="NewSelectedObjectProperties[0].Name" class="text-danger"></span>
+                <input asp-for="NewSelectedObjectProperties[0].Name" class="form-control" required>
             </div>
         </div>
                 
         <div class="row mt-2">
             <div class="col form-group">
                 <label asp-for="NewSelectedObjectProperties[0].NameInReport"></label>
-                <input asp-for="NewSelectedObjectProperties[0].NameInReport" class="form-control"/>
-                <span asp-validation-for="NewSelectedObjectProperties[0].NameInReport" class="text-danger"></span>
+                <input asp-for="NewSelectedObjectProperties[0].NameInReport" class="form-control" required>
             </div>
             <div class="col form-group form-check">
                 <input asp-for="NewSelectedObjectProperties[0].IsUsedInReport" type="checkbox" class="form-check-input"/>
                 <label asp-for="NewSelectedObjectProperties[0].IsUsedInReport" class="form-check-label align-bottom"></label>
-                <span asp-validation-for="NewSelectedObjectProperties[0].IsUsedInReport" class="text-danger"></span>
             </div>
             <div class="col form-group">
                 <label asp-for="NewSelectedObjectProperties[0].ReportCellStyle"></label>
-                <input asp-for="NewSelectedObjectProperties[0].ReportCellStyle" class="form-control"/>
-                <span asp-validation-for="NewSelectedObjectProperties[0].ReportCellStyle" class="text-danger"></span>
+                <input asp-for="NewSelectedObjectProperties[0].ReportCellStyle" class="form-control" required>
             </div>
         </div>
     </div>

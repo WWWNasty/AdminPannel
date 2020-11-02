@@ -83,3 +83,28 @@ body {
   background-color: #fff ;
   border-color: #ced4da ;
 }
+
+.error-container img{
+  padding-top: 45px;
+  padding-bottom: 38px;
+  width: 79px;
+}
+
+.poll-container {
+  width: 100%;
+  margin: 0;
+}
+
+.error-container{
+  font-size: 22px;
+  text-align: center;
+  padding-bottom: 40px;
+}
+
+.error-container p{
+  font-size: 18px;
+  line-height: 28px;
+  color: #262626;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}

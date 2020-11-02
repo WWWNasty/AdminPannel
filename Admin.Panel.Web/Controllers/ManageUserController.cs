@@ -66,7 +66,7 @@ namespace Admin.Panel.Web.Controllers
         }
         
         [HttpGet]
-        [Authorize(Roles = "SuperAdministrator, UsersEdit")]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> UpdateUser(int userId)
         {
            var user = await _manageUserRepository.GetUser(userId);
@@ -78,6 +78,7 @@ namespace Admin.Panel.Web.Controllers
                UserName = user.UserName,
                Nickname = user.Nickname,
                Email = user.Email,
+               Role = user.Role
                //CreatedDate = user.CreatedDate,
                //ApplicationCompanyId = user.ApplicationCompanyId
            };
@@ -86,7 +87,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "SuperAdministrator, UsersEdit")]
+        [Authorize(Roles = "SuperAdministrator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> UpdateUser(UpdateUserViewModel model)
         {
@@ -94,9 +95,29 @@ namespace Admin.Panel.Web.Controllers
             {
                 try
                 {
-                    _logger.LogInformation("Пользователь с Id:{0} успешно отредактирован", model.Id);
+                    var isLastAdmin = await _manageUserRepository.IsAdminLastActive();
+                    if (isLastAdmin == true && model.IsUsed == false)
+                    {
+                        var usr = await _manageUserRepository.GetUser(model.Id);
+
+                        model = new UpdateUserViewModel()
+                        {
+                            Id = usr.Id,
+                            IsUsed = usr.IsUsed,
+                            UserName = usr.UserName,
+                            Nickname = usr.Nickname,
+                            Email = usr.Email,
+                            Role = usr.Role,
+                            IsAdminLastActive = true
+                            //CreatedDate = user.CreatedDate,
+                            //ApplicationCompanyId = user.ApplicationCompanyId
+                        };
+                        return View(model);
+                    }
+                   
                     await _manageUserRepository.UpdateUser(model);
-                    return View("GetAllUsers");
+                    _logger.LogInformation("Пользователь с Id:{0} успешно отредактирован", model.Id);
+                    return RedirectToAction("GetAllUsers", "ManageUser");
                 }
                 catch (Exception e)
                 {
@@ -113,6 +134,7 @@ namespace Admin.Panel.Web.Controllers
                 UserName = user.UserName,
                 Nickname = user.Nickname,
                 Email = user.Email,
+                Role = user.Role
                 //CreatedDate = user.CreatedDate,
                 //ApplicationCompanyId = user.ApplicationCompanyId
             };
@@ -132,6 +154,8 @@ namespace Admin.Panel.Web.Controllers
                 UserName = user.UserName,
                 Nickname = user.Nickname,
                 Email = user.Email,
+                Role = user.Role,
+                IsAdminLastActive = true
                 //CreatedDate = user.CreatedDate,
                 //ApplicationCompanyId = user.ApplicationCompanyId
             };
@@ -147,7 +171,26 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 try
-                { 
+                {   var isLastAdmin = await _manageUserRepository.IsAdminLastActive();
+                    if (isLastAdmin == true && model.IsUsed == false)
+                    {
+                        var usr = await _manageUserRepository.GetUser(model.Id);
+
+                        model = new UpdateUserViewModel()
+                        {
+                            Id = usr.Id,
+                            IsUsed = usr.IsUsed,
+                            UserName = usr.UserName,
+                            Nickname = usr.Nickname,
+                            Email = usr.Email,
+                            Role = usr.Role,
+                            IsAdminLastActive = true
+                            //CreatedDate = user.CreatedDate,
+                            //ApplicationCompanyId = user.ApplicationCompanyId
+                        };
+                        return RedirectToAction("GetAllUsersForUser", model);
+                        
+                    }
                     await _manageUserRepository.UpdateUser(model);
                     _logger.LogInformation("Пользователь с Id:{0} успешно отредактирован", model.Id);
                     var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -169,8 +212,9 @@ namespace Admin.Panel.Web.Controllers
                 UserName = user.UserName,
                 Nickname = user.Nickname,
                 Email = user.Email,
+                Role = user.Role
                 //CreatedDate = user.CreatedDate,
-                //ApplicationCompanyId = user.ApplicationCompanyId
+                //A pplicationCompanyId = user.ApplicationCompanyId
             };
             return View("UpdateUser", model);
         }

@@ -45,7 +45,7 @@ function addDeleteButtonHandler() {
 
 function deleteVotingOption() {
     debugger;
-    if (countAnsw > 1) {
+    if (countAnsw > 0) {
         let del = $('.answer-option').last().remove();
         countAnsw--;
     }

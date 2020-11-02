@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Admin.Panel.Core.Entities.UserManage
 {
@@ -36,6 +37,8 @@ namespace Admin.Panel.Core.Entities.UserManage
         //public string ConfirmationToken { get; set; }
         public DateTime CreatedDate { get; set; }
         public bool IsUsed { get; set; }
+        public string Role { get; set; }
+        public List<ApplicationCompany> Companies { get; set; }
         public int ApplicationCompanyId { get; set; }
     }
 }

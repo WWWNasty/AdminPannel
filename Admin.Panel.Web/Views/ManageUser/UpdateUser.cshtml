@@ -5,10 +5,23 @@
     ViewData["Title"] = "Редактирование";
 }
 
-<h2>@ViewBag.Title</h2>
+<div class="form-group mt-5">
+    <div class="col-md-10">
+        <h4>@ViewBag.Title</h4> 
+    </div>
+</div>
 
 <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
-    <hr />
+   
+    @if (Model.IsAdminLastActive == true)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Единственного активного пользователя Администратора в системе нельзя заблокировать!</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
     <div asp-validation-summary="All" class="text-danger"></div>
     <input type="hidden" name="Id" value="@Model.Id"/>
     <div class="form-group">
@@ -32,9 +45,15 @@
             @* <label asp-for="UserName"></label> *@
             @* <input asp-for="UserName" class="form-control" /> *@
             @* <span asp-validation-for="UserName" class="text-danger"></span> *@
-           UserName: @Model.UserName
+            UserName: @Model.UserName
         </div>
     </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            Роль: @Model.Role
+        </div>
+    </div>
+    
     <div class="form-group form-check">
         <div class="col-md-10">
             <input type="checkbox" class="form-check-input" asp-for="IsUsed" class="form-control" />
@@ -42,7 +61,10 @@
             <span asp-validation-for="IsUsed" class="text-danger"></span>
         </div>
     </div>
-    <button type="submit" class="btn btn-default">Сохранить</button>
+    <div class="form-group col-md-10 mt-5">
+        <button type="button" class="btn btn-outline-primary" id="back-button" >Отмена</button>
+        <button type="submit" class="btn btn-primary ml-2">Сохранить</button>
+    </div>
 </form>
 
 

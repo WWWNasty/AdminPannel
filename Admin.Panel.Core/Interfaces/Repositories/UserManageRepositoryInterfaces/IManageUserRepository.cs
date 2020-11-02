@@ -11,6 +11,8 @@ namespace Admin.Panel.Core.Interfaces.Repositories.UserManageRepositoryInterface
 
         public Task<int> UpdateUser(UpdateUserViewModel user);
 
-        public Task<User> GetUser(int userId);
+        public Task<UpdateUserViewModel> GetUser(int userId);
+
+        public Task<bool> IsAdminLastActive();
     }
 }

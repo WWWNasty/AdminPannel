@@ -10,12 +10,14 @@
         //public bool EmailConfirmed { get; set; }
         //public string NormalizedEmail { get; set; }
         public string Nickname { get; set; }
+        
+        public string Role { get; set; }
+        public bool IsAdminLastActive { get; set; }
         //public string PasswordHash { get; set; }
         //public string SecurityStamp { get; set; }
         //public bool IsConfirmed { get; set; }
         //public string ConfirmationToken { get; set; }
         //public DateTime CreatedDate { get; set; }
-
         //public int ApplicationCompanyId { get; set; }
     }
 }
