@@ -50,7 +50,6 @@
                             Model.SelectedQuestionaryInputFieldTypeses.Select(selectedProperty => selectedProperty.Id).Contains(property.Id)))"
                             multiple>
                     </select>
-                    <span asp-validation-for="InputFieldTypesesId" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -88,13 +87,11 @@
                                 <div class="col form-group form-check">
                                     <input asp-for="SelectableAnswers[i].IsDefaultAnswer" type="checkbox" class="form-check-input"/>
                                     <label asp-for="SelectableAnswers[i].IsDefaultAnswer" class="form-check-label align-bottom"></label>
-                                    <span asp-validation-for="SelectableAnswers[i].IsDefaultAnswer" class="text-danger"></span>
                                 </div>
                         
                                 <div class="col form-group form-check">
                                     <input asp-for="SelectableAnswers[i].IsInvolvesComment" type="checkbox" class="form-check-input"/>
                                     <label asp-for="SelectableAnswers[i].IsInvolvesComment" class="form-check-label align-bottom"></label>
-                                    <span asp-validation-for="SelectableAnswers[i].IsInvolvesComment" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -120,12 +117,11 @@
                 <div class="row">
                     <div class="col form-check">
                         <label asp-for="SelectableAnswers[0].AnswerText"></label>
-                        <input asp-for="SelectableAnswers[0].AnswerText" class="form-control"/>
-                        <span asp-validation-for="SelectableAnswers[0].AnswerText" class="text-danger"></span>
+                        <input asp-for="SelectableAnswers[0].AnswerText" class="form-control" required>
                     </div>
                 </div>
                 
-                <div class="row mb-3">
+                <div class="row mb-3 mt-3">
                     <div class="col form-check">
                         <label asp-for="SelectableAnswers[0].SequenceOrder"></label>
                         <input asp-for="SelectableAnswers[0].SequenceOrder" class="form-control" required>
@@ -135,13 +131,11 @@
                     <div class="col form-group form-check">
                         <input asp-for="SelectableAnswers[0].IsDefaultAnswer" type="checkbox" class="form-check-input"/>
                         <label asp-for="SelectableAnswers[0].IsDefaultAnswer" class="form-check-label align-bottom"></label>
-                        <span asp-validation-for="SelectableAnswers[0].IsDefaultAnswer" class="text-danger"></span>
                     </div>
                                                              
                     <div class="col form-group form-check">
                         <input asp-for="SelectableAnswers[0].IsInvolvesComment" type="checkbox" class="form-check-input"/>
                         <label asp-for="SelectableAnswers[0].IsInvolvesComment" class="form-check-label align-bottom"></label>
-                        <span asp-validation-for="SelectableAnswers[0].IsInvolvesComment" class="text-danger"></span>
                     </div>
                 </div>
             </div>

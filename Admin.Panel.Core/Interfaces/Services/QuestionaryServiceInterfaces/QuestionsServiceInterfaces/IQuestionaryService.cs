@@ -5,10 +5,10 @@ namespace Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.Ques
 {
     public interface IQuestionaryService
     {
-        public Task<QuestionaryDto> GetAllForQuestionaryCreate(QuestionaryDto model);
-        public Task<QuestionaryDto> GetAllForQuestionaryUpdate(QuestionaryDto model);
-        public Task<QuestionaryDto> GetAllForQuestionaryForUserCreate(QuestionaryDto model, string idUser);
-        public Task<QuestionaryDto> GetAllForQuestionaryForUserUpdate(QuestionaryDto model, string idUser);
-        public Task<bool> IfQuestionaryCurrentInCompany(int idCompany, int idObjType, int idQuestionary);
+        Task<QuestionaryDto> GetAllForQuestionaryCreate(QuestionaryDto model);
+        Task<QuestionaryDto> GetAllForQuestionaryUpdate(QuestionaryDto model);
+        Task<QuestionaryDto> GetAllForQuestionaryForUserCreate(QuestionaryDto model, string idUser);
+        Task<QuestionaryDto> GetAllForQuestionaryForUserUpdate(QuestionaryDto model, string idUser);
+        Task<bool> IfQuestionaryCurrentInCompany(int idCompany, int idObjType, int idQuestionary);
     }
 }

@@ -56,9 +56,6 @@
                                 asp-items="Model.QuestionaryObjectTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))" required>
                             <option selected="selected" disabled="disabled"></option>
                         </select>
-                        <div class="invalid-feedback">
-                            <span asp-validation-for="ObjectTypeId" class="text-danger"></span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -77,7 +74,6 @@
                                 asp-items="Model.ApplicationCompanies.Select(o => new SelectListItem(o.CompanyName, o.CompanyId.ToString()))" required>
                             <option selected="selected" disabled="disabled"></option>
                         </select>
-                        <span asp-validation-for="CompanyId" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -104,7 +100,6 @@
                                <div class="col form-group form-check ">
                                    <input asp-for="QuestionaryQuestions[i].IsUsed" type="checkbox" class="form-check-input chk-used-input" >
                                    <label asp-for="QuestionaryQuestions[i].IsUsed" class="form-check-label align-bottom">Этот вопрос используется в анкете</label>
-                                   <span asp-validation-for="QuestionaryQuestions[i].IsUsed" class="text-danger"></span>
                                </div>
                            </div>
                            
@@ -122,14 +117,12 @@
                                <input type="hidden" asp-for="@Model.QuestionaryQuestions[i].Id"/>
                                <label asp-for="QuestionaryQuestions[i].QuestionText"></label>
                                <input asp-for="QuestionaryQuestions[i].QuestionText" class="form-control" required>
-                               <span asp-validation-for="QuestionaryQuestions[i].QuestionText" class="text-danger"></span>
                            </div>
                        </div>
                               
                        <div class="col form-group form-check">
                            <input asp-for="QuestionaryQuestions[i].CanSkipQuestion" type="checkbox" class="form-check-input chk-skip-input" >
                            <label asp-for="QuestionaryQuestions[i].CanSkipQuestion" class="form-check-label align-bottom">Это обязательный вопрос</label>
-                           <span asp-validation-for="QuestionaryQuestions[i].CanSkipQuestion" class="text-danger"></span>
                        </div>
                                           
                        <div class="row aa-container">
@@ -233,7 +226,6 @@
                 <div class="col form-group form-check ">
                     <input asp-for="QuestionaryQuestions[0].IsUsed" type="checkbox" class="form-check-input chk-used-input" >
                     <label asp-for="QuestionaryQuestions[0].IsUsed" class="form-check-label align-bottom">Этот вопрос используется в анкете</label>
-                    <span asp-validation-for="QuestionaryQuestions[0].IsUsed" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-auto">
@@ -246,13 +238,11 @@
                 <div class="col form-group">
                     <label asp-for="QuestionaryQuestions[0].QuestionText"></label>
                     <input asp-for="QuestionaryQuestions[0].QuestionText" class="form-control" required>
-                    <span asp-validation-for="QuestionaryQuestions[0].QuestionText" class="text-danger"></span>
                 </div>
             </div>
             <div class="col form-group form-check">
                 <input asp-for="QuestionaryQuestions[0].CanSkipQuestion" type="checkbox" class="form-check-input chk-skip-input" >
                 <label asp-for="QuestionaryQuestions[0].CanSkipQuestion" class="form-check-label align-bottom">Это обязательный вопрос</label>
-                <span asp-validation-for="QuestionaryQuestions[0].CanSkipQuestion" class="text-danger"></span>
             </div>
             <div class="row aa-container">
         

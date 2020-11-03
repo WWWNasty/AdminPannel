@@ -3,7 +3,6 @@
 let countAnsw = 1;
 $('.add').click(function () {
 
-    debugger;
     const template = document.getElementById('option-template');
     const newNode = template.cloneNode(true);
 
@@ -23,8 +22,16 @@ $('.add').click(function () {
         input.setAttribute('id', input.id.replace('0', countAnsw.toString()));
         input.setAttribute('name', input.name.replace('0', countAnsw.toString()));
     })
+    debugger;
 
-
+    // const spans = $(newNode).find('span');
+    //
+    // if (spans !== null){
+    //     spans.each((_, input) => {
+    //         input.setAttribute('data-valmsg-for', input.id.replace('0', countAnsw.toString()));
+    //     }) 
+    // }
+    
     newNode.classList.add ('answer-option');
    
     // if (count < 30) {

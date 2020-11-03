@@ -5,7 +5,7 @@ namespace Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces
 {
     public interface IQuestionaryObjectTypesService
     {
-        public Task<QuestionaryObjectType> GetAllProperties();
-        public Task<QuestionaryObjectType> GetObjectForUpdare(int id);
+        Task<QuestionaryObjectType> GetAllProperties();
+        Task<QuestionaryObjectType> GetObjectForUpdare(int id);
     }
 }

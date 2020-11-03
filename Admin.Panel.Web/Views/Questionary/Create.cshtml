@@ -63,9 +63,6 @@
                                 asp-items="Model.ApplicationCompanies.Select(o => new SelectListItem(o.CompanyName, o.CompanyId.ToString()))" required>
                             <option selected="selected" disabled="disabled"></option>
                         </select>
-                        <div class="invalid-feedback">
-                            <span asp-validation-for="CompanyId" class="text-danger"></span>
-                        </div>
                     </div>
                 </div>
             </div>

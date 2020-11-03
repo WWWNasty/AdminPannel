@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Entities.Questionary.Questions;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
+using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.QuestionsServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,15 +14,17 @@ namespace Admin.Panel.Web.Controllers
         private readonly ISelectableAnswersListRepository _selectableAnswersListRepository;
         private readonly IQuestionaryInputFieldTypesRepository _fieldTypesRepository;
         private readonly ILogger<AnswersController> _logger;
+        private readonly IAnswersService _answersService;
 
         public AnswersController(
             ISelectableAnswersListRepository selectableAnswersListRepository, 
             IQuestionaryInputFieldTypesRepository fieldTypesRepository, 
-            ILogger<AnswersController> logger)
+            ILogger<AnswersController> logger, IAnswersService answersService)
         {
             _selectableAnswersListRepository = selectableAnswersListRepository;
             _fieldTypesRepository = fieldTypesRepository;
             _logger = logger;
+            _answersService = answersService;
         }
 
         [HttpGet]
@@ -29,8 +32,7 @@ namespace Admin.Panel.Web.Controllers
         public async Task<IActionResult> Create()
         {
             SelectableAnswersLists model = new SelectableAnswersLists();
-            var inputs = await _fieldTypesRepository.GetAll();
-            model.QuestionaryInputFieldTypeses = inputs;
+            model = await _answersService.GetInputs(model);
             return View(model);
         }
 
@@ -44,8 +46,7 @@ namespace Admin.Panel.Web.Controllers
                 await _selectableAnswersListRepository.CreateAsync(model);
                 return RedirectToAction("GetAll", "Answers");
             }
-            var inputs = await _fieldTypesRepository.GetAll();
-            model.QuestionaryInputFieldTypeses = inputs;
+            model = await _answersService.GetInputs(model);
             return View(model);
         }
         
@@ -69,9 +70,8 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Update(int id)
         {
-            var inputs = await _fieldTypesRepository.GetAll();
             SelectableAnswersLists model = await _selectableAnswersListRepository.GetAsync(id);
-            model.QuestionaryInputFieldTypeses = inputs;
+            model = await _answersService.GetInputs(model);
             return View(model);
         }
 
@@ -85,9 +85,7 @@ namespace Admin.Panel.Web.Controllers
                 await _selectableAnswersListRepository.UpdateAsync(model);
                 return RedirectToAction("GetAll", "Answers");            
             }
-            model = await _selectableAnswersListRepository.GetAsync(model.Id);
-            var inputs = await _fieldTypesRepository.GetAll();
-            model.QuestionaryInputFieldTypeses = inputs;
+            model = await _answersService.GetInputs(model);
             return View(model);
         }
     }

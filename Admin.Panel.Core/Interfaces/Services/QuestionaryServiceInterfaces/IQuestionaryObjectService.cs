@@ -5,10 +5,10 @@ namespace Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces
 {
     public interface IQuestionaryObjectService
     {
-        public Task<QuestionaryObject> GetAllForCreate();
-        public Task<QuestionaryObject> GetAllForCreateForUser(string userId);
-        public Task<QuestionaryObject> GetAllForUpdate(QuestionaryObject model);
-        public Task<QuestionaryObject> GetAllForUpdateForUser(QuestionaryObject model, string userId);
+        Task<QuestionaryObject> GetAllForCreate();
+        Task<QuestionaryObject> GetAllForCreateForUser(string userId);
+        Task<QuestionaryObject> GetAllForUpdate(QuestionaryObject model);
+        Task<QuestionaryObject> GetAllForUpdateForUser(QuestionaryObject model, string userId);
      
 
     }

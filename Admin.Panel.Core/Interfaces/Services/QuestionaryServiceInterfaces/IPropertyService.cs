@@ -6,6 +6,6 @@ namespace Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces
 {
     public interface IPropertyService
     {
-        public Task<List<ObjectPropertyValues>> GetPropertiesForUpdateObject();
+        Task<List<ObjectPropertyValues>> GetPropertiesForUpdateObject();
     }
 }
