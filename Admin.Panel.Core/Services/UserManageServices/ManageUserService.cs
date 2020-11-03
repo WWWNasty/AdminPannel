@@ -9,25 +9,28 @@ using Admin.Panel.Core.Interfaces.Services.UserManageServiceInterfaces;
 
 namespace Admin.Panel.Core.Services.UserManageServices
 {
-    public class ManageUserService: IManageUserService
+    public class ManageUserService : IManageUserService
     {
         private readonly ICompanyRepository _companyRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IManageUserRepository _manageUserRepository;
 
-        public ManageUserService(ICompanyRepository companyRepository, IUserRepository userRepository, IRoleRepository roleRepository)
+        public ManageUserService(ICompanyRepository companyRepository, IUserRepository userRepository,
+            IRoleRepository roleRepository, IManageUserRepository manageUserRepository)
         {
             _companyRepository = companyRepository;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _manageUserRepository = manageUserRepository;
         }
-        
-        
+
+
         public async Task<RegisterDto> GetCompaniesAndRoles()
         {
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
             List<ApplicationRole> roles = await _roleRepository.GetAllRolesAsync();
-            
+
             RegisterDto registerObject = new RegisterDto
             {
                 ApplicationCompanies = companies,
@@ -41,7 +44,7 @@ namespace Admin.Panel.Core.Services.UserManageServices
         {
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(userId);
             List<ApplicationRole> roles = await _roleRepository.GetAllRolesAsyncButSuperAdmin();
-            
+
             RegisterDto registerObject = new RegisterDto
             {
                 ApplicationCompanies = companies,
@@ -50,7 +53,7 @@ namespace Admin.Panel.Core.Services.UserManageServices
 
             return registerObject;
         }
-        
+
         public async Task<bool> IsUsed(string name, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -61,11 +64,11 @@ namespace Admin.Panel.Core.Services.UserManageServices
                 {
                     return false;
                 }
+
                 return true;
             }
+
             return false;
         }
-
-     
     }
 }

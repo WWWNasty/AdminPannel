@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Entities.UserManage;
-using Admin.Panel.Core.Interfaces;
-using Admin.Panel.Core.Interfaces.Repositories;
 using Admin.Panel.Core.Interfaces.Repositories.UserManageRepositoryInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +19,9 @@ namespace Admin.Panel.Web.Controllers
         private readonly ILogger<ManageUserController> _logger;
 
         public ManageUserController(
-            IManageUserRepository manageUserRepository, 
-            IUserRepository userRepository, 
-            IMapper mapper, 
+            IManageUserRepository manageUserRepository,
+            IUserRepository userRepository,
+            IMapper mapper,
             ILogger<ManageUserController> logger)
         {
             _manageUserRepository = manageUserRepository;
@@ -38,52 +34,26 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "SuperAdministrator")]
         public async Task<ActionResult> GetAllUsers()
         {
-            try
-            {
-                List<GetAllUsersDto> model = await _manageUserRepository.GetAllUsers();
-                return View(model);
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("", "");
-            }
+            List<GetAllUsersDto> model = await _manageUserRepository.GetAllUsers();
+            return View(model);
         }
-        
+
         [HttpGet]
         [Authorize(Roles = "UsersRead")]
         public async Task<ActionResult> GetAllUsersForUser()
         {
-            try
-            {
-                var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                List<GetAllUsersDto> model = await _manageUserRepository.GetAllUsersForUser(userId);
-                return View("GetAllUsers", model);
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("", "");
-            }
+            var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            List<GetAllUsersDto> model = await _manageUserRepository.GetAllUsersForUser(userId);
+            return View("GetAllUsers", model);
         }
-        
+
         [HttpGet]
         [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> UpdateUser(int userId)
         {
-           var user = await _manageUserRepository.GetUser(userId);
-
-           var model = new UpdateUserViewModel()
-           {
-               Id = user.Id,
-               IsUsed = user.IsUsed,
-               UserName = user.UserName,
-               Nickname = user.Nickname,
-               Email = user.Email,
-               Role = user.Role
-               //CreatedDate = user.CreatedDate,
-               //ApplicationCompanyId = user.ApplicationCompanyId
-           };
+            UpdateUserViewModel model = await _manageUserRepository.GetUser(userId);
             //return View(_mapper.Map<UpdateUserViewModel>(user));
-           return View(model);
+            return View(model);
         }
 
         [HttpPost]
@@ -93,129 +63,57 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                
+                var isLastAdmin = await _manageUserRepository.IsAdminLastActive();
+                if (isLastAdmin && model.Role == "SuperAdministrator" && model.IsUsed == false)
                 {
-                    var isLastAdmin = await _manageUserRepository.IsAdminLastActive();
-                    if (isLastAdmin == true && model.IsUsed == false)
-                    {
-                        var usr = await _manageUserRepository.GetUser(model.Id);
+                    model = await _manageUserRepository.GetUser(model.Id);
+                    model.IsAdminLastActive = true;
+                    return View(model);
+                }
 
-                        model = new UpdateUserViewModel()
-                        {
-                            Id = usr.Id,
-                            IsUsed = usr.IsUsed,
-                            UserName = usr.UserName,
-                            Nickname = usr.Nickname,
-                            Email = usr.Email,
-                            Role = usr.Role,
-                            IsAdminLastActive = true
-                            //CreatedDate = user.CreatedDate,
-                            //ApplicationCompanyId = user.ApplicationCompanyId
-                        };
-                        return View(model);
-                    }
-                   
-                    await _manageUserRepository.UpdateUser(model);
-                    _logger.LogInformation("Пользователь с Id:{0} успешно отредактирован", model.Id);
-                    return RedirectToAction("GetAllUsers", "ManageUser");
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError("Не удалось редактировать пользователя с Id: {0} c ошибкой: {1}", model.Id, e);
-                }
-               
+                await _manageUserRepository.UpdateUser(model);
+                _logger.LogInformation("Пользователь с Id:{0} успешно отредактирован", model.Id);
+                return RedirectToAction("GetAllUsers", "ManageUser");
             }
-            var user = await _manageUserRepository.GetUser(model.Id);
 
-             model = new UpdateUserViewModel()
-            {
-                Id = user.Id,
-                IsUsed = user.IsUsed,
-                UserName = user.UserName,
-                Nickname = user.Nickname,
-                Email = user.Email,
-                Role = user.Role
-                //CreatedDate = user.CreatedDate,
-                //ApplicationCompanyId = user.ApplicationCompanyId
-            };
+            model = await _manageUserRepository.GetUser(model.Id);
             return View(model);
         }
-        
+
         [HttpGet]
-        [Authorize(Roles = "SuperAdministrator, UsersEdit")]
+        [Authorize(Roles = "UsersEdit")]
         public async Task<IActionResult> UpdateUserForUser(int userId)
         {
-            var user = await _manageUserRepository.GetUser(userId);
-
-            var model = new UpdateUserViewModel()
-            {
-                Id = user.Id,
-                IsUsed = user.IsUsed,
-                UserName = user.UserName,
-                Nickname = user.Nickname,
-                Email = user.Email,
-                Role = user.Role,
-                IsAdminLastActive = true
-                //CreatedDate = user.CreatedDate,
-                //ApplicationCompanyId = user.ApplicationCompanyId
-            };
-            //return View(_mapper.Map<UpdateUserViewModel>(user));
+            var model = await _manageUserRepository.GetUser(userId);
             return View("UpdateUser", model);
         }
 
         [HttpPost]
-        [Authorize(Roles = "SuperAdministrator, UsersEdit")]
+        [Authorize(Roles = "UsersEdit")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> UpdateUserForUser(UpdateUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                try
-                {   var isLastAdmin = await _manageUserRepository.IsAdminLastActive();
-                    if (isLastAdmin == true && model.IsUsed == false)
-                    {
-                        var usr = await _manageUserRepository.GetUser(model.Id);
-
-                        model = new UpdateUserViewModel()
-                        {
-                            Id = usr.Id,
-                            IsUsed = usr.IsUsed,
-                            UserName = usr.UserName,
-                            Nickname = usr.Nickname,
-                            Email = usr.Email,
-                            Role = usr.Role,
-                            IsAdminLastActive = true
-                            //CreatedDate = user.CreatedDate,
-                            //ApplicationCompanyId = user.ApplicationCompanyId
-                        };
-                        return RedirectToAction("GetAllUsersForUser", model);
-                        
-                    }
-                    await _manageUserRepository.UpdateUser(model);
-                    _logger.LogInformation("Пользователь с Id:{0} успешно отредактирован", model.Id);
-                    var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                    List<GetAllUsersDto> model1 = await _manageUserRepository.GetAllUsersForUser(userId);
-                    return RedirectToAction("GetAllUsersForUser", model1);
-                }
-                catch (Exception e)
+                var isLastAdmin = await _manageUserRepository.IsAdminLastActive();
+                if (isLastAdmin && model.Role == "SuperAdministrator" && model.IsUsed == false)
                 {
-                    _logger.LogError("Не удалось редактировать пользователя с Id: {0} c ошибкой: {1}", model.Id, e);
+                    model = await _manageUserRepository.GetUser(model.Id);
+                    model.IsAdminLastActive = true;
+                    return RedirectToAction("GetAllUsersForUser", model);
                 }
-                
-            }
-            var user = await _manageUserRepository.GetUser(model.Id);
 
-            model = new UpdateUserViewModel()
-            {
-                Id = user.Id,
-                IsUsed = user.IsUsed,
-                UserName = user.UserName,
-                Nickname = user.Nickname,
-                Email = user.Email,
-                Role = user.Role
-                //CreatedDate = user.CreatedDate,
-                //A pplicationCompanyId = user.ApplicationCompanyId
-            };
+                await _manageUserRepository.UpdateUser(model);
+                _logger.LogInformation("Пользователь с Id:{0} успешно отредактирован", model.Id);
+
+                var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                List<GetAllUsersDto> allUsers = await _manageUserRepository.GetAllUsersForUser(userId);
+                return RedirectToAction("GetAllUsersForUser", allUsers);
+            }
+
+            model = await _manageUserRepository.GetUser(model.Id);
             return View("UpdateUser", model);
         }
     }
