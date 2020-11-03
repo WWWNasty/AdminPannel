@@ -88,6 +88,7 @@ namespace Admin.Panel.Web
         {
             var path = Directory.GetCurrentDirectory();  
             loggerFactory.AddFile($"{path}\\Logs\\Log.txt");
+         
             
             if (env.IsDevelopment())
             {

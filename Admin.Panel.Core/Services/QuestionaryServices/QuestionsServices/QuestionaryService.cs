@@ -108,15 +108,19 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             model.ApplicationCompanies = allForObj.ApplicationCompanies;
             model.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes;
             model.SelectableAnswersLists = allForObj.SelectableAnswersLists;
-            foreach (QuestionaryQuestions question in model.QuestionaryQuestions)
+            if (model.QuestionaryQuestions != null)
             {
-                if (question.SelectableAnswersListId != 0)
+                foreach (QuestionaryQuestions question in model.QuestionaryQuestions)
                 {
-                    List<QuestionaryInputFieldTypes> currentInputFields =
-                        await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
-                    question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+                    if (question.SelectableAnswersListId != 0)
+                    {
+                        List<QuestionaryInputFieldTypes> currentInputFields =
+                            await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
+                        question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+                    }
                 }
             }
+
             return model;
         }
         
