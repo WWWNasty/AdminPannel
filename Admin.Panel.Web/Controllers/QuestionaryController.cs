@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary.Questions;
@@ -68,7 +67,7 @@ namespace Admin.Panel.Web.Controllers
                 var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId,
                     model.ObjectTypeId,
                     model.Id);
-                if (current == true)
+                if (current)
                 {
                     model = await _questionaryService.GetAllForQuestionaryCreate(model);
                     model.IfQuestionaryCurrentInCompany = true;
@@ -107,7 +106,7 @@ namespace Admin.Panel.Web.Controllers
                 var current =
                     await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId,
                         model.Id);
-                if (current == true)
+                if (current)
                 {
                     var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     model = await _questionaryService.GetAllForQuestionaryForUserCreate(model, user);
@@ -170,7 +169,7 @@ namespace Admin.Panel.Web.Controllers
                 var current =
                     await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId,
                         model.Id);
-                if (current == true && model.IsUsed == true)
+                if (current && model.IsUsed)
                 {
                     model = await _questionaryService.GetAllForQuestionaryUpdate(model);
                     model.IfQuestionaryCurrentInCompany = true;
@@ -196,7 +195,7 @@ namespace Admin.Panel.Web.Controllers
                 var current =
                     await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId, model.ObjectTypeId,
                         model.Id);
-                if (current == true && model.IsUsed == true)
+                if (current && model.IsUsed)
                 {
                     var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     model = await _questionaryService.GetAllForQuestionaryForUserUpdate(model, user);

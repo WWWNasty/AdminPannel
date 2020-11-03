@@ -44,6 +44,7 @@ namespace Admin.Panel.Web.Controllers
                 await _companyRepository.CreateAsync(model);
                 return RedirectToAction("GetAll", "Company");
             }
+
             return View(model);
         }
 
@@ -66,8 +67,8 @@ namespace Admin.Panel.Web.Controllers
                 await _companyRepository.UpdateAsync(model);
                 return RedirectToAction("GetAll", "Company");
             }
+
             return View(model);
         }
-        
     }
 }

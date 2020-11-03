@@ -61,31 +61,17 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Create()
         {
-            try
-            {
-                var model = await _questionaryObjectService.GetAllForCreate();
-                return View(model);
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("", "");
-            }
+            var model = await _questionaryObjectService.GetAllForCreate();
+            return View(model);
         }
 
         [HttpGet]
         [Authorize(Roles = "ObjectEdit")]
         public async Task<IActionResult> CreateForUser()
         {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var model = await _questionaryObjectService.GetAllForCreateForUser(userId);
-                return View("Create", model);
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("", "");
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var model = await _questionaryObjectService.GetAllForCreateForUser(userId);
+            return View("Create", model);
         }
 
         [HttpPost]
@@ -98,6 +84,7 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectRepository.CreateAsync(model);
                 return RedirectToAction("GetAll", "ObjectsPropValues");
             }
+
             model = await _questionaryObjectService.GetAllForCreate();
             return View("Create", model);
         }
@@ -112,6 +99,7 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectRepository.CreateAsync(model);
                 return RedirectToAction("GetAllForUser", "ObjectsPropValues");
             }
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             model = await _questionaryObjectService.GetAllForCreateForUser(userId);
             return View("Create", model);
@@ -121,7 +109,8 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "SuperAdministrator")]
         public async Task<ActionResult> Update(int id)
         {
-            var model = await _questionaryObjectService.GetAllForUpdate(id);
+            var model = await _questionaryObjectRepository.GetAsync(id);
+            model = await _questionaryObjectService.GetAllForUpdate(model);
             return View(model);
         }
 
@@ -135,10 +124,18 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectRepository.UpdateAsync(model);
                 return RedirectToAction("GetAll", "ObjectsPropValues");
             }
-            var mod = await _questionaryObjectService.GetAllForUpdate(model.Id);
-            
-            model.Companies = mod.Companies;
-            model.QuestionaryObjectTypes = mod.QuestionaryObjectTypes;
+
+            model = await _questionaryObjectService.GetAllForUpdate(model);
+            return View("Update", model);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "ObjectEdit")]
+        public async Task<ActionResult> UpdateForUser(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var model = await _questionaryObjectRepository.GetAsync(id);
+            model = await _questionaryObjectService.GetAllForUpdateForUser(model, userId);
             return View("Update", model);
         }
 
@@ -152,20 +149,9 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectRepository.UpdateAsync(model);
                 return RedirectToAction("GetAllForUser", "ObjectsPropValues");
             }
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var mod = await _questionaryObjectService.GetAllForUpdateForUser(model.Id ,userId);
-            
-            model.Companies = mod.Companies;
-            model.QuestionaryObjectTypes = mod.QuestionaryObjectTypes;
-            return View("Update", model);
-        }
 
-        [HttpGet]
-        [Authorize(Roles = "ObjectEdit")]
-        public async Task<ActionResult> UpdateForUser(int id)
-        {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var model = await _questionaryObjectService.GetAllForUpdateForUser(id, userId);
+            model = await _questionaryObjectService.GetAllForUpdateForUser(model, userId);
             return View("Update", model);
         }
 
@@ -174,8 +160,7 @@ namespace Admin.Panel.Web.Controllers
         public async Task<ActionResult> GetObjectProperties(int id)
         {
             List<ObjectPropertyValues> prop = await _questionaryObjectRepository.GetPropertiesForUpdate(id);
-            QuestionaryObject model = new QuestionaryObject();
-            model.SelectedObjectPropertyValues = prop;
+            QuestionaryObject model = new QuestionaryObject {SelectedObjectPropertyValues = prop};
             return PartialView("_Properties", model);
         }
     }

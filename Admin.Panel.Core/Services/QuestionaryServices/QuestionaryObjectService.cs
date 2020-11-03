@@ -56,9 +56,8 @@ namespace Admin.Panel.Core.Services.QuestionaryServices
             return createObj;
         }
         
-        public async Task<QuestionaryObject> GetAllForUpdate(int id)
+        public async Task<QuestionaryObject> GetAllForUpdate(QuestionaryObject model)
         {
-            var model = await _questionaryObjectRepository.GetAsync(id);
 
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
             List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
@@ -69,10 +68,8 @@ namespace Admin.Panel.Core.Services.QuestionaryServices
             return model;
         }
 
-        public async Task<QuestionaryObject> GetAllForUpdateForUser(int id, string userId)
+        public async Task<QuestionaryObject> GetAllForUpdateForUser(QuestionaryObject model, string userId)
         {
-            var model = await _questionaryObjectRepository.GetAsync(id);
-
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(userId);
             List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
 

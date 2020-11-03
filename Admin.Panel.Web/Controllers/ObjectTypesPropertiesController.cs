@@ -17,7 +17,8 @@ namespace Admin.Panel.Web.Controllers
         private readonly IQuestionaryObjectTypesRepository _questionaryObjectTypesRepository;
         private readonly IQuestionaryObjectTypesService _questionaryObjectTypesService;
 
-        public ObjectTypesPropertiesController(IQuestionaryObjectTypesRepository questionaryObjectTypesRepository, IQuestionaryObjectTypesService questionaryObjectTypesService)
+        public ObjectTypesPropertiesController(IQuestionaryObjectTypesRepository questionaryObjectTypesRepository,
+            IQuestionaryObjectTypesService questionaryObjectTypesService)
         {
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
             _questionaryObjectTypesService = questionaryObjectTypesService;
@@ -38,8 +39,8 @@ namespace Admin.Panel.Web.Controllers
             QuestionaryObjectType model = await _questionaryObjectTypesRepository.GetAsync(id);
             return View(model);
         }
-        
-        
+
+
         [HttpGet]
         [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
         public async Task<IActionResult> Create()
@@ -59,6 +60,7 @@ namespace Admin.Panel.Web.Controllers
                 await _questionaryObjectTypesRepository.CreateAsync(model);
                 return RedirectToAction("GetAll", "ObjectTypesProperties");
             }
+
             model = await _questionaryObjectTypesService.GetAllProperties();
             return View(model);
         }
@@ -67,16 +69,9 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Update(int id)
         {
-            try
-            {
-                QuestionaryObjectType model = await _questionaryObjectTypesService.GetObjectForUpdare(id);
+            QuestionaryObjectType model = await _questionaryObjectTypesService.GetObjectForUpdare(id);
 
-                return View(model);
-            }
-            catch (Exception e)   
-            {
-                return RedirectToAction("Error", "Home");
-            }
+            return View(model);
         }
 
         [HttpPost]
@@ -87,8 +82,9 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _questionaryObjectTypesRepository.UpdateAsync(model);
-                return RedirectToAction("GetAll", "ObjectTypesProperties");            
+                return RedirectToAction("GetAll", "ObjectTypesProperties");
             }
+
             model = await _questionaryObjectTypesService.GetObjectForUpdare(model.Id);
             return View(model);
         }

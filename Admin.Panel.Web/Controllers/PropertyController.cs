@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
-using Admin.Panel.Core.Interfaces.Services;
 using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +13,13 @@ namespace Admin.Panel.Web.Controllers
         private readonly IObjectPropertiesRepository _objectPropertiesRepository;
         private readonly IPropertyService _propertyService;
 
-        public PropertyController(IObjectPropertiesRepository objectPropertiesRepository, IPropertyService propertyService)
+        public PropertyController(IObjectPropertiesRepository objectPropertiesRepository,
+            IPropertyService propertyService)
         {
             _objectPropertiesRepository = objectPropertiesRepository;
             _propertyService = propertyService;
         }
-        
+
         [HttpGet]
         [Authorize(Roles = "SuperAdministrator, PropertiesObjectRead, PropertiesObjectEdit")]
         public async Task<ActionResult> GetAll()
@@ -29,14 +29,14 @@ namespace Admin.Panel.Web.Controllers
             model.ObjectProperties = prop;
             return View("Properties", model);
         }
-        
+
         [HttpGet]
         [Authorize(Roles = "SuperAdministrator, PropertiesObjectEdit, PropertiesObjectRead")]
         public async Task<IActionResult> Create()
         {
             ObjectProperty model = new ObjectProperty();
             model.ObjectProperties = await _objectPropertiesRepository.GetAllAsync();
-            return View("Properties",model);
+            return View("Properties", model);
         }
 
         [HttpPost]
@@ -49,17 +49,18 @@ namespace Admin.Panel.Web.Controllers
                 await _objectPropertiesRepository.CreateAsync(model);
                 return RedirectToAction("GetAll", "Property");
             }
+
             model.ObjectProperties = await _objectPropertiesRepository.GetAllAsync();
             return View("Properties", model);
         }
-        
+
         [HttpGet]
         [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Update(int id)
         {
             var model = await _objectPropertiesRepository.GetAsync(id);
 
-            return View("Update",model);
+            return View("Update", model);
         }
 
         [HttpPost]
@@ -72,6 +73,7 @@ namespace Admin.Panel.Web.Controllers
                 await _objectPropertiesRepository.UpdateAsync(model);
                 return RedirectToAction("GetAll", "Property");
             }
+
             return RedirectToAction("GetAll", "Property");
         }
     }
