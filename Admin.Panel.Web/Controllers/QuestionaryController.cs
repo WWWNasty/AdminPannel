@@ -24,8 +24,7 @@ namespace Admin.Panel.Web.Controllers
         private readonly ICompanyRepository _companyRepository;
         private readonly ILogger<QuestionaryController> _logger;
         private readonly UserManager<User> _userManager;
-
-
+        
         public QuestionaryController(
             IQuestionaryService questionaryService,
             IQuestionaryRepository questionaryRepository,

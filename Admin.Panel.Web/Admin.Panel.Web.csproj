@@ -43,6 +43,12 @@
 
   <ItemGroup>
     <None Include="Views\Property\Properties.cshtml" />
+    <None Remove="Logs\Log-20201027.txt" />
+    <None Remove="Logs\Log-20201028.txt" />
+    <None Remove="Logs\Log-20201029.txt" />
+    <None Remove="Logs\Log-20201030.txt" />
+    <None Remove="Logs\Log-20201102.txt" />
+    <None Remove="Logs\Log-20201103.txt" />
   </ItemGroup>
 
 </Project>

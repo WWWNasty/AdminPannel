@@ -22,7 +22,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Admin.Panel.Data.Repositories.Questionary.Questions;
 using Admin.Panel.Data.Repositories.UserManage;
+using Admin.Panel.Web.Logging;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 
 namespace Admin.Panel.Web
@@ -86,8 +88,16 @@ namespace Admin.Panel.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            var path = Directory.GetCurrentDirectory();  
-            loggerFactory.AddFile($"{path}\\Logs\\Log.txt");
+            var path = Directory.GetCurrentDirectory();
+            var mt = "{Timestamp: HH:mm:ss} [{Level:w3}] {UserName} - {Message: lj} {NewLine} {Exception} {NewLine} ";
+            var logger =new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .MinimumLevel.Information()                
+                .WriteTo.RollingFile($"{path}\\Logs\\Log.txt", outputTemplate: mt)
+                //.WriteTo.File($"{path}\\Logs\\Log.txt")
+                .CreateLogger();
+
+            loggerFactory.AddSerilog(logger);
          
             
             if (env.IsDevelopment())
@@ -107,6 +117,7 @@ namespace Admin.Panel.Web
             app.UseRouting();
 
             app.UseAuthentication();
+            app.UseMiddleware<LogUserNameMiddleware>();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

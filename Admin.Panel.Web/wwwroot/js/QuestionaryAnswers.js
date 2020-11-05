@@ -34,15 +34,9 @@ $('.add').click(function () {
     
     newNode.classList.add ('answer-option');
    
-    // if (count < 30) {
-    //     count++;
-   
     let create = $('.add-container').before(newNode);
     countAnsw++;
-
-    // } else {                                                      
-    //     alert("Максимум 30 штук");
-    // }                                                
+    
 })
 
 function addDeleteButtonHandler() {
