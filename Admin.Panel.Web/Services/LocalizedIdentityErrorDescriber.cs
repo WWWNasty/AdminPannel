@@ -30,5 +30,13 @@ namespace Admin.Panel.Web.Servises
                 Description = "Необходима минимум одна строчная буква (a-z)."
             };
         }
+        public override IdentityError DuplicateUserName(string email)
+        {
+            return new IdentityError
+            {
+                Code = nameof(DuplicateUserName),
+                Description = string.Format("Email '{0}' уже используется.", email)
+            };
+        }
     }
 }
