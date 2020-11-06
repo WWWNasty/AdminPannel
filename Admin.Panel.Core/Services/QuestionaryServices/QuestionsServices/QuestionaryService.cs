@@ -10,7 +10,7 @@ using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.Question
 
 namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
 {
-    public class QuestionaryService: IQuestionaryService
+    public class QuestionaryService : IQuestionaryService
     {
         private readonly IQuestionaryObjectTypesRepository _questionaryObjectTypesRepository;
         private readonly ISelectableAnswersListRepository _selectableAnswersListRepository;
@@ -19,10 +19,10 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
         private readonly IQuestionaryRepository _questionaryRepository;
 
         public QuestionaryService(
-            IQuestionaryObjectTypesRepository questionaryObjectTypesRepository, 
-            ISelectableAnswersListRepository selectableAnswersListRepository, 
-            IQuestionaryInputFieldTypesRepository questionaryInputFieldTypesRepository, 
-            ICompanyRepository companyRepository, 
+            IQuestionaryObjectTypesRepository questionaryObjectTypesRepository,
+            ISelectableAnswersListRepository selectableAnswersListRepository,
+            IQuestionaryInputFieldTypesRepository questionaryInputFieldTypesRepository,
+            ICompanyRepository companyRepository,
             IQuestionaryRepository questionaryRepository)
         {
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
@@ -43,7 +43,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             obj.SelectableAnswersLists = answersListTypes;
             return obj;
         }
-            
+
         private async Task<QuestionaryDto> GetAllForQuestionaryUser(string idUser)
         {
             List<QuestionaryObjectType> objectTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
@@ -55,7 +55,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             obj.SelectableAnswersLists = answersListTypes;
             return obj;
         }
-        
+
         public async Task<QuestionaryDto> GetAllForQuestionaryUpdate(QuestionaryDto model)
         {
             var obj = await GetAllForQuestionary();
@@ -86,18 +86,20 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             model.SelectableAnswersLists = allForQuestionary.SelectableAnswersLists;
             if (model.QuestionaryQuestions != null)
             {
-               foreach (QuestionaryQuestions question in model.QuestionaryQuestions)
-               {
-                   if (question.SelectableAnswersListId != 0)
-                   {
-                       List<QuestionaryInputFieldTypes> currentInputFields = await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
-                       question.CurrentQuestionaryInputFieldTypes = currentInputFields;
-                   }
-               }
+                foreach (QuestionaryQuestions question in model.QuestionaryQuestions)
+                {
+                    if (question.SelectableAnswersListId != 0)
+                    {
+                        List<QuestionaryInputFieldTypes> currentInputFields =
+                            await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
+                        question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+                    }
+                }
             }
+
             return model;
         }
-        
+
         public async Task<QuestionaryDto> GetAllForQuestionaryForUserUpdate(QuestionaryDto model, string idUser)
         {
             var allForObj = await GetAllForQuestionaryUser(idUser);
@@ -119,7 +121,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
 
             return model;
         }
-        
+
         public async Task<QuestionaryDto> GetAllForQuestionaryForUserCreate(QuestionaryDto model, string idUser)
         {
             var obj = await GetAllForQuestionaryUser(idUser);
@@ -141,14 +143,12 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
 
             return model;
         }
-  
+
         public Task<bool> IfQuestionaryCurrentInCompany(int idCompany, int idObjType, int idQuestionary)
         {
-            var current = _questionaryRepository.IfQuestionaryCurrentInCompanyAsync(idCompany, idObjType, idQuestionary);
+            var current =
+                _questionaryRepository.IfQuestionaryCurrentInCompanyAsync(idCompany, idObjType, idQuestionary);
             return current;
         }
-
-      
-        
     }
 }

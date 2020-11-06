@@ -6,7 +6,6 @@
 
 <div class="form-group mt-5">
     <div class="col-md-10">
-        @* <h4>@ViewBag.Title</h4> *@
         <h4>Привязка объекта</h4>
     </div>
 </div>
@@ -31,7 +30,7 @@
                     }
                     <div class="col">
                         <div class="row">
-                            <label asp-for="QuestionaryObjectTypes"></label> 
+                            <label asp-for="QuestionaryObjectTypes"></label>
                         </div>
                         <div class="row">
                             <select asp-for="ObjectTypeId" asp-items="lst" class="selectpicker" required>
@@ -42,12 +41,12 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col">
             <div class="form-group">
                 @{
                     List<SelectListItem> lst1 = new List<SelectListItem>();
-                   
+
                     for (int i = Model.Companies.Count - 1; i >= 0; i--)
                     {
                         lst1.Add(new SelectListItem {Text = Model.Companies[i].CompanyName, Value = Model.Companies[i].CompanyId.ToString()});

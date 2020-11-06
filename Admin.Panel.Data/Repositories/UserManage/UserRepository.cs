@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Data.Repositories.UserManage
 {
-    public class UserRepository: IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly string _connectionString;
         private readonly ILogger<UserRepository> _logger;
@@ -65,18 +65,6 @@ namespace Admin.Panel.Data.Repositories.UserManage
                         }
                     }
 
-                    // var companyId = user.;
-                    //
-                    // ApplicationUserCompany userCompany = new ApplicationUserCompany
-                    // {
-                    //     UserId = userId,
-                    //     CompanyId = companyId
-                    // };
-                    //
-                    // var queryAddCompanyToUser = "INSERT INTO ApplicationUserCompany(UserId,CompanyId) VALUES(@UserId,@CompanyId)";
-                    //
-                    // await cn.ExecuteAsync(queryAddCompanyToUser, userCompany);
-
                     _logger.LogInformation("Пользователь {0} успешно добавлен в бд.", user.Email);
                     return IdentityResult.Success;
                 }
@@ -122,7 +110,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 try
                 {
                     var query = "SELECT * FROM ApplicationUser WHERE Id=@Id";
-                    var user = await cn.QueryAsync<User>(query, new { @Id = userId });
+                    var user = await cn.QueryAsync<User>(query, new {@Id = userId});
 
                     return user.SingleOrDefault();
                 }
@@ -134,7 +122,8 @@ namespace Admin.Panel.Data.Repositories.UserManage
             }
         }
 
-        public Task<User> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+        public Task<User> FindByLoginAsync(string loginProvider, string providerKey,
+            CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -150,10 +139,9 @@ namespace Admin.Panel.Data.Repositories.UserManage
 
                 try
                 {
-                    //var query = "SELECT * FROM ApplicationUser WHERE LOWER(UserName)=LOWER(@UserName)";
                     var query = $@"SELECT * FROM [ApplicationUser]
                     WHERE [NormalizedUserName] = @{nameof(normalizedUserName)}";
-                    var user = await cn.QueryAsync<User>(query, new { @NormalizedUserName = normalizedUserName});
+                    var user = await cn.QueryAsync<User>(query, new {@NormalizedUserName = normalizedUserName});
 
                     return user.SingleOrDefault();
                 }
@@ -162,7 +150,6 @@ namespace Admin.Panel.Data.Repositories.UserManage
                     _logger.LogError("Пользователь {1} не найден по имени в бд с ошибкой: {0}", ex, normalizedUserName);
                     throw new Exception($"{GetType().FullName}", ex);
                 }
-
             }
         }
 
@@ -197,6 +184,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
             {
                 throw new ArgumentNullException(nameof(user));
             }
+
             return Task.FromResult(user.PasswordHash);
         }
 
@@ -208,15 +196,11 @@ namespace Admin.Panel.Data.Repositories.UserManage
 
                 try
                 {
-                    // var query = @"SELECT r.[Name] FROM [ApplicationRole] r 
-                    // INNER JOIN [ApplicationUser] ur ON ur.[RoleId] = r.Id 
-                    // WHERE ur.Id = @userId";
-                    
                     var query = @"SELECT f.[Name] FROM [ApplictionRoleFunctions] rf 
                     INNER JOIN [FunctionsRoles] f ON rf.[FunctionsRolesId] = f.[Id] 
 					INNER JOIN [ApplicationUser] u ON u.[RoleId] = rf.[ApplicationRoleId]
                     WHERE u.[Id] = @userId";
-                    var queryResults = await cn.QueryAsync<string>(query, new { userId = user.Id });
+                    var queryResults = await cn.QueryAsync<string>(query, new {userId = user.Id});
 
                     return queryResults.ToList();
                 }
@@ -233,6 +217,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
             {
                 throw new ArgumentNullException(nameof(user));
             }
+
             return Task.FromResult(user.SecurityStamp);
         }
 
@@ -254,7 +239,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
                                                                                 INNER JOIN [ApplicationUserRole] ur ON ur.[UserId] = u.[Id] 
                                                                                 INNER JOIN [ApplicationRole] r ON r.[Id] = ur.[RoleId] 
                                                                                 WHERE r.[NormalizedName] = @normalizedName",
-                    new { normalizedName = roleName.ToUpper() });
+                    new {normalizedName = roleName.ToUpper()});
 
                 return queryResults.ToList();
             }
@@ -267,13 +252,16 @@ namespace Admin.Panel.Data.Repositories.UserManage
 
         public async Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-             using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
-                var roleId = await connection.ExecuteScalarAsync<int?>("SELECT [Id] FROM [ApplicationRole] WHERE [NormalizedName] = @normalizedName", new { normalizedName = roleName.ToUpper() });
+                var roleId = await connection.ExecuteScalarAsync<int?>(
+                    "SELECT [Id] FROM [ApplicationRole] WHERE [NormalizedName] = @normalizedName",
+                    new {normalizedName = roleName.ToUpper()});
                 if (roleId == default(int)) return false;
-                var matchingRoles = await connection.ExecuteScalarAsync<int>($"SELECT COUNT(*) FROM [ApplicationUserRole] WHERE [UserId] = @userId AND [RoleId] = @{nameof(roleId)}",
-                    new { userId = user.Id, roleId });
-                
+                var matchingRoles = await connection.ExecuteScalarAsync<int>(
+                    $"SELECT COUNT(*) FROM [ApplicationUserRole] WHERE [UserId] = @userId AND [RoleId] = @{nameof(roleId)}",
+                    new {userId = user.Id, roleId});
+
                 return matchingRoles > 0;
             }
         }
@@ -286,7 +274,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
                     INNER JOIN [FunctionsRoles] f ON rf.[FunctionsRolesId] = f.[Id] 
 					INNER JOIN [ApplicationUser] u ON u.[RoleId] = rf.[ApplicationRoleId]
                     WHERE u.[Id] = @userId";
-                string queryResults = connection.Query<string>(query, new { userId = idUser }).FirstOrDefault();
+                string queryResults = connection.Query<string>(query, new {userId = idUser}).FirstOrDefault();
 
                 return queryResults;
             }
@@ -299,10 +287,9 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 cn.Open();
                 try
                 {
-                    //var query = "SELECT * FROM ApplicationUser WHERE LOWER(UserName)=LOWER(@UserName)";
                     var query = @"SELECT Id FROM [ApplicationUser]
                     WHERE [UserName] = @UserName";
-                    int user = cn.Query<int>(query, new { @UserName = name}).FirstOrDefault();
+                    int user = cn.Query<int>(query, new {@UserName = name}).FirstOrDefault();
 
                     return user;
                 }
@@ -310,16 +297,16 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 {
                     throw new Exception($"{GetType().FullName}", ex);
                 }
-
             }
         }
-        
+
         public Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveLoginAsync(User user, string loginProvider, string providerKey, CancellationToken cancellationToken)
+        public Task RemoveLoginAsync(User user, string loginProvider, string providerKey,
+            CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -340,6 +327,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
             {
                 throw new ArgumentNullException(nameof(user));
             }
+
             user.NormalizedEmail = normalizedEmail;
             return Task.FromResult(0);
         }
@@ -350,6 +338,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
             {
                 throw new ArgumentNullException(nameof(user));
             }
+
             user.NormalizedUserName = normalizedName;
             return Task.FromResult(0);
         }
@@ -360,17 +349,18 @@ namespace Admin.Panel.Data.Repositories.UserManage
             {
                 throw new ArgumentNullException(nameof(user));
             }
+
             user.PasswordHash = passwordHash;
             return Task.FromResult(0);
         }
 
         public Task SetSecurityStampAsync(User user, string stamp, CancellationToken cancellationToken)
         {
-
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
+
             user.SecurityStamp = stamp;
             return Task.FromResult(0);
         }
@@ -387,7 +377,8 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 await cn.OpenAsync();
                 try
                 {
-                    await cn.ExecuteAsync(@"UPDATE ApplicationUser SET UserName=@UserName,PasswordHash=@PasswordHash,NickName=@NickName,SecurityStamp=@SecurityStamp,IsConfirmed=@IsConfirmed,
+                    await cn.ExecuteAsync(
+                        @"UPDATE ApplicationUser SET UserName=@UserName,PasswordHash=@PasswordHash,NickName=@NickName,SecurityStamp=@SecurityStamp,IsConfirmed=@IsConfirmed,
                     NormalizedUserName=@NormalizedUserName,NormalizedEmail=@NormalizedEmail,Email=@Email,
                     EmailConfirmed=@EmailConfirmed,IsUsed=@IsUsed WHERE Id=@Id", user);
                     _logger.LogInformation("Пользователь с Id: {0} успешно отредактирован в бд.", user.Id);
@@ -403,42 +394,6 @@ namespace Admin.Panel.Data.Repositories.UserManage
 
         public void Dispose()
         {
-
         }
-
-        //public Task<DateTimeOffset?> GetLockoutEndDateAsync(User user, CancellationToken cancellationToken)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task SetLockoutEndDateAsync(User user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<int> IncrementAccessFailedCountAsync(User user, CancellationToken cancellationToken)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task ResetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<bool> GetLockoutEnabledAsync(User user, CancellationToken cancellationToken)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task SetLockoutEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

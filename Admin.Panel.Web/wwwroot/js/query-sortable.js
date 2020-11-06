@@ -15,7 +15,6 @@ const sortable = Sortable.create(el, {
             let inputs = $(container).children('input');
             let nameInputSkip = $(item).find(".chk-skip-input").attr("name");
             let nameInputUsed = $(item).find(".chk-used-input").attr("name");
-            //let hiddens = $(inputs).find(`input[name="${nameInput}"]`);
             item.parentNode.removeChild(item); // remove sortable item
             let count = parseInt($('#voting-options-count').text());
             count--;
@@ -63,36 +62,8 @@ const sortable = Sortable.create(el, {
                     //конец
                 })
             })
-
-            // for(let i = 0; i < inputs.length ;i++){
-            //     let nameHidden = inputs[i].attr("name");
-            //     if(nameHidden!== null){
-            //         if (nameInputSkip === nameHidden || nameInputUsed === nameHidden) {
-            //             inputs[i].remove();
-            //         }
-            //     }
-            // }
-            // inputs.each((_, input) => {
-            //     let nameHidden = input.attr("name");
-            //     if(nameHidden!== null){
-            //         if (nameInputSkip === nameHidden || nameInputUsed === nameHidden) {
-            //             input.remove();
-            //         } 
-            //     }
-            //     //input.remove();
-            // });
         }
     },
-    //
-    // onClone: function (evt) {
-    //     var origEl = evt.item,
-    //         cloneEl = evt.target;
-    //
-    //     if (Sortable.utils.is(cloneEl, ".js-add")) {
-    //         // Click on add button
-    //         origEl.parentNode.cloneNode(origEl); // add sortable item
-    //     }
-    // },
     onEnd: () => {
         console.log('перемещен элемент');
     },
@@ -106,7 +77,6 @@ const sortable = Sortable.create(el, {
             //откуда берем data-id
             let votingOptionSets = $('#simpleList').find(".voting-option-set").toArray();
             //куда записываем индекс
-            //let inputs = $('#sequence-order').toArray();
             let inputs = $('#simpleList').find(".sequence-order").toArray();
 
             let index = 0;
@@ -125,19 +95,4 @@ const sortable = Sortable.create(el, {
     }
 });
 console.log(sortable);
-//document.getElementById("sequence-order").value=selItem;
-// Sortable(el,{
-//     onClone: function (evt) {
-//         var origEl = evt.item,
-//             cloneEl = evt.clone;
-//
-//         if (Sortable.utils.is(cloneEl, ".js-add")) {
-//             // Click on add button
-//             origEl.parentNode.append(origEl); // add sortable item
-//         }
-//     },
-//     // onClone: () => {
-//     //     debugger;
-//     //     console.log('nastya')
-//     // },
-// });
+

@@ -1,8 +1,3 @@
-// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-
 let count = 1;
 $('.addPick').click(function () {
 
@@ -23,13 +18,6 @@ $('.addPick').click(function () {
     });
     
     console.log(i1);
-    // const selects = $(newNode).find('.select');
-    //
-    // //input.id = input.id.replace('0', count.toString()); //name.replace('0', count.toString());
-    //
-    // selects.each((_, select) => {
-    //     select.setAttribute('class', select.class.replace('select', 'selectpicker'));
-    // })
     count = parseInt($('#voting-options-count').text());
     elements.each((_, input) => {
         let index = count;
@@ -39,10 +27,6 @@ $('.addPick').click(function () {
     })
     
     newNode.classList.add ('voting-option');
-    // newNode.classList.add ('js-remove');
-
-    // if (count < 30) {
-    //     count++;
     debugger;
 
     //откуда берем data-id

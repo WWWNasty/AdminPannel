@@ -19,14 +19,13 @@
             }
             @if (User.IsInRole("SuperAdministrator"))
             {
-            <a asp-controller="ObjectsPropValues" asp-action="Create" class="btn btn-outline-primary">&#10011; Создать объект</a>
+                <a asp-controller="ObjectsPropValues" asp-action="Create" class="btn btn-outline-primary">&#10011; Создать объект</a>
             }
         </div>
     </div>
-   
 }
 
-<div class="card" >
+<div class="card">
     <div class="card-header">
         <div class="row">
             <div class="col">
@@ -73,7 +72,7 @@
                     else
                     {
                         <div class="col">
-                            <a asp-controller="Questionary" asp-action="Get" asp-route-Id="@obj.Id" style="color: #CDCDCD;" > @Html.DisplayFor(modelItem => obj.Name)</a>
+                            <a asp-controller="Questionary" asp-action="Get" asp-route-Id="@obj.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => obj.Name)</a>
                         </div>
                         <div class="col">
                             <div class="row">
@@ -86,8 +85,8 @@
                         </div>
                         <div class="col text-secondary">
                             <h7 style="color: #CDCDCD;">@obj.Updated</h7>
-                        </div>                                
-                    } 
+                        </div>
+                    }
                 </div>
             </li>
         }

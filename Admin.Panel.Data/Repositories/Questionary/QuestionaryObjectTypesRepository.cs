@@ -122,7 +122,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 //создание свойств
                                 var objectPropertyId = cn.ExecuteScalar<int>(
                                     @"INSERT INTO ObjectProperties(Name,NameInReport,IsUsedInReport,ReportCellStyle,IsUsed) 
-                                            VALUES(@Name,@NameInReport,@IsUsedInReport,@ReportCellStyle,1;
+                                            VALUES(@Name,@NameInReport,@IsUsedInReport,@ReportCellStyle,1)
                                             SELECT QuestionaryObjectTypeId = @@IDENTITY",
                                     objectProperty, transaction);
                                 

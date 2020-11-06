@@ -14,15 +14,13 @@ namespace Admin.Panel.Core.Services.UserManageServices
         private readonly ICompanyRepository _companyRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IManageUserRepository _manageUserRepository;
 
         public ManageUserService(ICompanyRepository companyRepository, IUserRepository userRepository,
-            IRoleRepository roleRepository, IManageUserRepository manageUserRepository)
+            IRoleRepository roleRepository)
         {
             _companyRepository = companyRepository;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
-            _manageUserRepository = manageUserRepository;
         }
 
 

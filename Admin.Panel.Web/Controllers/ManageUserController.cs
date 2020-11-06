@@ -13,19 +13,17 @@ namespace Admin.Panel.Web.Controllers
 {
     public class ManageUserController : Controller
     {
-        private readonly IUserRepository _userRepository;
+       
         private readonly IManageUserRepository _manageUserRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<ManageUserController> _logger;
 
         public ManageUserController(
             IManageUserRepository manageUserRepository,
-            IUserRepository userRepository,
             IMapper mapper,
             ILogger<ManageUserController> logger)
         {
             _manageUserRepository = manageUserRepository;
-            _userRepository = userRepository;
             _mapper = mapper;
             _logger = logger;
         }

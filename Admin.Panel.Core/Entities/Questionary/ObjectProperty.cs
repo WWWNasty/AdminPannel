@@ -29,8 +29,5 @@ namespace Admin.Panel.Core.Entities.Questionary
         public string ReportCellStyle { get; set; }
         
         public List<ObjectProperty> ObjectProperties { get; set; }
-        
-        //public string Value { get; set; }
-
     }
 }

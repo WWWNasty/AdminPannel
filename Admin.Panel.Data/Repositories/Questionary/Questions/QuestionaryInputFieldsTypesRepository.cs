@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Admin.Panel.Data.Repositories.Questionary.Questions
 {
-    public class QuestionaryInputFieldsTypesRepository: IQuestionaryInputFieldTypesRepository
+    public class QuestionaryInputFieldsTypesRepository : IQuestionaryInputFieldTypesRepository
     {
         private readonly string _connectionString;
 
@@ -50,7 +50,9 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                     var query = @"SELECT i.* FROM QuestionaryInputFieldTypes i
                     INNER JOIN AnswersListInputType ai ON i.Id = ai.QuestionaryInputFieldTypeId
                     WHERE ai.SelectableAnswersListId = @SelectableAnswersListId";
-                    var result = await connection.QueryAsync<QuestionaryInputFieldTypes>(query, new {@SelectableAnswersListId = id});
+                    var result =
+                        await connection.QueryAsync<QuestionaryInputFieldTypes>(query,
+                            new {@SelectableAnswersListId = id});
                     return result.ToList();
                 }
                 catch (Exception ex)

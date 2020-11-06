@@ -139,7 +139,6 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogInformation("Не удалось выполнить проверку на последний ли админ в бд с ошибкой: {0}", ex);
                     throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                 }
             }
@@ -159,7 +158,6 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError("Пользователь с Id: {0} не отредактирован с ошибкой в бд: {1}.", user.Id);
                     throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                 }
             }

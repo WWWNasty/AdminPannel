@@ -39,8 +39,7 @@ namespace Admin.Panel.Core.Entities.Questionary
 
         [Required(ErrorMessage = "Поле обязательно6!")]
         public List<ObjectPropertyValues> SelectedObjectPropertyValues { get; set; }
-
-        //create
+        
         [Display(Name = "Тип объекта")]
         public List<QuestionaryObjectType> QuestionaryObjectTypes { get; set; }
         

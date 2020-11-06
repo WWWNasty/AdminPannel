@@ -8,19 +8,22 @@ using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Data.Repositories.Questionary
 {
     public class CompanyRepository: ICompanyRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<CompanyRepository> _logger;
 
-        public CompanyRepository(IConfiguration configuration)
+        public CompanyRepository(IConfiguration configuration, ILogger<CompanyRepository> logger)
         {
+            _logger = logger;
             _connectionString = configuration.GetConnectionString("questionaryConnection");
         }
 
-        public async Task<ApplicationCompany> GetAsync(int CompanyId)
+        public async Task<ApplicationCompany> GetAsync(int companyId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -29,7 +32,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 try
                 {
                     var query = "SELECT * FROM Companies WHERE CompanyId=@Id";
-                    var сompany = await connection.QueryAsync<ApplicationCompany>(query, new { @Id = CompanyId });
+                    var сompany = await connection.QueryAsync<ApplicationCompany>(query, new { @Id = companyId });
                     return сompany.SingleOrDefault();
                 }
                 catch (Exception ex)
@@ -109,6 +112,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     var query = @"INSERT INTO Companies(CompanyName,CompanyDescription,IsUsed) 
                     VALUES(@CompanyName, @CompanyDescription,1)";
                     await connection.ExecuteAsync(query, company);
+                    _logger.LogInformation("Компания {0} успешно добавлена в бд.", company.CompanyName);
                     return company;
                 }
                 catch (Exception ex)
@@ -129,6 +133,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     var query = @"UPDATE Companies SET CompanyName=@CompanyName,CompanyDescription=@CompanyDescription,IsUsed=@IsUsed 
                      WHERE CompanyId=@CompanyId";
                     await connection.ExecuteAsync(query, company);
+                    _logger.LogInformation("Компания с Id:{0} успешно отредактирована в бд.", company.CompanyId);
                     return company;
                 }
                 catch (Exception ex)
@@ -137,23 +142,5 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 }
             }
         }
-
-        // public async Task DeleteAsync(ApplicationCompany company)
-        // {
-        //     using (var connection = new SqlConnection(_connectionString))
-        //     {
-        //         connection.Open();
-        //
-        //         try
-        //         {
-        //             var query = @"DELETE FROM Companies WHERE CompanyId=@CompanyId";
-        //             await connection.ExecuteAsync(query, company);
-        //         }
-        //         catch (Exception ex)
-        //         {
-        //             throw new Exception($"{GetType().FullName}.WithConnection__", ex);
-        //         }
-        //     }
-        // }
     }
 }

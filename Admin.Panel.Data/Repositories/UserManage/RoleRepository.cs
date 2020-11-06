@@ -21,7 +21,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
         {
             _connectionString = configuration.GetConnectionString("questionaryConnection");
         }
-        
+
         public async Task<List<ApplicationRole>> GetAllRolesAsync()
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -65,7 +65,8 @@ namespace Admin.Panel.Data.Repositories.UserManage
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync(cancellationToken);
-                role.Id = await connection.QuerySingleAsync<int>($@"INSERT INTO [ApplicationRole] ([Name], [NormalizedName])
+                role.Id = await connection.QuerySingleAsync<int>(
+                    $@"INSERT INTO [ApplicationRole] ([Name], [NormalizedName])
                     VALUES (@{nameof(ApplicationRole.Name)}, @{nameof(ApplicationRole.Name)});
                     SELECT CAST(SCOPE_IDENTITY() as int)", role);
             }
@@ -96,7 +97,8 @@ namespace Admin.Panel.Data.Repositories.UserManage
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync(cancellationToken);
-                await connection.ExecuteAsync($"DELETE FROM [ApplicationRole] WHERE [Id] = @{nameof(ApplicationRole.Id)}", role);
+                await connection.ExecuteAsync(
+                    $"DELETE FROM [ApplicationRole] WHERE [Id] = @{nameof(ApplicationRole.Id)}", role);
             }
 
             return IdentityResult.Success;
@@ -123,7 +125,8 @@ namespace Admin.Panel.Data.Repositories.UserManage
             return Task.FromResult(role.Name);
         }
 
-        public Task SetNormalizedRoleNameAsync(ApplicationRole role, string normalizedName, CancellationToken cancellationToken)
+        public Task SetNormalizedRoleNameAsync(ApplicationRole role, string normalizedName,
+            CancellationToken cancellationToken)
         {
             role.Name = normalizedName;
             return Task.FromResult(0);
@@ -137,11 +140,12 @@ namespace Admin.Panel.Data.Repositories.UserManage
             {
                 await connection.OpenAsync(cancellationToken);
                 return await connection.QuerySingleOrDefaultAsync<ApplicationRole>($@"SELECT * FROM [ApplicationRole]
-                    WHERE [Id] = @{nameof(roleId)}", new { roleId });
+                    WHERE [Id] = @{nameof(roleId)}", new {roleId});
             }
         }
 
-        public async Task<ApplicationRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
+        public async Task<ApplicationRole> FindByNameAsync(string normalizedRoleName,
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -149,13 +153,12 @@ namespace Admin.Panel.Data.Repositories.UserManage
             {
                 await connection.OpenAsync(cancellationToken);
                 return await connection.QuerySingleOrDefaultAsync<ApplicationRole>($@"SELECT * FROM [ApplicationRole]
-                    WHERE [NormalizedName] = @{nameof(normalizedRoleName)}", new { normalizedRoleName });
+                    WHERE [NormalizedName] = @{nameof(normalizedRoleName)}", new {normalizedRoleName});
             }
         }
 
         public void Dispose()
         {
         }
-
-        }
+    }
 }

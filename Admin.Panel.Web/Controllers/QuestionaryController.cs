@@ -1,15 +1,11 @@
-using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary.Questions;
-using Admin.Panel.Core.Entities.UserManage;
-using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.QuestionsServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+
 
 namespace Admin.Panel.Web.Controllers
 {
@@ -17,33 +13,17 @@ namespace Admin.Panel.Web.Controllers
     {
         private readonly IQuestionaryService _questionaryService;
         private readonly IQuestionaryRepository _questionaryRepository;
-        private readonly ISelectableAnswersListRepository _selectableAnswersListRepository;
         private readonly IQuestionaryInputFieldTypesRepository _fieldTypesRepository;
-        private readonly IQuestionaryObjectTypesRepository _questionaryObjectTypesRepository;
-        private readonly IQuestionaryInputFieldTypesRepository _questionaryInputFieldTypesRepository;
-        private readonly ICompanyRepository _companyRepository;
-        private readonly ILogger<QuestionaryController> _logger;
-        private readonly UserManager<User> _userManager;
-        
+
         public QuestionaryController(
             IQuestionaryService questionaryService,
             IQuestionaryRepository questionaryRepository,
-            ISelectableAnswersListRepository selectableAnswersListRepository,
-            IQuestionaryInputFieldTypesRepository fieldTypesRepository,
-            IQuestionaryObjectTypesRepository questionaryObjectTypesRepository,
-            IQuestionaryInputFieldTypesRepository questionaryInputFieldTypesRepository,
-            ICompanyRepository companyRepository,
-            ILogger<QuestionaryController> logger, UserManager<User> userManager)
+            IQuestionaryInputFieldTypesRepository fieldTypesRepository
+        )
         {
             _questionaryService = questionaryService;
             _questionaryRepository = questionaryRepository;
-            _selectableAnswersListRepository = selectableAnswersListRepository;
             _fieldTypesRepository = fieldTypesRepository;
-            _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
-            _questionaryInputFieldTypesRepository = questionaryInputFieldTypesRepository;
-            _companyRepository = companyRepository;
-            _logger = logger;
-            _userManager = userManager;
         }
 
         [HttpGet]
@@ -74,10 +54,6 @@ namespace Admin.Panel.Web.Controllers
                 }
 
                 await _questionaryRepository.CreateAsync(model);
-                var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                _logger.LogInformation("Анкета {0} успешно создана для компании с Id: {1} пользователем с Id {2}.",
-                    model.Name,
-                    model.CompanyId, userId);
                 return RedirectToAction("GetAll", "Questionary");
             }
 
@@ -114,8 +90,6 @@ namespace Admin.Panel.Web.Controllers
                 }
 
                 await _questionaryRepository.CreateAsync(model);
-                _logger.LogInformation("Анкета {0} успешно создана для компании с Id: {1}.", model.Name,
-                    model.CompanyId);
                 return RedirectToAction("GetAllForUser", "Questionary");
             }
 
@@ -176,7 +150,6 @@ namespace Admin.Panel.Web.Controllers
                 }
 
                 await _questionaryRepository.UpdateAsync(model);
-                _logger.LogInformation("Анкета с Id {0} успешно отредактирована.", model.Id);
                 return RedirectToAction("GetAll", "Questionary");
             }
 
@@ -203,7 +176,6 @@ namespace Admin.Panel.Web.Controllers
                 }
 
                 await _questionaryRepository.UpdateAsync(model);
-                _logger.LogInformation("Анкета с Id {0} успешно отредактирована.", model.Id);
                 return RedirectToAction("GetAllForUser", "Questionary");
             }
 
@@ -226,11 +198,9 @@ namespace Admin.Panel.Web.Controllers
         [Authorize]
         public async Task<ActionResult> AnswersGetAll(int id, [FromQuery] int index)
         {
-            //TODO доставать каждому вопросу варианты ответов
-            // SelectableAnswers[] answrs = await _selectableAnswersListRepository.GetSelectableAnswersAsync(id);
+            //TODO доставать каждому вопросу варианты ответов со значением коммента и по умолчанию ли
             var inputTypes = await _fieldTypesRepository.GetAllCurrent(id);
             QuestionaryDto model = new QuestionaryDto();
-            //model.QuestionaryQuestions[i].SelectableAnswers = answrs;
             model.QuestionaryInputFieldTypes = inputTypes;
             model.IndexCurrentQuestion = index;
             return PartialView("_SelectableAnswers", model);

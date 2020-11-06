@@ -1,5 +1,4 @@
-﻿
-(function() {
+﻿(function() {
     debugger;
     'use strict';
     window.addEventListener('load', function() {

@@ -12,17 +12,14 @@ namespace Admin.Panel.Web.Controllers
     public class AnswersController : Controller
     {
         private readonly ISelectableAnswersListRepository _selectableAnswersListRepository;
-        private readonly IQuestionaryInputFieldTypesRepository _fieldTypesRepository;
         private readonly ILogger<AnswersController> _logger;
         private readonly IAnswersService _answersService;
 
         public AnswersController(
-            ISelectableAnswersListRepository selectableAnswersListRepository, 
-            IQuestionaryInputFieldTypesRepository fieldTypesRepository, 
+            ISelectableAnswersListRepository selectableAnswersListRepository,
             ILogger<AnswersController> logger, IAnswersService answersService)
         {
             _selectableAnswersListRepository = selectableAnswersListRepository;
-            _fieldTypesRepository = fieldTypesRepository;
             _logger = logger;
             _answersService = answersService;
         }

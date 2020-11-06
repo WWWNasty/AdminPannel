@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Admin.Panel.Core.Entities.Questionary.Questions
 {
-   // [QuestionaryValidation]
     public class QuestionaryDto: BaseEntity
     {
         [Required(ErrorMessage = "Поле Название - обязательно!")]
@@ -44,18 +43,4 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         public int IndexCurrentQuestion { get; set; }
         public bool IfQuestionaryCurrentInCompany { get; set; }
     }
-    
-    // public class QuestionaryValidationAttribute : ValidationAttribute
-    // {
-    //     public override bool IsValid(object value)
-    //     {
-    //         QuestionaryDto questionary = value as QuestionaryDto;
-    //         if (questionary.IsUsed == true && questionary.IfQuestionaryCurrentInCompany == true)
-    //         {
-    //             this.ErrorMessage = "В компании уже есть анкета для такого объекта! Деактивируйте её, если хотите создать новую.";
-    //             return false;
-    //         }
-    //         return true;
-    //     }
-    // }
 }

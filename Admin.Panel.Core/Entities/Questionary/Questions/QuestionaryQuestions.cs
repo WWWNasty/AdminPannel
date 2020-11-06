@@ -24,10 +24,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         public int SelectableAnswersListId { get; set; }
         
         public string QuestionaryInputFieldTypeName { get; set; }
-        
-        // [Required(ErrorMessage = "Укажите порядок следования!")]
-        // [Range(0, 29, ErrorMessage = "Недопустимый индекс")]
-        // [Display(Name = "Сортировка")]
+  
         public int SequenceOrder { get; set; }
         
         [Display(Name = "Вопрос используется в анкете")]

@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Admin.Panel.Core.Entities.UserManage;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
@@ -25,10 +23,7 @@ using Admin.Panel.Data.Repositories.Questionary.Questions;
 using Admin.Panel.Data.Repositories.UserManage;
 using Admin.Panel.Web.Logging;
 using Microsoft.Extensions.Logging;
-using Serilog;
-using Serilog.Events;
-using Serilog.Extensions.Hosting;
-using ILogger = Serilog.ILogger;
+
 
 
 namespace Admin.Panel.Web
@@ -49,7 +44,6 @@ namespace Admin.Panel.Web
             services.AddScoped<IManageUserService, ManageUserService>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IObjectPropertiesRepository, ObjectPropertiesRepository>();
-            services.AddScoped<IPropertyService, PropertyService>();
             services.AddScoped<IQuestionaryObjectRepository, QuestionaryObjectRepository>();
             services.AddScoped<IQuestionaryObjectService, QuestionaryObjectService>();
             services.AddScoped<IQuestionaryObjectTypesRepository, QuestionaryObjectTypesRepository>();
@@ -57,7 +51,7 @@ namespace Admin.Panel.Web
             services.AddScoped<IQuestionaryService, QuestionaryService>();
             services.AddScoped<IQuestionaryRepository, QuestionaryRepository>();
             services.AddScoped<ISelectableAnswersListRepository, SelectableAnswersListRepository>();
-            services.AddScoped<IAnswersService,AnswersService>();
+            services.AddScoped<IAnswersService, AnswersService>();
             services.AddScoped<IQuestionaryInputFieldTypesRepository, QuestionaryInputFieldsTypesRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
@@ -73,7 +67,8 @@ namespace Admin.Panel.Web
                 .AddDefaultTokenProviders();
             services.AddTransient<IEmailSender, EmailSender>();
             //TODO сложность пароля сделать по сложнее
-            services.Configure<IdentityOptions>(options => {
+            services.Configure<IdentityOptions>(options =>
+            {
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
@@ -82,12 +77,6 @@ namespace Admin.Panel.Web
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
             services.AddRazorPages();
-            //services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
-            //{
-            //    var libraryPath = Path.GetFullPath(
-            //        Path.Combine(HostEnvironment.ContentRootPath, "..", "MyClassLib"));
-            //    options.FileProviders.Add(new PhysicalFileProvider(libraryPath));
-            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -104,7 +93,7 @@ namespace Admin.Panel.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-          
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

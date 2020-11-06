@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
-using Admin.Panel.Core.Interfaces.Services;
 using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Web.Controllers
 {
@@ -16,12 +13,16 @@ namespace Admin.Panel.Web.Controllers
     {
         private readonly IQuestionaryObjectTypesRepository _questionaryObjectTypesRepository;
         private readonly IQuestionaryObjectTypesService _questionaryObjectTypesService;
+        private readonly ILogger<QuestionaryController> _logger;
 
-        public ObjectTypesPropertiesController(IQuestionaryObjectTypesRepository questionaryObjectTypesRepository,
-            IQuestionaryObjectTypesService questionaryObjectTypesService)
+        public ObjectTypesPropertiesController(
+            IQuestionaryObjectTypesRepository questionaryObjectTypesRepository,
+            IQuestionaryObjectTypesService questionaryObjectTypesService,
+            ILogger<QuestionaryController> logger)
         {
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
             _questionaryObjectTypesService = questionaryObjectTypesService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -46,7 +47,6 @@ namespace Admin.Panel.Web.Controllers
         public async Task<IActionResult> Create()
         {
             QuestionaryObjectType model = await _questionaryObjectTypesService.GetAllProperties();
-
             return View(model);
         }
 
@@ -58,6 +58,7 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _questionaryObjectTypesRepository.CreateAsync(model);
+                _logger.LogInformation("Тип объекта успешно создан: {0}.", model.Name);
                 return RedirectToAction("GetAll", "ObjectTypesProperties");
             }
 
@@ -82,6 +83,7 @@ namespace Admin.Panel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _questionaryObjectTypesRepository.UpdateAsync(model);
+                _logger.LogInformation("Тип объекта с Id: {0} успешно отредактирован.", model.Id);
                 return RedirectToAction("GetAll", "ObjectTypesProperties");
             }
 

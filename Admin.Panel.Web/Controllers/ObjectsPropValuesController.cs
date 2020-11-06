@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
-using Admin.Panel.Core.Interfaces.Services;
 using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Web.Controllers
 {
@@ -17,18 +15,12 @@ namespace Admin.Panel.Web.Controllers
     {
         private readonly IQuestionaryObjectRepository _questionaryObjectRepository;
         private readonly IQuestionaryObjectService _questionaryObjectService;
-        private readonly ICompanyRepository _companyRepository;
-        private readonly IObjectPropertiesRepository _objectPropertiesRepository;
 
         public ObjectsPropValuesController(
             IQuestionaryObjectRepository questionaryObjectRepository,
-            ICompanyRepository companyRepository,
-            IObjectPropertiesRepository objectPropertiesRepository,
             IQuestionaryObjectService questionaryObjectService)
         {
             _questionaryObjectRepository = questionaryObjectRepository;
-            _companyRepository = companyRepository;
-            _objectPropertiesRepository = objectPropertiesRepository;
             _questionaryObjectService = questionaryObjectService;
         }
 

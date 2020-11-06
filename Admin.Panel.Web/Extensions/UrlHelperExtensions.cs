@@ -1,9 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Admin.Panel.Web.Controllers;
+﻿using Admin.Panel.Web.Controllers;
 
 namespace Microsoft.AspNetCore.Mvc
 {

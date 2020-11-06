@@ -2,37 +2,17 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model Admin.Panel.Core.Entities.Questionary.QuestionaryObject
 
-@for (int i = 0; i < Model.SelectedObjectPropertyValues.Count ; i++)
+@for (int i = 0; i < Model.SelectedObjectPropertyValues.Count; i++)
 {
+    <div class="form-group">
+        <div class="col-md-10">
 
-        @* <div class="row"> *@
-        @*     <div class="row"> *@
-        @*         <div class="card-body"> *@
-        @*             <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].Id" /> *@
-        @*             <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].Name" /> *@
-        @*             <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].ObjectPropertyId" /> *@
-        @*             <h7 class="card-title">@Model.SelectedObjectPropertyValues[i].Name</h7> *@
-        @*         </div> *@
-        @*     </div> *@
-        @*     <div class="row"> *@
-        @*         <div class="card-body col-md-7"> *@
-        @*             <input asp-for="@Model.SelectedObjectPropertyValues[i].Value" class="form-control" required> *@
-        @*             <div class="invalid-feedback"> *@
-        @*                 <span asp-validation-for="@Model.SelectedObjectPropertyValues[i].Value" class="text-danger"></span> *@
-        @*             </div> *@
-        @*         </div> *@
-        @*     </div> *@
-        @* </div> *@
-        
-        <div class="form-group">
-            <div class="col-md-10">
-                
-                <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].Id"/>
-                <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].Name"/>
-                <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].ObjectPropertyId"/>
-                <h7 class="card-title">@Model.SelectedObjectPropertyValues[i].Name</h7>
+            <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].Id"/>
+            <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].Name"/>
+            <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].ObjectPropertyId"/>
+            <h7 class="card-title">@Model.SelectedObjectPropertyValues[i].Name</h7>
 
-                <input asp-for="@Model.SelectedObjectPropertyValues[i].Value" class="form-control" required>
-            </div>
+            <input asp-for="@Model.SelectedObjectPropertyValues[i].Value" class="form-control" required>
         </div>
+    </div>
 }

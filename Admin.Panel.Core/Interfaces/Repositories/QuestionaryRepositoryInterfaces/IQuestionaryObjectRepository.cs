@@ -14,6 +14,5 @@ namespace Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfac
         public Task<QuestionaryObject> CreateAsync(QuestionaryObject obj);
         public Task<QuestionaryObject> UpdateAsync(QuestionaryObject obj);
         public Task<List<ObjectPropertyValues>> GetPropertiesForUpdate(int idTypeObj);
-        public Task<List<ObjectPropertyValues>> GetPropertiesForCreate(int id);
     }
 }

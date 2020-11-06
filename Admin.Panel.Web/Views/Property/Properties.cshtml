@@ -5,162 +5,161 @@
     ViewData["Title"] = "Создание свойства";
 }
 
- @if (User.Identity.IsAuthenticated)
- {
-     if (User.IsInRole("SuperAdministrator") || User.IsInRole("PropertiesObjectEdit"))
-     {
-         <div class="form-group">
-             <div class="col-md-10">
-                 <h4>@ViewBag.Title</h4>
-             </div>
-         </div>
-         
-         <form method="post" asp-antiforgery="true" class="needs-validation" novalidate>
-             <div class="form-group">
-                 <div class="col-md-10">
-                     <label asp-for="Name"></label>
-                     <input asp-for="Name" class="form-control" required>
-                     @* <span asp-validation-for="Name" class="text-danger"></span> *@
-                 </div>
-             </div>
-             <div class="form-group">
-                 <div class="col-md-10">
-                     <label asp-for="NameInReport"></label>
-                     <input asp-for="NameInReport" class="form-control" required>
-                 </div>
-             </div>
-             <div class="form-group form-check">
-                 <div class="col-md-10">
-                     <input asp-for="IsUsedInReport" type="checkbox" class="form-check-input">
-                     <label asp-for="IsUsedInReport" class="form-check-label align-bottom"></label>
-                 </div>
-             </div>
-             <div class="form-group">
-                 <div class="col-md-10">
-                     <label asp-for="ReportCellStyle"></label>
-                     <input asp-for="ReportCellStyle" class="form-control" required>
-                 </div>
-             </div>
-             
-             <div class="form-group mt-4">
-                 <button type="submit" class="btn btn-primary ml-3">Сохранить</button>
-             </div>
-                  
-         </form>
-     }
- <br>
-     <div class="col mb-2">
-         <h4>Свойства типов объекта</h4>
-     </div>
-     <div class="card" >
-         <div class="card-header">
-             <div class="row">
-                 <div class="col">
-                     Название
-                 </div>
-                 <div class="col">
-                     Статус
-                 </div>
-                 <div class="col">
-                     Название в отчете
-                 </div>
-                 <div class="col">
-                     Используется в отчете
-                 </div>
-                 <div class="col">
-                     Тип поля в Отчете
-                 </div>
-             </div>
-         </div>
-         <ul class="list-group list-group-flush">
-     
-             @foreach (var prop in Model.ObjectProperties)
-             {
-                 <li class="list-group-item">
-                     <input type="hidden" name="Id" value="@prop.Id"/>
-                     @* <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear-fill" fill="#C4DBF5" xmlns="http://www.w3.org/2000/svg"> *@
-                     @*     <path fill-rule="evenodd" d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z"/> *@
-                     @* </svg> *@
-                     <div class="row">
-                         @if (prop.IsUsed)
-                         {
-                             <div class="col">
-                                 @if (User.Identity.IsAuthenticated)
-                                 {
-                                     if (User.IsInRole("SuperAdministrator"))
-                                     {
-                                         <a asp-controller="Property" asp-action="Update" asp-route-Id="@prop.Id" style="color: black;"> @Html.DisplayFor(modelItem => prop.Name)</a>
-                                     }
-                                     else
-                                     {
-                                         <h4>@Model.Name</h4>
-                                     }
-                                 }
-                             </div>
-                             <div class="col">
-                                 <div class="row">
-                                     <div style="width: 8px; height: 8px; background-color: #5BD148; border-radius: 4px" class="my-auto mr-1"></div>
-                                     <h7>активно</h7>
-                                 </div>
-                             </div>
-                             <div class="col">
-                                 @prop.NameInReport
-                             </div>
-                             <div class="col">
-                                 @if (prop.IsUsedInReport)
-                                 {
-                                     <input class="form-check-input ml-5" type="checkbox" value="true" id="flexCheckDisabled" checked  disabled>
-                                 }
-                                 else
-                                 {
-                                     <input class="form-check-input ml-5" type="checkbox" value="false" id="flexCheckDisabled" disabled>
-                                 }
-                             </div>
-                             <div class="col">
-                                 @prop.ReportCellStyle
-                             </div>
-                         }
-                         else
-                         {
-                             <div class="col">
-                                 @if (User.Identity.IsAuthenticated)
-                                 {
-                                     if (User.IsInRole("SuperAdministrator"))
-                                     {
-                                         <a asp-controller="Property" asp-action="Update" asp-route-Id="@prop.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => prop.Name)</a>
-                                     }
-                                     else
-                                     {
-                                         <h4>@Model.Name</h4>
-                                     }
-                                 }
-                             </div>
-                             <div class="col">
-                                 <div class="row">
-                                     <div style="width: 8px; height: 8px; background-color: #CDCDCD; border-radius: 4px" class="my-auto mr-1"></div>
-                                     <h7 style="color: #CDCDCD;">не активно</h7>
-                                 </div>
-                             </div>
-                             <div class="col">
-                                 @prop.NameInReport
-                             </div>
-                             <div class="col">
-                                  @if (prop.IsUsedInReport)
-                                  {
-                                      <input class="form-check-input ml-5" type="checkbox" value="true" id="flexCheckDisabled" checked  disabled>
-                                  }
-                                  else
-                                  {
-                                      <input class="form-check-input ml-5" type="checkbox" value="false" id="flexCheckDisabled" disabled>
-                                  } 
-                             </div>
-                             <div class="col">
-                                 @prop.ReportCellStyle
-                             </div>
-                         } 
-                     </div>
-                 </li>
-             }
-         </ul>
-     </div>
- }
+@if (User.Identity.IsAuthenticated)
+{
+    if (User.IsInRole("SuperAdministrator") || User.IsInRole("PropertiesObjectEdit"))
+    {
+        <div class="form-group">
+            <div class="col-md-10">
+                <h4>@ViewBag.Title</h4>
+            </div>
+        </div>
+
+        <form method="post" asp-antiforgery="true" class="needs-validation" novalidate>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <label asp-for="NameInReport"></label>
+                    <input asp-for="NameInReport" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group form-check">
+                <div class="col-md-10">
+                    <input asp-for="IsUsedInReport" type="checkbox" class="form-check-input">
+                    <label asp-for="IsUsedInReport" class="form-check-label align-bottom"></label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <label asp-for="ReportCellStyle"></label>
+                    <input asp-for="ReportCellStyle" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="form-group mt-4">
+                <button type="submit" class="btn btn-primary ml-3">Сохранить</button>
+            </div>
+
+        </form>
+    }
+    <br>
+    <div class="col mb-2">
+        <h4>Свойства типов объекта</h4>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">
+                    Название
+                </div>
+                <div class="col">
+                    Статус
+                </div>
+                <div class="col">
+                    Название в отчете
+                </div>
+                <div class="col">
+                    Используется в отчете
+                </div>
+                <div class="col">
+                    Тип поля в Отчете
+                </div>
+            </div>
+        </div>
+        <ul class="list-group list-group-flush">
+
+            @foreach (var prop in Model.ObjectProperties)
+            {
+                <li class="list-group-item">
+                    <input type="hidden" name="Id" value="@prop.Id"/>
+                    @* <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear-fill" fill="#C4DBF5" xmlns="http://www.w3.org/2000/svg"> *@
+                    @*     <path fill-rule="evenodd" d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z"/> *@
+                    @* </svg> *@
+                    <div class="row">
+                        @if (prop.IsUsed)
+                        {
+                            <div class="col">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    if (User.IsInRole("SuperAdministrator"))
+                                    {
+                                        <a asp-controller="Property" asp-action="Update" asp-route-Id="@prop.Id" style="color: black;"> @Html.DisplayFor(modelItem => prop.Name)</a>
+                                    }
+                                    else
+                                    {
+                                        <h4>@Model.Name</h4>
+                                    }
+                                }
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div style="width: 8px; height: 8px; background-color: #5BD148; border-radius: 4px" class="my-auto mr-1"></div>
+                                    <h7>активно</h7>
+                                </div>
+                            </div>
+                            <div class="col">
+                                @prop.NameInReport
+                            </div>
+                            <div class="col">
+                                @if (prop.IsUsedInReport)
+                                {
+                                    <input class="form-check-input ml-5" type="checkbox" value="true" id="flexCheckDisabled" checked disabled>
+                                }
+                                else
+                                {
+                                    <input class="form-check-input ml-5" type="checkbox" value="false" id="flexCheckDisabled" disabled>
+                                }
+                            </div>
+                            <div class="col">
+                                @prop.ReportCellStyle
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    if (User.IsInRole("SuperAdministrator"))
+                                    {
+                                        <a asp-controller="Property" asp-action="Update" asp-route-Id="@prop.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => prop.Name)</a>
+                                    }
+                                    else
+                                    {
+                                        <h4>@Model.Name</h4>
+                                    }
+                                }
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div style="width: 8px; height: 8px; background-color: #CDCDCD; border-radius: 4px" class="my-auto mr-1"></div>
+                                    <h7 style="color: #CDCDCD;">не активно</h7>
+                                </div>
+                            </div>
+                            <div class="col">
+                                @prop.NameInReport
+                            </div>
+                            <div class="col">
+                                @if (prop.IsUsedInReport)
+                                {
+                                    <input class="form-check-input ml-5" type="checkbox" value="true" id="flexCheckDisabled" checked disabled>
+                                }
+                                else
+                                {
+                                    <input class="form-check-input ml-5" type="checkbox" value="false" id="flexCheckDisabled" disabled>
+                                }
+                            </div>
+                            <div class="col">
+                                @prop.ReportCellStyle
+                            </div>
+                        }
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+}

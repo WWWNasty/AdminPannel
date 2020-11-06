@@ -11,13 +11,10 @@ namespace Admin.Panel.Web.Controllers
     public class PropertyController : Controller
     {
         private readonly IObjectPropertiesRepository _objectPropertiesRepository;
-        private readonly IPropertyService _propertyService;
 
-        public PropertyController(IObjectPropertiesRepository objectPropertiesRepository,
-            IPropertyService propertyService)
+        public PropertyController(IObjectPropertiesRepository objectPropertiesRepository)
         {
             _objectPropertiesRepository = objectPropertiesRepository;
-            _propertyService = propertyService;
         }
 
         [HttpGet]

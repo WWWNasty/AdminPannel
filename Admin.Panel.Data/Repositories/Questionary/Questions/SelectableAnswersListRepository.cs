@@ -8,18 +8,22 @@ using Admin.Panel.Core.Entities.Questionary.Questions;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Admin.Panel.Data.Repositories.Questionary.Questions
 {
-    public class SelectableAnswersListRepository: ISelectableAnswersListRepository
+    public class SelectableAnswersListRepository : ISelectableAnswersListRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<SelectableAnswersListRepository> _logger;
 
-        public SelectableAnswersListRepository(IConfiguration configuration)
+        public SelectableAnswersListRepository(IConfiguration configuration,
+            ILogger<SelectableAnswersListRepository> logger)
         {
+            _logger = logger;
             _connectionString = configuration.GetConnectionString("questionaryConnection");
         }
-        
+
         public async Task<SelectableAnswersLists> GetAsync(int id)
         {
             using (var cn = new SqlConnection(_connectionString))
@@ -29,22 +33,23 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 try
                 {
                     var query = @"SELECT * FROM SelectableAnswersLists WHERE Id=@Id";
-                    var obj = cn.Query<SelectableAnswersLists>(query, new { @Id = id }).SingleOrDefault();
-                        //получение вариантов ответов
+                    var obj = cn.Query<SelectableAnswersLists>(query, new {@Id = id}).SingleOrDefault();
+                    //получение вариантов ответов
                     List<SelectableAnswers> answerses = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers 
-				                                                                where SelectableAnswersListId = @SelectableAnswersListId", 
-                        new { @SelectableAnswersListId = id }).ToList();
+				                                                                where SelectableAnswersListId = @SelectableAnswersListId",
+                        new {@SelectableAnswersListId = id}).ToList();
 
                     obj.SelectableAnswers = answerses;
-                    
+
                     //получение допустимых контроллов 
-                    List<QuestionaryInputFieldTypes> inputs = cn.Query<QuestionaryInputFieldTypes>(@"SELECT q.* FROM QuestionaryInputFieldTypes q
+                    List<QuestionaryInputFieldTypes> inputs = cn.Query<QuestionaryInputFieldTypes>(
+                        @"SELECT q.* FROM QuestionaryInputFieldTypes q
                                                                                 INNER JOIN  AnswersListInputType qi ON qi.QuestionaryInputFieldTypeId = q.Id
-				                                                                where SelectableAnswersListId = @SelectableAnswersListId", 
-                        new { @SelectableAnswersListId = id }).ToList();
+				                                                                where SelectableAnswersListId = @SelectableAnswersListId",
+                        new {@SelectableAnswersListId = id}).ToList();
 
                     obj.SelectedQuestionaryInputFieldTypeses = inputs;
-                    
+
                     return obj;
                 }
                 catch (Exception ex)
@@ -63,9 +68,9 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 try
                 {
                     SelectableAnswers[] answerses = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers 
-				                                                                where SelectableAnswersListId = @SelectableAnswersListId", 
-                        new { @SelectableAnswersListId = id }).ToArray();
-                    
+				                                                                where SelectableAnswersListId = @SelectableAnswersListId",
+                        new {@SelectableAnswersListId = id}).ToArray();
+
                     return answerses;
                 }
                 catch (Exception ex)
@@ -74,7 +79,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 }
             }
         }
-        
+
         public async Task<List<SelectableAnswersLists>> GetAllAsync()
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -144,9 +149,9 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                     }, transaction);
                             }
                         }
-                        
+
                         //добавлние допустимых контролов 
-                        
+
                         foreach (var controlId in selectableAnswersList.InputFieldTypesesId)
                         {
                             cn.Execute(
@@ -154,15 +159,17 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 		                                                VALUES (@SelectableAnswersListId,@QuestionaryInputFieldTypeId)",
                                 new AnswersListInputType
                                 {
-                                 SelectableAnswersListId = selectableAnswersList.Id,
-                                 QuestionaryInputFieldTypeId = controlId
+                                    SelectableAnswersListId = selectableAnswersList.Id,
+                                    QuestionaryInputFieldTypeId = controlId
                                 }, transaction);
                         }
 
-                        var result = cn.Query<SelectableAnswersLists>(@"SELECT * FROM SelectableAnswersLists WHERE Id=@Id", new { @Id = objTypeId }, transaction).SingleOrDefault();
+                        var result = cn
+                            .Query<SelectableAnswersLists>(@"SELECT * FROM SelectableAnswersLists WHERE Id=@Id",
+                                new {@Id = objTypeId}, transaction).SingleOrDefault();
 
                         transaction.Commit();
-
+                        _logger.LogInformation("Список ответов с Id:{0} успешно добавлен в бд.", objTypeId);
                         return result;
                     }
                     catch (Exception ex)
@@ -186,8 +193,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                          WHERE Id=@Id";
                         await connection.ExecuteAsync(query, answersLists, transaction);
 
-                        //редактирование списка контроллов TODO 
-
+                        //редактирование списка контроллов 
                         //дропаем контроллы
 
                         connection.Execute(
@@ -264,8 +270,9 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                     }, transaction);
                             }
                         }
-                        transaction.Commit();
 
+                        transaction.Commit();
+                        _logger.LogInformation("Список ответов с Id:{0} успешно отредактирован в бд.", answersLists.Id);
                         return answersLists;
                     }
                     catch (Exception ex)

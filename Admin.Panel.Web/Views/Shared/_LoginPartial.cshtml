@@ -7,59 +7,53 @@
 
 @inject SignInManager<User> SignInManager
 
-@{ 
-//var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-}
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <form asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right" asp-antiforgery="true">
+    <form asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})" method="post" id="logoutForm" class="navbar-right" asp-antiforgery="true">
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                @* <a class="nav-link">Привет, @User.Identity.Name!</a> *@
-            </li>
+
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     @User.Identity.Name
+                    @User.Identity.Name
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                     @if (User.Identity.IsAuthenticated)
-                     {
-                        if (User.IsInRole("PropertiesObjectRead")|| User.IsInRole("UsersRead"))
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("PropertiesObjectRead") || User.IsInRole("UsersRead"))
                         {
                             <a asp-controller="Property" asp-action="Create" class="dropdown-item">Свойства типов объектов</a>
                         }
-                         
-                         if (User.IsInRole("TypesObjectRead")|| User.IsInRole("UsersRead"))
+
+                        if (User.IsInRole("TypesObjectRead") || User.IsInRole("UsersRead"))
                         {
                             <a asp-controller="ObjectTypesProperties" asp-action="GetAll" class="dropdown-item">Типы объектов</a>
                         }
-                         
-                        if (User.IsInRole("ObjectRead")|| User.IsInRole("UsersRead"))
-                         {
-                             <a asp-controller="ObjectsPropValues" asp-action="GetAllForUser" class="dropdown-item">Обьекты</a>
-                         }
-                         
-                        
-                         if (User.IsInRole("AnswerRead")|| User.IsInRole("UsersRead"))
-                         {
-                             <a asp-controller="Answers" asp-action="GetAll" class="dropdown-item">Ответы</a>
-                         }
-                         
-                         if (User.IsInRole("QuestionaryRead")|| User.IsInRole("UsersRead"))
-                         {
+
+                        if (User.IsInRole("ObjectRead") || User.IsInRole("UsersRead"))
+                        {
+                            <a asp-controller="ObjectsPropValues" asp-action="GetAllForUser" class="dropdown-item">Обьекты</a>
+                        }
+
+
+                        if (User.IsInRole("AnswerRead") || User.IsInRole("UsersRead"))
+                        {
+                            <a asp-controller="Answers" asp-action="GetAll" class="dropdown-item">Ответы</a>
+                        }
+
+                        if (User.IsInRole("QuestionaryRead") || User.IsInRole("UsersRead"))
+                        {
                             <a asp-controller="Questionary" asp-action="GetAllForUser" class="dropdown-item">Анкеты</a>
-                         }
-                         
-                         <a asp-controller="Account" asp-action="ChangePassword" class="dropdown-item">Изменить пароль</a>
-                         
+                        }
+
+                        <a asp-controller="Account" asp-action="ChangePassword" class="dropdown-item">Изменить пароль</a>
+
                         if (User.IsInRole("UsersRead"))
                         {
                             <div class="dropdown-divider"></div>
                             <a asp-controller="ManageUser" asp-action="GetAllUsersForUser" class="dropdown-item">Все пользователи</a>
-@*                             <a asp-controller="Account" asp-action="RegisterForUser" class="dropdown-item">Создать пользователя</a> *@
                         }
-     
+
                         if (User.IsInRole("SuperAdministrator"))
                         {
                             <div class="dropdown-divider"></div>
@@ -70,11 +64,8 @@
                             <a asp-controller="Answers" asp-action="GetAll" class="dropdown-item">Все ответы</a>
                             <a asp-controller="Questionary" asp-action="GetAll" class="dropdown-item">Все Анкеты</a>
                             <a asp-controller="ManageUser" asp-action="GetAllUsers" class="dropdown-item">Все пользователи</a>
-@*                             <a asp-controller="Account" asp-action="Register" class="dropdown-item">Создать пользователя</a> *@
-                           
                         }
                     }
-
                 </div>
             </li>
             <li>
@@ -86,6 +77,8 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-controller="Account" asp-action="LogIn" class="nav-link">Войти</a></li>
+        <li>
+            <a asp-controller="Account" asp-action="LogIn" class="nav-link">Войти</a>
+        </li>
     </ul>
 }

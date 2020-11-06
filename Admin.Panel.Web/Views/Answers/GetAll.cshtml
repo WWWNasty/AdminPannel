@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col">
                 <h4>@ViewBag.Title</h4>
-            </div> 
+            </div>
             @if (User.IsInRole("SuperAdministrator") || User.IsInRole("AnswerEdit"))
             {
                 <a asp-controller="Answers" asp-action="Create" class="btn btn-outline-primary">&#10011; Создать тип ответов</a>
@@ -21,7 +21,7 @@
     </div>
 }
 
-<div class="card" >
+<div class="card">
     <div class="card-header">
         <div class="row">
             <div class="col">
@@ -45,13 +45,13 @@
                     {
                         <div class="col">
                             @if (User.IsInRole("SuperAdministrator") || User.IsInRole("AnswerRead"))
-                                {
-                                    <a asp-controller="Answers" asp-action="Get" asp-route-Id="@obj.Id" style="color: black;"> @Html.DisplayFor(modelItem => obj.Name)</a>
-                                }
-                                @if(!(User.IsInRole("SuperAdministrator") || User.IsInRole("AnswerRead")))
-                                {
-                                    @obj.Name 
-                                }
+                            {
+                                <a asp-controller="Answers" asp-action="Get" asp-route-Id="@obj.Id" style="color: black;"> @Html.DisplayFor(modelItem => obj.Name)</a>
+                            }
+                            @if (!(User.IsInRole("SuperAdministrator") || User.IsInRole("AnswerRead")))
+                            {
+                                @obj.Name
+                            }
                         </div>
                         <div class="col">
                             <div class="row">
@@ -63,14 +63,14 @@
                     else
                     {
                         <div class="col">
-                             @if (User.IsInRole("SuperAdministrator") || User.IsInRole("AnswerRead"))
-                             {
-                                 <a asp-controller="Answers" asp-action="Get" asp-route-Id="@obj.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => obj.Name)</a>
-                             }
-                             @if(!(User.IsInRole("SuperAdministrator") || User.IsInRole("AnswerRead")))
-                             {
-                                 @obj.Name
-                             }
+                            @if (User.IsInRole("SuperAdministrator") || User.IsInRole("AnswerRead"))
+                            {
+                                <a asp-controller="Answers" asp-action="Get" asp-route-Id="@obj.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => obj.Name)</a>
+                            }
+                            @if (!(User.IsInRole("SuperAdministrator") || User.IsInRole("AnswerRead")))
+                            {
+                                @obj.Name
+                            }
                         </div>
                         <div class="col">
                             <div class="row">
@@ -78,7 +78,7 @@
                                 <h7 style="color: #CDCDCD;">не активно</h7>
                             </div>
                         </div>
-                    } 
+                    }
                 </div>
             </li>
         }
