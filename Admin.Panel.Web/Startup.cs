@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Admin.Panel.Core.Entities.UserManage;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
@@ -25,6 +26,9 @@ using Admin.Panel.Data.Repositories.UserManage;
 using Admin.Panel.Web.Logging;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Events;
+using Serilog.Extensions.Hosting;
+using ILogger = Serilog.ILogger;
 
 
 namespace Admin.Panel.Web
@@ -60,6 +64,7 @@ namespace Admin.Panel.Web
             services.AddTransient<IUserStore<User>, UserRepository>();
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddTransient<IRoleStore<ApplicationRole>, RoleRepository>();
+            services.AddSingleton<UserNameEnricher>();
             services.AddIdentity<User, ApplicationRole>()
                 //.AddDapperStores(options => {
                 //    options.AddRolesTable<ExtendedRolesTable, ExtendedIdentityRole>();
@@ -88,18 +93,6 @@ namespace Admin.Panel.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            var path = Directory.GetCurrentDirectory();
-            var mt = "{Timestamp: HH:mm:ss} [{Level:w3}] {UserName} - {Message: lj} {NewLine} {Exception} {NewLine} ";
-            var logger =new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .MinimumLevel.Information()                
-                .WriteTo.RollingFile($"{path}\\Logs\\Log.txt", outputTemplate: mt)
-                //.WriteTo.File($"{path}\\Logs\\Log.txt")
-                .CreateLogger();
-
-            loggerFactory.AddSerilog(logger);
-         
-            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -111,13 +104,13 @@ namespace Admin.Panel.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+          
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseMiddleware<LogUserNameMiddleware>();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

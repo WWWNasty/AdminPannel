@@ -1,23 +1,29 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Serilog.Context;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace Admin.Panel.Web.Logging
 {
-    public class LogUserNameMiddleware
+    public class UserNameEnricher : ILogEventEnricher
     {
-        private readonly RequestDelegate next;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public LogUserNameMiddleware(RequestDelegate next)
+        public UserNameEnricher(IHttpContextAccessor contextAccessor)
         {
-            this.next = next;
+            _contextAccessor = contextAccessor;
         }
-
-        public Task Invoke(HttpContext context)
+        
+        public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
         {
-            LogContext.PushProperty("UserName", context.User.Identity.Name);
-
-            return next(context);
+            var identityName = _contextAccessor.HttpContext.User.Identity.Name;
+            
+            if (identityName != null)
+            {
+                logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("UserName", identityName));
+            }
         }
     }
 }

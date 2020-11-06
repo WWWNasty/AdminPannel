@@ -22,10 +22,12 @@ $('.add').click(function () {
         input.setAttribute('id', input.id.replace('0', countAnsw.toString()));
         input.setAttribute('name', input.name.replace('0', countAnsw.toString()));
     })
-    debugger;
+  
 
-    // const spans = $(newNode).find('span');
-    //
+    const spans = $(newNode).find('span');
+    
+    spans.each((_, span) => span.setAttribute('data-valmsg-for', span.data_valmsg_for.replace('0', countAnsw.toString())));
+    //  
     // if (spans !== null){
     //     spans.each((_, input) => {
     //         input.setAttribute('data-valmsg-for', input.id.replace('0', countAnsw.toString()));
