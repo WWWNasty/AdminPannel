@@ -5,6 +5,7 @@ using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.Q
 using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.QuestionsServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Admin.Panel.Web.Controllers
@@ -42,7 +43,7 @@ namespace Admin.Panel.Web.Controllers
         public async Task<IActionResult> Create(QuestionaryDto model)
         {
             if (ModelState.IsValid)
-            {
+            { 
                 var current = await _questionaryService.IfQuestionaryCurrentInCompany(model.CompanyId,
                     model.ObjectTypeId,
                     model.Id);

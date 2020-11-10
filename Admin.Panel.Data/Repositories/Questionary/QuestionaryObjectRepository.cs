@@ -274,5 +274,32 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 }
             }
         }
+
+        public async Task<bool> IsCodeUnique(QuestionaryObject model)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    var obj = connection.Query<QuestionaryObject>(
+                        @"SELECT * FROM QuestionaryObjects Where Code =@Code",
+                        new {@Code = model.Code}).ToList();
+                    if (model.Id ==0)
+                    {
+                        return obj.Count == 0;
+                    }
+                    
+                    var objs = connection.Query<QuestionaryObject>(
+                        @"SELECT * FROM QuestionaryObjects Where Code =@Code AND Id <> @Id",
+                        new {@Code = model.Code, @Id = model.Id}).ToList();
+                    return objs.Count == 0;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
     }
 }

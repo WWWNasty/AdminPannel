@@ -20,32 +20,25 @@ namespace Admin.Panel.Core.Services.QuestionaryServices
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
         }
 
-        public async Task<QuestionaryObject> GetAllForCreate()
+        public async Task<QuestionaryObject> GetAllForCreate(QuestionaryObject model)
         {
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
             List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
 
-            QuestionaryObject createObj = new QuestionaryObject
-            {
-                Companies = companies,
-                QuestionaryObjectTypes = objTypes
-            };
-
-            return createObj;
+            model.Companies = companies;
+            model.QuestionaryObjectTypes = objTypes;
+            return model;
         }
 
-        public async Task<QuestionaryObject> GetAllForCreateForUser(string userId)
+        public async Task<QuestionaryObject> GetAllForCreateForUser(QuestionaryObject model, string userId)
         {
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(userId);
             List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
 
-            QuestionaryObject createObj = new QuestionaryObject
-            {
-                Companies = companies,
-                QuestionaryObjectTypes = objTypes
-            };
-
-            return createObj;
+            model.Companies = companies;
+            model.QuestionaryObjectTypes = objTypes;
+                    
+            return model;
         }
 
         public async Task<QuestionaryObject> GetAllForUpdate(QuestionaryObject model)

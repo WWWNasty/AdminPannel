@@ -66,6 +66,12 @@
         <div class="col-md-10">
             <label asp-for="Code">Код объекта</label>
             <input asp-for="Code" class="form-control" required>
+             @if (Model.IsCodeUnique == false)
+             {
+                 <div style="color: red">
+                     Код уже используется в системе!
+                 </div>
+             }
         </div>
     </div>
     <div class="form-group">

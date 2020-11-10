@@ -53,7 +53,8 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "SuperAdministrator")]
         public async Task<IActionResult> Create()
         {
-            var model = await _questionaryObjectService.GetAllForCreate();
+            QuestionaryObject model = new QuestionaryObject();
+            model = await _questionaryObjectService.GetAllForCreate(model);
             return View(model);
         }
 
@@ -61,8 +62,9 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "ObjectEdit")]
         public async Task<IActionResult> CreateForUser()
         {
+            QuestionaryObject model = new QuestionaryObject();
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var model = await _questionaryObjectService.GetAllForCreateForUser(userId);
+            model = await _questionaryObjectService.GetAllForCreateForUser(model, userId);
             return View("Create", model);
         }
 
@@ -73,11 +75,19 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _questionaryObjectRepository.CreateAsync(model);
-                return RedirectToAction("GetAll", "ObjectsPropValues");
+                 var isCodeUnique = await _questionaryObjectRepository.IsCodeUnique(model);
+                if (isCodeUnique)
+                {
+                    await _questionaryObjectRepository.CreateAsync(model);
+                    return RedirectToAction("GetAll", "ObjectsPropValues");
+                }
+                model = await _questionaryObjectService.GetAllForCreate(model);
+                model.IsCodeUnique = false;
+                return View("Create", model);     
+                
             }
 
-            model = await _questionaryObjectService.GetAllForCreate();
+            model = await _questionaryObjectService.GetAllForCreate(model);
             return View("Create", model);
         }
 
@@ -87,13 +97,23 @@ namespace Admin.Panel.Web.Controllers
         public async Task<IActionResult> CreateForUser(QuestionaryObject model)
         {
             if (ModelState.IsValid)
-            {
-                await _questionaryObjectRepository.CreateAsync(model);
-                return RedirectToAction("GetAllForUser", "ObjectsPropValues");
+            { 
+                var isCodeUnique = await _questionaryObjectRepository.IsCodeUnique(model);
+                if (isCodeUnique)
+                {
+                    await _questionaryObjectRepository.CreateAsync(model);
+                    return RedirectToAction("GetAllForUser", "ObjectsPropValues");
+                }
+
+                var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                model = await _questionaryObjectService.GetAllForCreateForUser(model, user);
+                model.IsCodeUnique = false;
+                return View("Create", model);
+                
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            model = await _questionaryObjectService.GetAllForCreateForUser(userId);
+            model = await _questionaryObjectService.GetAllForCreateForUser(model, userId);
             return View("Create", model);
         }
 
@@ -102,7 +122,15 @@ namespace Admin.Panel.Web.Controllers
         public async Task<ActionResult> Update(int id)
         {
             var model = await _questionaryObjectRepository.GetAsync(id);
+            var isCodeUnique = await _questionaryObjectRepository.IsCodeUnique(model);
             model = await _questionaryObjectService.GetAllForUpdate(model);
+            if (isCodeUnique)
+            {
+                model.IsCodeUnique = true;
+                return View(model);
+            }
+
+            model.IsCodeUnique = false;
             return View(model);
         }
 
@@ -113,8 +141,16 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _questionaryObjectRepository.UpdateAsync(model);
-                return RedirectToAction("GetAll", "ObjectsPropValues");
+                var isCodeUnique = await _questionaryObjectRepository.IsCodeUnique(model);
+                if (isCodeUnique)
+                {
+                    await _questionaryObjectRepository.UpdateAsync(model);
+                    return RedirectToAction("GetAll", "ObjectsPropValues"); 
+                }
+
+                model = await _questionaryObjectService.GetAllForUpdate(model);
+                model.IsCodeUnique = false;
+                return View("Update", model);
             }
 
             model = await _questionaryObjectService.GetAllForUpdate(model);
@@ -128,6 +164,14 @@ namespace Admin.Panel.Web.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var model = await _questionaryObjectRepository.GetAsync(id);
             model = await _questionaryObjectService.GetAllForUpdateForUser(model, userId);
+            var isCodeUnique = await _questionaryObjectRepository.IsCodeUnique(model);
+            if (isCodeUnique)
+            {
+                model.IsCodeUnique = true;
+                return View("Update", model);
+            }
+
+            model.IsCodeUnique = false;
             return View("Update", model);
         }
 
@@ -138,8 +182,17 @@ namespace Admin.Panel.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _questionaryObjectRepository.UpdateAsync(model);
-                return RedirectToAction("GetAllForUser", "ObjectsPropValues");
+                var isCodeUnique = await _questionaryObjectRepository.IsCodeUnique(model);
+                if (isCodeUnique)
+                {
+                    await _questionaryObjectRepository.UpdateAsync(model);
+                    return RedirectToAction("GetAllForUser", "ObjectsPropValues");
+                }
+                var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                model = await _questionaryObjectService.GetAllForUpdateForUser(model, user);
+                model.IsCodeUnique = false;
+                return View("Update", model);
+                
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

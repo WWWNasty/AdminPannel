@@ -11,7 +11,7 @@ namespace Admin.Panel.Core.Entities.Questionary
         [StringLength(20, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 1)]
         [Display(Name = "Код")]
         public string Code { get; set; }
-        
+
         [Required(ErrorMessage = "Поле обязательно2!")]
         [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 2)]
         [Display(Name = "Описание")]
@@ -36,6 +36,8 @@ namespace Admin.Panel.Core.Entities.Questionary
         [Display(Name = "Активный")]
         public bool IsUsed { get; set; }
         public string CompanyName { get; set; }
+        
+        public bool IsCodeUnique { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно6!")]
         public List<ObjectPropertyValues> SelectedObjectPropertyValues { get; set; }
