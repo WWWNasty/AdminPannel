@@ -8,12 +8,12 @@ namespace Admin.Panel.Core.Entities.Questionary
     public class ObjectProperty: BaseEntity
     {
         [Required(ErrorMessage = "Поле Название - обязательно!")]
-        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 2)]
+        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 1)]
         [Display(Name = "Название")]
         public string Name { get; set; }
         
         [Required(ErrorMessage = "Поле Название в отчете - обязательно!")]
-        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 2)]
+        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 1)]
         [Display(Name = "Название в отчете")]
         public string NameInReport { get; set; }
         
@@ -23,8 +23,8 @@ namespace Admin.Panel.Core.Entities.Questionary
         [Display(Name = "Активно")]
         public bool IsUsed { get; set; }
         
-        [Required(ErrorMessage = "Поле Тип поля в отчете - обязательно!")]
-        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 3)]
+        // [Required(ErrorMessage = "Поле Тип поля в отчете - обязательно!")]
+        // [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 3)]
         [Display(Name = "Тип поля в отчете")]
         public string ReportCellStyle { get; set; }
         

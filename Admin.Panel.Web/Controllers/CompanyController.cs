@@ -26,7 +26,7 @@ namespace Admin.Panel.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles = "SuperAdministrator")]
-        public async Task<IActionResult> Create()
+        public  IActionResult Create()
         {
             return View();
         }

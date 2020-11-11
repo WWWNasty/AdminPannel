@@ -13,43 +13,36 @@ namespace Admin.Panel.Web.Servises
 {
     public class EmailSender : IEmailSender
     {
-        private bool TrustAllCertificateCallback(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors errors)
+        private bool TrustAllCertificateCallback(object sender, X509Certificate cert, X509Chain chain,
+            SslPolicyErrors errors)
         {
             return true;
         }
+
         public Task SendEmailAsync(string email, string subject, string message)
         {
+            ServicePointManager.ServerCertificateValidationCallback = TrustAllCertificateCallback;
 
-            try
+            const string server = "mail.payberry.ru";
+            const string password = "Fhgfh@45G6HG";
+            string mailFrom = "poll@payberry.ru";
+            const string userName = "shop.logs";
+            var msg = new MailMessage(new MailAddress(mailFrom, mailFrom), new MailAddress(email))
             {
-                ServicePointManager.ServerCertificateValidationCallback = TrustAllCertificateCallback;
+                Subject = subject,
+                Body = message,
+                BodyEncoding = Encoding.UTF8,
+                IsBodyHtml = true
+            };
 
-                const string server = "mail.payberry.ru";
-                const string password = "Fhgfh@45G6HG";
-                string mailFrom = "poll@payberry.ru";
-                const string userName = "shop.logs";
-                var msg = new MailMessage(new MailAddress(mailFrom, mailFrom), new MailAddress(email))
-                {
-                    Subject = subject,
-                    Body = message,
-                    BodyEncoding = Encoding.UTF8,
-                    IsBodyHtml = true
-                };
-
-                var smtp = new SmtpClient(server, 9025)
-                {
-                    Credentials = new NetworkCredential(userName, password),
-                    Timeout = 600000,
-                    EnableSsl = true,
-                };
-                smtp.Send(msg);
-
-                return Task.CompletedTask;
-            }
-            catch (Exception ex)
+            var smtp = new SmtpClient(server, 9025)
             {
-                //ignored
-            }
+                Credentials = new NetworkCredential(userName, password),
+                Timeout = 600000,
+                EnableSsl = true,
+            };
+            smtp.Send(msg);
+            
             return Task.CompletedTask;
         }
     }

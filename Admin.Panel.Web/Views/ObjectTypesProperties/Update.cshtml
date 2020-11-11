@@ -50,7 +50,7 @@
         </div>
     </div>
      
-    <span style="display: none" id="answer-options-count">@Model.SelectedObjectProperties.Count</span>
+    <span style="display: none" id="answer-options-count">0</span>
     
     <div class="col-sm-7 mt-2 add-container">
         <input type="button" value="Добавить новое свойство" class="add btn btn-outline-secondary mt-3"/>
@@ -82,10 +82,10 @@
                 <input asp-for="NewSelectedObjectProperties[0].IsUsedInReport" type="checkbox" class="form-check-input"/>
                 <label asp-for="NewSelectedObjectProperties[0].IsUsedInReport" class="form-check-label align-bottom"></label>
             </div>
-            <div class="col form-group">
-                <label asp-for="NewSelectedObjectProperties[0].ReportCellStyle"></label>
-                <input asp-for="NewSelectedObjectProperties[0].ReportCellStyle" class="form-control" required>
-            </div>
+            @* <div class="col form-group"> *@
+            @*     <label asp-for="NewSelectedObjectProperties[0].ReportCellStyle"></label> *@
+            @*     <input asp-for="NewSelectedObjectProperties[0].ReportCellStyle" class="form-control" required> *@
+            @* </div> *@
         </div>
     </div>
 </div> 

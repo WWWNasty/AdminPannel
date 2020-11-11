@@ -86,7 +86,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 try
                 {
                     var query = @"INSERT INTO ObjectProperties(Name,NameInReport,IsUsedInReport,ReportCellStyle,IsUsed) 
-                    VALUES(@Name,@NameInReport,@IsUsedInReport,@ReportCellStyle,1)";
+                    VALUES(@Name,@NameInReport,@IsUsedInReport,'Text',1)";
                     await connection.ExecuteAsync(query, obj);
                     return obj;
                 }
@@ -105,7 +105,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
                 try
                 {
-                    var query = @"UPDATE ObjectProperties SET Name=@Name,NameInReport=@NameInReport,IsUsedInReport=@IsUsedInReport,ReportCellStyle=@ReportCellStyle,IsUsed=@IsUsed 
+                    var query = @"UPDATE ObjectProperties SET Name=@Name,NameInReport=@NameInReport,IsUsedInReport=@IsUsedInReport,ReportCellStyle='Text',IsUsed=@IsUsed 
                      WHERE Id=@Id";
                     await connection.ExecuteAsync(query, obj);
                     return obj;

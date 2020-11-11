@@ -36,10 +36,10 @@ namespace Admin.Panel.Core.Entities.Questionary
         [Display(Name = "Активный")]
         public bool IsUsed { get; set; }
         public string CompanyName { get; set; }
-        
-        public bool IsCodeUnique { get; set; }
 
-        [Required(ErrorMessage = "Поле обязательно6!")]
+        public bool IsCodeUnique { get; set; } = true;
+
+        [Required(ErrorMessage = "Поле обязательно!")]
         public List<ObjectPropertyValues> SelectedObjectPropertyValues { get; set; }
         
         [Display(Name = "Тип объекта")]
