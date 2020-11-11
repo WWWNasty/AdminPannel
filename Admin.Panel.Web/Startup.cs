@@ -1,5 +1,6 @@
 using Admin.Panel.Core.Entities.UserManage;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
+using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.Completed;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Repositories.UserManageRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Admin.Panel.Data.Repositories.Questionary;
+using Admin.Panel.Data.Repositories.Questionary.Completed;
 using Admin.Panel.Web.Servises;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -53,6 +55,7 @@ namespace Admin.Panel.Web
             services.AddScoped<ISelectableAnswersListRepository, SelectableAnswersListRepository>();
             services.AddScoped<IAnswersService, AnswersService>();
             services.AddScoped<IQuestionaryInputFieldTypesRepository, QuestionaryInputFieldsTypesRepository>();
+            services.AddScoped<ICompletedQuestionaryRepository, CompletedQuestionaryRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<IUserStore<User>, UserRepository>();
