@@ -34,7 +34,7 @@ namespace Admin.Panel.Core.Entities.Questionary
                 QuestionaryObjectType opt = value as QuestionaryObjectType;
                 if (opt != null && opt.SelectedPropertiesId == null && opt.NewSelectedObjectProperties == null)
                 {
-                    this.ErrorMessage = "Не указаны свойства!";
+                    ErrorMessage = "Не указаны свойства!";
                     return false;
                 }
                 return true;

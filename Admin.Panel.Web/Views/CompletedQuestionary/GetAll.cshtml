@@ -1,10 +1,52 @@
 ﻿@using Admin.Panel.Core.Entities
 @using System.Security.Claims
-@model List<Admin.Panel.Core.Entities.Questionary.Completed.CompletedQuestionary>
+@model Admin.Panel.Core.Entities.Questionary.Completed.QueryParameters
 
 @{
     ViewData["Title"] = "Результаты";
 }
+<form method="post" asp-antiforgery="true" class="needs-validation" novalidate>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <div class="col-md-10">
+                    <label asp-for="ApplicationCompanies">Компания</label>
+                    <select class="selectpicker" asp-for="CompanyIds"
+                            asp-items="Model.ApplicationCompanies.Select(p => new SelectListItem(p.CompanyName, p.CompanyId.ToString()))"
+                            multiple>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <div class="col-md-10">
+                    <label asp-for="QuestionaryObjectTypes">Тип объекта</label>
+                    <select class="selectpicker" asp-for="ObjectTypeIds"
+                            asp-items="Model.QuestionaryObjectTypes.Select(p => new SelectListItem(p.Name, p.Id.ToString()))"
+                            multiple>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <div class="col-md-10">
+                    <label asp-for="QuestionaryObjects">Объект</label>
+                    <select class="selectpicker" asp-for="ObjectIds"
+                            asp-items="Model.QuestionaryObjects.Select(p => new SelectListItem(p.Name, p.Id.ToString()))"
+                            multiple>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mt-4">
+            <button type="submit" class="btn btn-outline-primary">Поиск</button>
+        </div>
+    </div>
+</form>
 
 <div class="card">
     <div class="card-header">
@@ -33,7 +75,7 @@
         </div>
     </div>
     <ul class="list-group list-group-flush">
-        @foreach (var obj in Model)
+        @foreach (var obj in Model.CompletedQuestionaries)
         {
             <li class="list-group-item">
                 <input type="hidden" name="Id" value="@obj.Id"/>
@@ -70,4 +112,5 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/js/CompletedValidationSerch.js"></script>
 }

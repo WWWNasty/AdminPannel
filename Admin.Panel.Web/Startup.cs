@@ -4,9 +4,11 @@ using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.C
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Repositories.UserManageRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces;
+using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.Completed;
 using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.QuestionsServiceInterfaces;
 using Admin.Panel.Core.Interfaces.Services.UserManageServiceInterfaces;
 using Admin.Panel.Core.Services.QuestionaryServices;
+using Admin.Panel.Core.Services.QuestionaryServices.Completed;
 using Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices;
 using Admin.Panel.Core.Services.UserManageServices;
 using Admin.Panel.Data.MapperProfiles;
@@ -56,6 +58,7 @@ namespace Admin.Panel.Web
             services.AddScoped<IAnswersService, AnswersService>();
             services.AddScoped<IQuestionaryInputFieldTypesRepository, QuestionaryInputFieldsTypesRepository>();
             services.AddScoped<ICompletedQuestionaryRepository, CompletedQuestionaryRepository>();
+            services.AddScoped<ICompletedQuestionaryService, CompletedQuestionaryService>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<IUserStore<User>, UserRepository>();

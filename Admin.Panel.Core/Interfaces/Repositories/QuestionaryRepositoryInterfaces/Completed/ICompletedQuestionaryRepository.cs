@@ -6,6 +6,6 @@ namespace Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfac
 {
     public interface ICompletedQuestionaryRepository
     {
-        Task<List<CompletedQuestionary>> GetAllAsync();
+        Task<List<CompletedQuestionary>> GetAllAsync(QueryParameters model);
     }
 }
