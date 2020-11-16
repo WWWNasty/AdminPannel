@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -12,12 +13,17 @@ namespace Admin.Panel.Core.Entities.Questionary.Completed
         public List<QuestionaryObjectType> QuestionaryObjectTypes { get; set; }
         public List<QuestionaryObject> QuestionaryObjects { get; set; }
 
-        public List<int> CompanyIds { get; set; }
-        public List<int> ObjectTypeIds { get; set; }
-        public List<int> ObjectIds { get; set; }
+        public int[] CompanyIds { get; set; }
+        public int[] ObjectTypeIds { get; set; }
+        public int[] ObjectIds { get; set; }
 
-        public int ElementsCount { get; set; }
-        public int PageNumber { get; set; }
+        public int PageNumber { get; set; } = 1; // номер текущей страницы
+        public int PageSize { get; set; } // кол-во объектов на странице
+        public int TotalItems { get; set; } // всего объектов
+        // public int TotalPages  // всего страниц
+        // {
+        //     get { return (int)Math.Ceiling((decimal)TotalItems / PageSize); }
+        // }
 
         public class QueryParametersValidationAttribute : ValidationAttribute
         {

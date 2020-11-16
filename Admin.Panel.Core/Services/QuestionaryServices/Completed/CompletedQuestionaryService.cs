@@ -27,7 +27,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.Completed
 
         public async Task<QueryParameters> GetAll(QueryParameters model)
         {
-           model.CompletedQuestionaries = await _completedQuestionaryRepository.GetAllAsync(model);
+           model = await _completedQuestionaryRepository.GetAllAsync(model);
            model.ApplicationCompanies = await _companyRepository.GetAllAsync();
            model.QuestionaryObjects = await _questionaryObjectRepository.GetAllAsync();
            model.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllAsync();
