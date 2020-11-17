@@ -33,5 +33,14 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.Completed
            model.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllAsync();
            return model;
         }
+
+        public async Task<QueryParameters> GetAllForUser(QueryParameters model, int userId)
+        {
+            model = await _completedQuestionaryRepository.GetAllAsync(model);
+            model.ApplicationCompanies = await _companyRepository.GetAllForUserAsync(userId);
+            model.QuestionaryObjects = await _questionaryObjectRepository.GetAllForUserAsync(userId);
+            model.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllAsync();
+            return model;
+        }
     }
 }

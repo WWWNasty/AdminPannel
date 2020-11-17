@@ -60,7 +60,28 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 }
             }
         }
-        
+
+        public async Task<List<ApplicationCompany>> GetAllForUserAsync(int userId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                try
+                {
+                    var query = @"SELECT * FROM Companies c 
+                                    INNER JOIN ApplicationUserCompany ac ON c.CompanyId = ac.CompanyId
+                                        WHERE ac.UserId =@UserId";
+                    var сompanies = await connection.QueryAsync<ApplicationCompany>(query, new {@UserId = Convert.ToInt32(userId)});
+                    return сompanies.ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
         public async Task<List<ApplicationCompany>> GetAllActiveAsync()
         {
             using (var connection = new SqlConnection(_connectionString))

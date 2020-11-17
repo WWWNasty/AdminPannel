@@ -6,5 +6,6 @@ namespace Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.Comp
     public interface ICompletedQuestionaryService
     {
         Task<QueryParameters> GetAll(QueryParameters model);
+        Task<QueryParameters> GetAllForUser(QueryParameters model, int userId);
     }
 }

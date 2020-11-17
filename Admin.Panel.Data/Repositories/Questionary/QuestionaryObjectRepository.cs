@@ -98,21 +98,14 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 await connection.OpenAsync();
                 try
                 {
-                    List<QuestionaryObject> result = new List<QuestionaryObject>();
-                    List<int> companiesId = connection
+                    int[] companiesId = connection
                         .Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @Id",
-                            new {@Id = userId}).ToList();
-                    foreach (var companyId in companiesId)
-                    {
-                        var objects = connection
-                            .Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE CompanyId = @CompanyId",
-                                new {@CompanyId = companyId}).ToList();
-                        foreach (var obj in objects)
-                        {
-                            result.Add(obj);
-                        }
-                    }
-
+                            new {@Id = userId}).ToArray();
+                    
+                    var result = connection
+                        .Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE CompanyId IN @CompanyId",
+                            new {@CompanyId = companiesId}).ToList();
+                    
                     return result;
                 }
                 catch (Exception ex)
@@ -129,21 +122,13 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 await connection.OpenAsync();
                 try
                 {
-                    List<QuestionaryObject> result = new List<QuestionaryObject>();
-                    List<int> companiesId = connection
+                    int[] companiesId = connection
                         .Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @Id",
-                            new {@Id = userId}).ToList();
-                    foreach (var companyId in companiesId)
-                    {
-                        var objects = connection
-                            .Query<QuestionaryObject>(
-                                @"SELECT * FROM QuestionaryObjects WHERE CompanyId = @CompanyId AND IsUsed = 1",
-                                new {@CompanyId = companyId}).ToList();
-                        foreach (var obj in objects)
-                        {
-                            result.Add(obj);
-                        }
-                    }
+                            new {@Id = userId}).ToArray();
+                    var result = connection
+                        .Query<QuestionaryObject>(
+                            @"SELECT * FROM QuestionaryObjects WHERE IsUsed = 1 AND CompanyId IN @CompanyId",
+                            new {@CompanyId = companiesId}).ToList();
 
                     return result;
                 }
@@ -285,11 +270,11 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     var obj = connection.Query<QuestionaryObject>(
                         @"SELECT * FROM QuestionaryObjects Where Code =@Code",
                         new {@Code = model.Code}).ToList();
-                    if (model.Id ==0)
+                    if (model.Id == 0)
                     {
                         return obj.Count == 0;
                     }
-                    
+
                     var objs = connection.Query<QuestionaryObject>(
                         @"SELECT * FROM QuestionaryObjects Where Code =@Code AND Id <> @Id",
                         new {@Code = model.Code, @Id = model.Id}).ToList();

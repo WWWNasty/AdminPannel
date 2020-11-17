@@ -118,7 +118,6 @@
         <nav aria-label="...">
             <ul class="pagination justify-content-end mt-2">
                 <input type="hidden" asp-for="PageNumber" id="currentpg"/>
-                @* <span style="display: none" id="currentpg">@Model.PageNumber</span> *@
                 @{
                     //Максимальная длина списка страниц
                     const int maxPageListSize = 5;
@@ -126,26 +125,22 @@
                     {
                         <li class="page-item">
                             <button type="submit" pagenumber="0" class="pgnumber-before page-link">&laquo;</button>
-                            @* <a class="page-link" asp-route-id="@(Model.PageNumber - 1)"></a> *@
                         </li>
                     }
                     //Вычисление номера списка страниц
-                    int listNum = (int) Math.Floor(((Model.PageNumber + 1) - 1.0d) / maxPageListSize);
-
+                    int listNum = (int) Math.Floor((Model.PageNumber - 1.0d) / maxPageListSize);
 
                     for (int pageElem = listNum * maxPageListSize + 1, counter = 0; counter < maxPageListSize; counter++, pageElem++)
                     {
                         if (pageElem == Model.PageNumber)
                         {
                             <li class="page-item active">
-                                @* <a asp-controller="CompletedQuestionary" asp-action="GetAll" class="pgnumber page-link">@pageElem</a> *@
                                 <button type="button" class="pgnumber page-link">@pageElem</button>
                             </li>
                         }
                         else
                         {
                             <li class="page-item">
-                                @* <a asp-controller="CompletedQuestionary" asp-action="GetAll" class="pgnumber page-link">@pageElem</a> *@
                                 <button type="submit" pagenumber="@pageElem" class="pgnumber page-link">@pageElem</button>
                             </li>
                         }
@@ -161,18 +156,13 @@
                             @{
                                 var totalPages = Math.Ceiling((double) Model.TotalItems / Model.PageSize);
                             }
-                            <input type="hidden" asp-for="PageNumber" id="lastPage"/>
-
                             <button type="submit" pagenumber="@totalPages" class="pgnumber-next page-link">&raquo;</button>
-                            @* <a asp-controller="CompletedQuestionary" asp-action="GetAll" class="pgnumber page-link">&raquo;</a> *@
-                            @* <a class="page-link" asp-route-id="@(Model.PageNumber + 1)"></a> *@
                         </li>
                     }
                 }
             </ul>
         </nav>
     }
-
 </form>
 
 @section Scripts {

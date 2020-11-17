@@ -45,6 +45,10 @@
                         {
                             <a asp-controller="Questionary" asp-action="GetAllForUser" class="dropdown-item">Анкеты</a>
                         }
+                        if (User.IsInRole("AnswersRead"))
+                        {
+                            <a asp-controller="CompletedQuestionary" asp-action="GetAllForUser" class="dropdown-item">Результаты анкетирований</a>
+                        }
 
                         <a asp-controller="Account" asp-action="ChangePassword" class="dropdown-item">Изменить пароль</a>
 

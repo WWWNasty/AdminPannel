@@ -1,3 +1,4 @@
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary.Completed;
@@ -36,7 +37,7 @@ namespace Admin.Panel.Web.Controllers
         public async Task<IActionResult> GetAll(QueryParameters model)
         {
             if (ModelState.IsValid)
-            {
+            {    
                 model = await _completedQuestionaryService.GetAll(model);
                 return View(model);
             }
@@ -44,14 +45,30 @@ namespace Admin.Panel.Web.Controllers
             return View(model);
         }
         
-        // [HttpGet]
-        // [Authorize(Roles = "SuperAdministrator, ")]
-        // public async Task<ActionResult> GetAllForUser()
-        // {
-        //     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //     var model = await _completedQuestionaryRepository.GetAllForUserAsync(userId);
-        //     return View("GetAll", model);
-        // }
+        [HttpGet]
+        [Authorize(Roles = "AnswersRead")]
+        public async Task<ActionResult> GetAllForUser()
+        {
+            var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            QueryParameters model = new QueryParameters();
+            model = await _completedQuestionaryService.GetAllForUser(model, userId); 
+            return View("GetAll", model);
+        }
         
+        [HttpPost]
+        [Authorize(Roles = "AnswersRead")]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> GetAllForUser(QueryParameters model)
+        {
+            var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (ModelState.IsValid)
+            {
+                model = await _completedQuestionaryService.GetAllForUser(model, userId);
+                return View("GetAll", model);
+            }
+            model = await _completedQuestionaryService.GetAllForUser(model, userId);
+            return View("GetAll", model);
+        }
     }
 }

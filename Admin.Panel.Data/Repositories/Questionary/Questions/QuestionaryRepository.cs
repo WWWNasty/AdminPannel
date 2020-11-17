@@ -42,6 +42,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 																		INNER JOIN SelectableAnswersLists l ON l.Id = p.SelectableAnswersListId
 				                                                                where QuestionaryId = @QuestionaryId",
                         new {QuestionaryId = id}).ToList();
+
                     foreach (var question in questions)
                     {
                         var answ = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers
@@ -53,7 +54,6 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                     }
 
                     obj.QuestionaryQuestions = questions;
-
                     return obj;
                 }
                 catch (Exception ex)
@@ -93,22 +93,16 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 
                 try
                 {
-                    List<QuestionaryDto> questionaries = new List<QuestionaryDto>();
-                    List<int> companiesId = connection
+                    int[] companiesId = connection
                         .Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE c.UserID = @UserId",
-                            new {@UserId = Convert.ToInt32(userId)}).ToList();
-                    foreach (var id in companiesId)
-                    {
-                        var query = @"SELECT * FROM Questionary
-                                        WHERE CompanyId =@CompanyId";
-                        var objs = connection.Query<QuestionaryDto>(query, new {@CompanyId = id});
-                        foreach (var obj in objs)
-                        {
-                            questionaries.Add(obj);
-                        }
-                    }
+                            new {@UserId = Convert.ToInt32(userId)}).ToArray();
 
-                    return questionaries.ToList();
+                    var query = @"SELECT q.*, c.CompanyName AS CompanyName, o.Name AS ObjectTypeName FROM Questionary q
+                    INNER JOIN Companies AS c ON c.CompanyId = q.CompanyId
+					INNER JOIN QuestionaryObjectTypes AS o ON o.Id = q.ObjectTypeId
+                                        WHERE c.CompanyId IN @CompanyId";
+                    var objs = connection.Query<QuestionaryDto>(query, new {@CompanyId = companiesId}).ToList();
+                    return objs;
                 }
                 catch (Exception ex)
                 {
