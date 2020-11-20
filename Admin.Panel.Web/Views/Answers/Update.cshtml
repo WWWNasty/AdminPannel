@@ -64,11 +64,10 @@
 
             @foreach (int i in Range(0, Model.SelectableAnswers.Count))
             {
-                <input type="hidden" asp-for="@Model.SelectableAnswers[i].Id"/>
-
                 <div class="col-md-10 mt-4 voting-option-set bg-light move-container-cursor" data-id="0" data-toggle="tooltip" title="Нажмите и перетащите вопрос для изменения порядка вопросов в анкете.">
                     <div class="row">
                         <div class="col form-group mt-3">
+                            <input type="hidden" asp-for="@Model.SelectableAnswers[i].Id"/>
                             <label asp-for="SelectableAnswers[i].AnswerText"></label>
                             <input asp-for="SelectableAnswers[i].AnswerText" class="form-control" required>
                         </div>
