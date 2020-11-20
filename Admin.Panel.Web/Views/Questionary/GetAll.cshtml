@@ -1,99 +1,101 @@
 @using Admin.Panel.Core.Entities
 @using System.Security.Claims
 @model List<Admin.Panel.Core.Entities.Questionary.Questions.QuestionaryDto>
-
-@{
-    ViewData["Title"] = "Мои анкеты";
-}
-
-@if (User.Identity.IsAuthenticated)
-{
-    <div class="form-group mt-5">
-        <div class="row">
-            <div class="col">
-                <h4>@ViewBag.Title</h4>
-            </div>
-
-            @if (User.IsInRole("QuestionaryEdit"))
-            {
-                <a asp-controller="Questionary" asp-action="CreateForUser" class="btn btn-outline-primary ">&#10011; Создать Анкету</a>
-            }
-            @if (User.IsInRole("SuperAdministrator"))
-            {
-                <a asp-controller="Questionary" asp-action="Create" class="btn btn-outline-primary">&#10011; Создать Анкету</a>
-            }
-
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
+<div class="container">
+    @{
+        ViewData["Title"] = "Мои анкеты";
+    }
+    
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="form-group mt-5">
             <div class="row">
                 <div class="col">
-                    Название анкеты
+                    <h4>@ViewBag.Title</h4>
                 </div>
-                <div class="col">
-                    Статус
-                </div>
-                <div class="col">
-                    Компания
-                </div>
-                <div class="col">
-                    Тип объекта
-                </div>
+    
+                @if (User.IsInRole("QuestionaryEdit"))
+                {
+                    <a asp-controller="Questionary" asp-action="CreateForUser" class="btn btn-outline-primary ">&#10011; Создать Анкету</a>
+                }
+                @if (User.IsInRole("SuperAdministrator"))
+                {
+                    <a asp-controller="Questionary" asp-action="Create" class="btn btn-outline-primary">&#10011; Создать Анкету</a>
+                }
+    
             </div>
         </div>
-        <ul class="list-group list-group-flush">
-            @foreach (var obj in Model)
-            {
-                <li class="list-group-item">
-                    <input type="hidden" name="Id" value="@obj.Id"/>
-                    @* <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear-fill" fill="#C4DBF5" xmlns="http://www.w3.org/2000/svg"> *@
-                    @*     <path fill-rule="evenodd" d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z"/> *@
-                    @* </svg> *@
-                    <div class="row">
-                        @if (obj.IsUsed)
-                        {
-                            <div class="col">
-                                <a asp-controller="Questionary" asp-action="Get" asp-route-Id="@obj.Id" style="color: black;"> @Html.DisplayFor(modelItem => obj.Name)</a>
-                            </div>
-                            <div class="col">
-                                <div class="row">
-                                    <div style="width: 8px; height: 8px; background-color: #5BD148; border-radius: 4px" class="my-auto mr-1"></div>
-                                    <h7>активно</h7>
-                                </div>
-                            </div>
-                            <div class="col">
-                                @obj.CompanyName
-                            </div>
-                            <div class="col">
-                                @obj.ObjectTypeName
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="col">
-                                <a asp-controller="Questionary" asp-action="Get" asp-route-Id="@obj.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => obj.Name)</a>
-                            </div>
-                            <div class="col">
-                                <div class="row">
-                                    <div style="width: 8px; height: 8px; background-color: #CDCDCD; border-radius: 4px" class="my-auto mr-1"></div>
-                                    <h7 style="color: #CDCDCD;">не активно</h7>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <h7 style="color: #CDCDCD;">@obj.CompanyName</h7>
-                            </div>
-                            <div class="col text-secondary">
-                                <h7 style="color: #CDCDCD;">@obj.ObjectTypeName</h7>
-                            </div>
-                        }
+    
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        Название анкеты
                     </div>
-                </li>
-            }
-        </ul>
-    </div>
-}
+                    <div class="col">
+                        Статус
+                    </div>
+                    <div class="col">
+                        Компания
+                    </div>
+                    <div class="col">
+                        Тип объекта
+                    </div>
+                </div>
+            </div>
+            <ul class="list-group list-group-flush">
+                @foreach (var obj in Model)
+                {
+                    <li class="list-group-item">
+                        <input type="hidden" name="Id" value="@obj.Id"/>
+                        @* <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear-fill" fill="#C4DBF5" xmlns="http://www.w3.org/2000/svg"> *@
+                        @*     <path fill-rule="evenodd" d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z"/> *@
+                        @* </svg> *@
+                        <div class="row">
+                            @if (obj.IsUsed)
+                            {
+                                <div class="col">
+                                    <a asp-controller="Questionary" asp-action="Get" asp-route-Id="@obj.Id" style="color: black;"> @Html.DisplayFor(modelItem => obj.Name)</a>
+                                </div>
+                                <div class="col">
+                                    <div class="row">
+                                        <div style="width: 8px; height: 8px; background-color: #5BD148; border-radius: 4px" class="my-auto mr-1"></div>
+                                        <h7>активно</h7>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    @obj.CompanyName
+                                </div>
+                                <div class="col">
+                                    @obj.ObjectTypeName
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col">
+                                    <a asp-controller="Questionary" asp-action="Get" asp-route-Id="@obj.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => obj.Name)</a>
+                                </div>
+                                <div class="col">
+                                    <div class="row">
+                                        <div style="width: 8px; height: 8px; background-color: #CDCDCD; border-radius: 4px" class="my-auto mr-1"></div>
+                                        <h7 style="color: #CDCDCD;">не активно</h7>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h7 style="color: #CDCDCD;">@obj.CompanyName</h7>
+                                </div>
+                                <div class="col text-secondary">
+                                    <h7 style="color: #CDCDCD;">@obj.ObjectTypeName</h7>
+                                </div>
+                            }
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+</div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

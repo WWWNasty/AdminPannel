@@ -1,147 +1,149 @@
 ﻿@using Admin.Panel.Core.Entities
 @model List<Admin.Panel.Core.Entities.UserManage.GetAllUsersDto>
-
-@{
-    ViewData["Title"] = "Все пользователи";
-}
-@if (User.Identity.IsAuthenticated)
-{
-    <div class="form-group mt-5">
-        <div class="row">
-            <div class="col">
-                <h4>@ViewBag.Title</h4>
-            </div>
-            @if (User.IsInRole("ObjectEdit"))
-            {
-                <a asp-controller="Account" asp-action="RegisterForUser" class="btn btn-outline-primary">&#10011; Создать пользователя</a>
-            }
-            @if (User.IsInRole("SuperAdministrator"))
-            {
-                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary">&#10011; Создать пользователя</a>
-            }
-        </div>
-    </div>
-    
-
-    <div class="card">
-        <div class="card-header">
+<div class="container">
+    @{
+        ViewData["Title"] = "Все пользователи";
+    }
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="form-group mt-5">
             <div class="row">
-                <div class="col-md-2">
-                    Имя пользователя
-                </div>
-                <div class="col-md-2">
-                    Статус
-                </div>
-                <div class="col-md-2">
-                    Email
-                </div>
-                <div class="col-md-2">
-                    Создан
-                </div>
-                <div class="col-md-1">
-                    Роль
-                </div>
                 <div class="col">
-                    Компания
+                    <h4>@ViewBag.Title</h4>
                 </div>
+                @if (User.IsInRole("ObjectEdit"))
+                {
+                    <a asp-controller="Account" asp-action="RegisterForUser" class="btn btn-outline-primary">&#10011; Создать пользователя</a>
+                }
+                @if (User.IsInRole("SuperAdministrator"))
+                {
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary">&#10011; Создать пользователя</a>
+                }
             </div>
         </div>
-        <ul class="list-group list-group-flush">
-            @foreach (var obj in Model)
-            {
-                <li class="list-group-item">
-                    <input type="hidden" name="Id" value="@obj.Id"/>
-                    @* <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear-fill" fill="#C4DBF5" xmlns="http://www.w3.org/2000/svg"> *@
-                    @*     <path fill-rule="evenodd" d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z"/> *@
-                    @* </svg> *@
-                    <div class="row">
-                        @if (obj.IsUsed)
-                        {
-                            <div class="col-md-2">
-                                
-                                @if (User.IsInRole("SuperAdministrator"))
-                                {
-                                    <a asp-controller="ManageUser" asp-action="UpdateUser" asp-route-userId="@obj.Id" style="color: black;"> @Html.DisplayFor(modelItem => obj.Nickname)</a>
-                                }
-                                @if (User.IsInRole("UsersEdit"))
-                                {
-                                    <a asp-controller="ManageUser" asp-action="UpdateUserForUser" asp-route-userId="@obj.Id" style="color: black;"> @Html.DisplayFor(modelItem => obj.Nickname)</a>
-                                }
-                                @if(!(User.IsInRole("SuperAdministrator") || User.IsInRole("UsersEdit")))
-                                {
-                                    @obj.Nickname 
-                                }
-                            </div>
-                            <div class="col-md-2">
-                                <div class="row">
-                                    <div style="width: 8px; height: 8px; background-color: #5BD148; border-radius: 4px" class="my-auto mr-1"></div>
-                                    <h7>активен</h7>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                @obj.Email
-                            </div>
-                            <div class="col-md-2">
-                                @obj.CreatedDate
-                            </div>
-                            <div class="col-md-1">
-                                @obj.Role
-                            </div>
-                            <div class="col">
-                                <ul>
-                                    @foreach (var company in obj.Companies)
-                                    {
-                                        <li>@company.CompanyName</li>
-                                    }
-                                </ul>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="col-md-2">
-                                 @if (User.IsInRole("SuperAdministrator"))
-                                 {
-                                     <a asp-controller="ManageUser" asp-action="UpdateUser" asp-route-userId="@obj.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => obj.Nickname)</a>
-                                 }
-                                 @if (User.IsInRole("UsersEdit"))
-                                 {
-                                     <a asp-controller="ManageUser" asp-action="UpdateUserForUser" asp-route-userId="@obj.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => obj.Nickname)</a>
-                                 }
-                                 @if(!(User.IsInRole("SuperAdministrator") || User.IsInRole("UsersEdit")))
-                                 {
-                                     @obj.Nickname
-                                 }
-                            </div>
-                            <div class="col-md-2">
-                                <div class="row">
-                                    <div style="width: 8px; height: 8px; background-color: #CDCDCD; border-radius: 4px" class="my-auto mr-1"></div>
-                                    <h7 style="color: #CDCDCD;">не активен</h7>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <h7 style="color: #CDCDCD;">@obj.Email</h7>
-                            </div>
-                            <div class="col-md-2">
-                                <h7 style="color: #CDCDCD;">@obj.CreatedDate</h7>
-                            </div>
-                            <div class="col-md-1" style="color: #CDCDCD;">
-                                @obj.Role
-                            </div>
-                            <div class="col" style="color: #CDCDCD;">
-                                <ul>
-                                    @foreach (var company in obj.Companies)
-                                    {
-                                        <li>@company.CompanyName</li>
-                                    }
-                                </ul>
-                            </div>
-                        }
+        
+    
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-2">
+                        Имя пользователя
                     </div>
-                </li>
-            }
-        </ul>
-    </div>
-}
+                    <div class="col-md-2">
+                        Статус
+                    </div>
+                    <div class="col-md-2">
+                        Email
+                    </div>
+                    <div class="col-md-2">
+                        Создан
+                    </div>
+                    <div class="col-md-1">
+                        Роль
+                    </div>
+                    <div class="col">
+                        Компания
+                    </div>
+                </div>
+            </div>
+            <ul class="list-group list-group-flush">
+                @foreach (var obj in Model)
+                {
+                    <li class="list-group-item">
+                        <input type="hidden" name="Id" value="@obj.Id"/>
+                        @* <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear-fill" fill="#C4DBF5" xmlns="http://www.w3.org/2000/svg"> *@
+                        @*     <path fill-rule="evenodd" d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z"/> *@
+                        @* </svg> *@
+                        <div class="row">
+                            @if (obj.IsUsed)
+                            {
+                                <div class="col-md-2">
+                                    
+                                    @if (User.IsInRole("SuperAdministrator"))
+                                    {
+                                        <a asp-controller="ManageUser" asp-action="UpdateUser" asp-route-userId="@obj.Id" style="color: black;"> @Html.DisplayFor(modelItem => obj.Nickname)</a>
+                                    }
+                                    @if (User.IsInRole("UsersEdit"))
+                                    {
+                                        <a asp-controller="ManageUser" asp-action="UpdateUserForUser" asp-route-userId="@obj.Id" style="color: black;"> @Html.DisplayFor(modelItem => obj.Nickname)</a>
+                                    }
+                                    @if(!(User.IsInRole("SuperAdministrator") || User.IsInRole("UsersEdit")))
+                                    {
+                                        @obj.Nickname 
+                                    }
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="row">
+                                        <div style="width: 8px; height: 8px; background-color: #5BD148; border-radius: 4px" class="my-auto mr-1"></div>
+                                        <h7>активен</h7>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    @obj.Email
+                                </div>
+                                <div class="col-md-2">
+                                    @obj.CreatedDate
+                                </div>
+                                <div class="col-md-1">
+                                    @obj.Role
+                                </div>
+                                <div class="col">
+                                    <ul>
+                                        @foreach (var company in obj.Companies)
+                                        {
+                                            <li>@company.CompanyName</li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-2">
+                                     @if (User.IsInRole("SuperAdministrator"))
+                                     {
+                                         <a asp-controller="ManageUser" asp-action="UpdateUser" asp-route-userId="@obj.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => obj.Nickname)</a>
+                                     }
+                                     @if (User.IsInRole("UsersEdit"))
+                                     {
+                                         <a asp-controller="ManageUser" asp-action="UpdateUserForUser" asp-route-userId="@obj.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => obj.Nickname)</a>
+                                     }
+                                     @if(!(User.IsInRole("SuperAdministrator") || User.IsInRole("UsersEdit")))
+                                     {
+                                         @obj.Nickname
+                                     }
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="row">
+                                        <div style="width: 8px; height: 8px; background-color: #CDCDCD; border-radius: 4px" class="my-auto mr-1"></div>
+                                        <h7 style="color: #CDCDCD;">не активен</h7>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <h7 style="color: #CDCDCD;">@obj.Email</h7>
+                                </div>
+                                <div class="col-md-2">
+                                    <h7 style="color: #CDCDCD;">@obj.CreatedDate</h7>
+                                </div>
+                                <div class="col-md-1" style="color: #CDCDCD;">
+                                    @obj.Role
+                                </div>
+                                <div class="col" style="color: #CDCDCD;">
+                                    <ul>
+                                        @foreach (var company in obj.Companies)
+                                        {
+                                            <li>@company.CompanyName</li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

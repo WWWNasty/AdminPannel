@@ -1,74 +1,76 @@
 ﻿@model Admin.Panel.Core.Entities.UserManage.RegisterDto
-
-@{
-    ViewBag.Title = "Создание нового пользователя";
-}
-
-<div class="form-group mt-5">
-    <div class="col-md-10">
-        <h4>@ViewBag.Title</h4>
-    </div>
-</div>
-
-<form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
-
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
+<div class="container">
+    @{
+        ViewBag.Title = "Создание нового пользователя";
+    }
+    
+    <div class="form-group mt-5">
         <div class="col-md-10">
-            <label asp-for="Email"></label>
-            <input asp-for="Email" class="form-control"/>
-            <span asp-validation-for="Email" class="text-danger"></span>
+            <h4>@ViewBag.Title</h4>
         </div>
     </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            <label asp-for="Nickname"></label>
-            <input asp-for="Nickname" class="form-control"/>
-            <span asp-validation-for="Nickname" class="text-danger"></span>
+    
+    <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
+    
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control"/>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            <label asp-for="Password"></label>
-            <input asp-for="Password" class="form-control"/>
-            <span asp-validation-for="Password" class="text-danger"></span>
+        <div class="form-group">
+            <div class="col-md-10">
+                <label asp-for="Nickname"></label>
+                <input asp-for="Nickname" class="form-control"/>
+                <span asp-validation-for="Nickname" class="text-danger"></span>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            <label asp-for="ConfirmPassword"></label>
-            <input asp-for="ConfirmPassword" class="form-control"/>
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        <div class="form-group">
+            <div class="col-md-10">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control"/>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            @{
-                List<SelectListItem> lst = new List<SelectListItem>();
-                for (int i = Model.RolesList.Count - 1; i >= 0; i--)
-                {
-                    lst.Add(new SelectListItem {Text = Model.RolesList[i].Name, Value = Model.RolesList[i].Id.ToString()});
+        <div class="form-group">
+            <div class="col-md-10">
+                <label asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword" class="form-control"/>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                @{
+                    List<SelectListItem> lst = new List<SelectListItem>();
+                    for (int i = Model.RolesList.Count - 1; i >= 0; i--)
+                    {
+                        lst.Add(new SelectListItem {Text = Model.RolesList[i].Name, Value = Model.RolesList[i].Id.ToString()});
+                    }
                 }
-            }
-            <label asp-for="RolesList"></label>
-            <select asp-for="RoleId" asp-items="lst" class="selectpicker">
-                <option selected="selected" disabled="disabled">Ничего не выбрано</option>
-            </select>
-            <span asp-validation-for="RoleId" class="text-danger"></span>
+                <label asp-for="RolesList"></label>
+                <select asp-for="RoleId" asp-items="lst" class="selectpicker">
+                    <option selected="selected" disabled="disabled">Ничего не выбрано</option>
+                </select>
+                <span asp-validation-for="RoleId" class="text-danger"></span>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            <label asp-for="ApplicationCompanies"></label>
-            <select class="selectpicker" asp-for="SelectedCompaniesId"
-                    asp-items="Model.ApplicationCompanies.Select(p => new SelectListItem(p.CompanyName, p.CompanyId.ToString()))"
-                    multiple>
-            </select>
-            <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
+        <div class="form-group">
+            <div class="col-md-10">
+                <label asp-for="ApplicationCompanies"></label>
+                <select class="selectpicker" asp-for="SelectedCompaniesId"
+                        asp-items="Model.ApplicationCompanies.Select(p => new SelectListItem(p.CompanyName, p.CompanyId.ToString()))"
+                        multiple>
+                </select>
+                <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
+            </div>
         </div>
-    </div>
-    <button type="submit" class="btn btn-default">Создать</button>
-</form>
+        <button type="submit" class="btn btn-default">Создать</button>
+    </form>
+
+</div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

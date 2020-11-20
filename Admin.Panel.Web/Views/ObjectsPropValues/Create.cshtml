@@ -1,39 +1,63 @@
 ﻿@model Admin.Panel.Core.Entities.Questionary.QuestionaryObject
-
-@{
-    ViewData["Title"] = "Создание объекта";
-}
-
-<div class="form-group mt-5">
-    <div class="col-md-10">
-        <h4>Привязка объекта</h4>
-    </div>
-</div>
-
-<form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true" class="needs-validation" novalidate>
-    <div class="form-group mt-4">
+<div class="container">
+    @{
+        ViewData["Title"] = "Создание объекта";
+    }
+    
+    <div class="form-group mt-5">
         <div class="col-md-10">
-            <label asp-for="Name">Название объекта</label>
-            <input asp-for="Name" class="form-control" required>
+            <h4>Привязка объекта</h4>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <div class="col-md">
+    
+    <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true" class="needs-validation" novalidate>
+        <div class="form-group mt-4">
+            <div class="col-md-10">
+                <label asp-for="Name">Название объекта</label>
+                <input asp-for="Name" class="form-control" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <div class="col-md">
+                        @{
+                            List<SelectListItem> lst = new List<SelectListItem>();
+                            for (int i = Model.QuestionaryObjectTypes.Count - 1; i >= 0; i--)
+                            {
+                                lst.Add(new SelectListItem {Text = Model.QuestionaryObjectTypes[i].Name, Value = Model.QuestionaryObjectTypes[i].Id.ToString()});
+                            }
+                        }
+                        <div class="col">
+                            <div class="row">
+                                <label asp-for="QuestionaryObjectTypes"></label>
+                            </div>
+                            <div class="row">
+                                <select asp-for="ObjectTypeId" asp-items="lst" class="selectpicker" required>
+                                    <option selected="selected" disabled="disabled"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col">
+                <div class="form-group">
                     @{
-                        List<SelectListItem> lst = new List<SelectListItem>();
-                        for (int i = Model.QuestionaryObjectTypes.Count - 1; i >= 0; i--)
+                        List<SelectListItem> lst1 = new List<SelectListItem>();
+    
+                        for (int i = Model.Companies.Count - 1; i >= 0; i--)
                         {
-                            lst.Add(new SelectListItem {Text = Model.QuestionaryObjectTypes[i].Name, Value = Model.QuestionaryObjectTypes[i].Id.ToString()});
+                            lst1.Add(new SelectListItem {Text = Model.Companies[i].CompanyName, Value = Model.Companies[i].CompanyId.ToString()});
                         }
                     }
                     <div class="col">
                         <div class="row">
-                            <label asp-for="QuestionaryObjectTypes"></label>
+                            <label asp-for="Companies"></label>
                         </div>
                         <div class="row">
-                            <select asp-for="ObjectTypeId" asp-items="lst" class="selectpicker" required>
+                            <select asp-for="CompanyId" asp-items="lst1" class=" selectpicker" required>
                                 <option selected="selected" disabled="disabled"></option>
                             </select>
                         </div>
@@ -41,60 +65,37 @@
                 </div>
             </div>
         </div>
-
-        <div class="col">
-            <div class="form-group">
-                @{
-                    List<SelectListItem> lst1 = new List<SelectListItem>();
-
-                    for (int i = Model.Companies.Count - 1; i >= 0; i--)
-                    {
-                        lst1.Add(new SelectListItem {Text = Model.Companies[i].CompanyName, Value = Model.Companies[i].CompanyId.ToString()});
-                    }
+    
+        <div class="form-group">
+            <div class="col-md-10">
+                <label asp-for="Code">Код объекта</label>
+                <input asp-for="Code" class="form-control" required>
+                @if (Model.IsCodeUnique == false)
+                {
+                   <div style="color: red">
+                       Код уже используется в системе!
+                   </div>
                 }
-                <div class="col">
-                    <div class="row">
-                        <label asp-for="Companies"></label>
-                    </div>
-                    <div class="row">
-                        <select asp-for="CompanyId" asp-items="lst1" class=" selectpicker" required>
-                            <option selected="selected" disabled="disabled"></option>
-                        </select>
-                    </div>
-                </div>
             </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-10">
-            <label asp-for="Code">Код объекта</label>
-            <input asp-for="Code" class="form-control" required>
-            @if (Model.IsCodeUnique == false)
+        <div class="form-group">
+            <div class="col-md-10">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control" required></textarea>
+            </div>
+        </div>
+        <div id="option-container">
+            @if (Model.SelectedObjectPropertyValues != null)
             {
-               <div style="color: red">
-                   Код уже используется в системе!
-               </div>
+                <partial name="_Properties"/>
             }
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            <label asp-for="Description"></label>
-            <textarea asp-for="Description" class="form-control" required></textarea>
+        <div class="form-group col-md-10 mt-5">
+            <button type="button" class="btn btn-outline-primary" id="back-button">Отмена</button>
+            <button type="submit" class="btn btn-primary ml-2">Сохранить</button>
         </div>
-    </div>
-    <div id="option-container">
-        @if (Model.SelectedObjectPropertyValues != null)
-        {
-            <partial name="_Properties"/>
-        }
-    </div>
-    <div class="form-group col-md-10 mt-5">
-        <button type="button" class="btn btn-outline-primary" id="back-button">Отмена</button>
-        <button type="submit" class="btn btn-primary ml-2">Сохранить</button>
-    </div>
-</form>
+    </form>
+</div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

@@ -1,62 +1,64 @@
 @using Admin.Panel.Core.Entities.Questionary
 @using Admin.Panel.Core.Entities.Questionary.Questions
 @model Admin.Panel.Core.Entities.Questionary.Questions.QuestionaryDto
-
-@{
-    ViewData["Title"] = "Анкета";
-}
-
-<h2>Анкета</h2>
-@if (User.Identity.IsAuthenticated)
-{
-    <div class="card-body">
-        <input type="hidden" name="Id" value="@Model.Id"/>
-        <h4 class="card-title">
-
-
-            @if (User.IsInRole("QuestionaryEdit"))
+<div class="container">
+    @{
+        ViewData["Title"] = "Анкета";
+    }
+    
+    <h2>Анкета</h2>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="card-body">
+            <input type="hidden" name="Id" value="@Model.Id"/>
+            <h4 class="card-title">
+    
+    
+                @if (User.IsInRole("QuestionaryEdit"))
+                {
+                    <a asp-controller="Questionary" asp-action="UpdateForUser" class="text-success" asp-route-Id="@Model.Id">@Html.DisplayFor(modelItem => Model.Name)</a>
+                }
+                @if (User.IsInRole("SuperAdministrator"))
+                {
+                    <a asp-controller="Questionary" asp-action="Update" class="text-success" asp-route-Id="@Model.Id">@Html.DisplayFor(modelItem => Model.Name)</a>
+                }
+                @if (!User.IsInRole("QuestionaryEdit") && !User.IsInRole("SuperAdministrator"))
+                {
+                    <h4 class="text-success">@Model.Name</h4>
+                }
+    
+            </h4>
+            <div class="card-body">
+                <h7 class="card-title">Тип объекта: @Model.ObjectTypeName</h7>
+            </div>
+    
+            <div>
+                <h6>
+                    Вопросы:
+                </h6>
+            </div>
+    
+            @foreach (var question in Model.QuestionaryQuestions)
             {
-                <a asp-controller="Questionary" asp-action="UpdateForUser" class="text-success" asp-route-Id="@Model.Id">@Html.DisplayFor(modelItem => Model.Name)</a>
+                <div class="card-body">
+                    <h5 class="card-title">@question.QuestionText</h5>
+                </div>
             }
+        </div>
+    
+        <div class="form-group col-md-10 mt-5">
             @if (User.IsInRole("SuperAdministrator"))
             {
-                <a asp-controller="Questionary" asp-action="Update" class="text-success" asp-route-Id="@Model.Id">@Html.DisplayFor(modelItem => Model.Name)</a>
+                <a class="btn btn-outline-primary" asp-controller="Questionary" asp-action="GetAll">Назад</a>
             }
-            @if (!User.IsInRole("QuestionaryEdit") && !User.IsInRole("SuperAdministrator"))
+            @if (!User.IsInRole("SuperAdministrator"))
             {
-                <h4 class="text-success">@Model.Name</h4>
+                <a class="btn btn-outline-primary" asp-controller="Questionary" asp-action="GetAllForUser">Назад</a>
             }
-
-        </h4>
-        <div class="card-body">
-            <h7 class="card-title">Тип объекта: @Model.ObjectTypeName</h7>
         </div>
+    }
 
-        <div>
-            <h6>
-                Вопросы:
-            </h6>
-        </div>
-
-        @foreach (var question in Model.QuestionaryQuestions)
-        {
-            <div class="card-body">
-                <h5 class="card-title">@question.QuestionText</h5>
-            </div>
-        }
-    </div>
-
-    <div class="form-group col-md-10 mt-5">
-        @if (User.IsInRole("SuperAdministrator"))
-        {
-            <a class="btn btn-outline-primary" asp-controller="Questionary" asp-action="GetAll">Назад</a>
-        }
-        @if (!User.IsInRole("SuperAdministrator"))
-        {
-            <a class="btn btn-outline-primary" asp-controller="Questionary" asp-action="GetAllForUser">Назад</a>
-        }
-    </div>
-}
+</div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

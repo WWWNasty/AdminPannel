@@ -3,131 +3,133 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 @model Admin.Panel.Core.Entities.Questionary.Questions.SelectableAnswersLists
 @using static System.Linq.Enumerable;
-
-@{
-    ViewData["Title"] = "Редактирование списка ответов";
-}
-
-<form asp-action="Update" asp-controller="Answers" method="post" asp-antiforgery="true" class="needs-validation" novalidate>
-    <div class="form-group mt-5">
-        <div class="row">
-            <div class="col">
-                <div class="col">
-                    <h4>Редактирование списка ответов"@Model.Name"</h4>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="col form-group form-check">
-                    <div class="col">
-                        <input asp-for="IsUsed" type="checkbox" class="form-check-input">
-                        <label asp-for="IsUsed" class="form-check-label align-bottom">Этот список активен</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <input type="hidden" name="Id" value="@Model.Id"/>
-
-    <div class="form-group row">
-        <div class="col">
-            <div class="col-md-10">
-                <label asp-for="Name"></label>
-                <input asp-for="Name" class="form-control" required>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-10">
-            <div class="col">
-                <div class="row">
-                    <label asp-for="QuestionaryInputFieldTypeses">Список вариантов контроллов для ввода ответа</label>
-                </div>
-                <div class="row">
-                    <select class="selectpicker" asp-for="InputFieldTypesesId"
-                            asp-items="Model.QuestionaryInputFieldTypeses.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.SelectedQuestionaryInputFieldTypeses.Select(selectedProperty => selectedProperty.Id).Contains(property.Id)))"
-                            multiple required>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-    <small>
-        <h class="card-subtitle mb-2 text-muted">Варианты ответов</h>
-    </small>
-
-    <div class="form-group row answers-options">
-        <span style="display: none" id="answer-options-count">@Model.SelectableAnswers.Count</span>
-
-        <div class="col-md-10 mt-3 " id="simpleList">
-
-            @foreach (int i in Range(0, Model.SelectableAnswers.Count))
-            {
-                <div class="col-md-10 mt-4 voting-option-set bg-light move-container-cursor" data-id="0" data-toggle="tooltip" title="Нажмите и перетащите вопрос для изменения порядка вопросов в анкете.">
-                    <div class="row">
-                        <div class="col form-group mt-3">
-                            <input type="hidden" asp-for="@Model.SelectableAnswers[i].Id"/>
-                            <label asp-for="SelectableAnswers[i].AnswerText"></label>
-                            <input asp-for="SelectableAnswers[i].AnswerText" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="col aa-container">
-                        <input type="hidden" asp-for="SelectableAnswers[i].SequenceOrder" class="sequence-order" id="init-sequence-order"/>
-                        <div class="row">
-                            <div class="col form-group form-check">
-                                <input asp-for="SelectableAnswers[i].IsDefaultAnswer" type="checkbox" class="form-check-input">
-                                <label asp-for="SelectableAnswers[i].IsDefaultAnswer" class="form-check-label align-bottom"></label>
-                            </div>
-                            <div class="col form-group form-check">
-                                <input asp-for="SelectableAnswers[i].IsInvolvesComment" type="checkbox" class="form-check-input">
-                                <label asp-for="SelectableAnswers[i].IsInvolvesComment" class="form-check-label align-bottom"></label>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            }
-        </div>
-
-        <div class="col-sm-7 mt-4 add-container">
-            <input type="button" value="&#10011; Добавить ответ" class="add btn btn-outline-primary"/>
-        </div>
-    </div>
-    <div class="col form-group mt-5">
-        <button type="button" class="btn btn-outline-primary" id="back-button">Отмена</button>
-        <button type="submit" class="btn btn-primary ml-2">Сохранить</button>
-    </div>
-
-</form>
-<div class="col-md-10 mt-4 bg-light voting-option-set move-container-cursor" data-id="" id="option-template" style="display: none" data-toggle="tooltip" title="Нажмите и перетащите вопрос для изменения порядка вопросов в анкете.">
-    <div class="mt-3" id="0">
-        <div class="row mb-0">
-            <div class="col-md"></div>
-            <div class="col-md-1">
-                <h1 class="js-remove mb-0">&times;</h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col form-group">
-                <label asp-for="SelectableAnswers[0].AnswerText"></label>
-                <input asp-for="SelectableAnswers[0].AnswerText" class="form-control" required>
-            </div>
-        </div>
-        <div class="col">
-            <input type="hidden" asp-for="SelectableAnswers[0].SequenceOrder" class="sequence-order"/>
+<div class="container">
+    @{
+        ViewData["Title"] = "Редактирование списка ответов";
+    }
+    
+    <form asp-action="Update" asp-controller="Answers" method="post" asp-antiforgery="true" class="needs-validation" novalidate>
+        <div class="form-group mt-5">
             <div class="row">
-                <div class="col form-group form-check">
-                    <input asp-for="SelectableAnswers[0].IsDefaultAnswer" type="checkbox" class="form-check-input isdef"/>
-                    <label asp-for="SelectableAnswers[0].IsDefaultAnswer" class="form-check-label align-bottom"></label>
+                <div class="col">
+                    <div class="col">
+                        <h4>Редактирование списка ответов"@Model.Name"</h4>
+                    </div>
                 </div>
-                <div class="col form-group form-check">
-                    <input asp-for="SelectableAnswers[0].IsInvolvesComment" type="checkbox" class="form-check-input iscomment"/>
-                    <label asp-for="SelectableAnswers[0].IsInvolvesComment" class="form-check-label align-bottom"></label>
+                <div class="col-md-4">
+                    <div class="col form-group form-check">
+                        <div class="col">
+                            <input asp-for="IsUsed" type="checkbox" class="form-check-input">
+                            <label asp-for="IsUsed" class="form-check-label align-bottom">Этот список активен</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <input type="hidden" name="Id" value="@Model.Id"/>
+    
+        <div class="form-group row">
+            <div class="col">
+                <div class="col-md-10">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" required>
+                </div>
+            </div>
+        </div>
+    
+        <div class="form-group">
+            <div class="col-md-10">
+                <div class="col">
+                    <div class="row">
+                        <label asp-for="QuestionaryInputFieldTypeses">Допустимые варианты ввода</label>
+                    </div>
+                    <div class="row">
+                        <select class="selectpicker" asp-for="InputFieldTypesesId"
+                                asp-items="Model.QuestionaryInputFieldTypeses.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.SelectedQuestionaryInputFieldTypeses.Select(selectedProperty => selectedProperty.Id).Contains(property.Id)))"
+                                multiple required>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <small>
+            <h class="card-subtitle mb-2 text-muted">Варианты ответов</h>
+        </small>
+    
+        <div class="form-group row answers-options">
+            <span style="display: none" id="answer-options-count">@Model.SelectableAnswers.Count</span>
+    
+            <div class="col-md-10 mt-3 " id="simpleList">
+    
+                @foreach (int i in Range(0, Model.SelectableAnswers.Count))
+                {
+                    <div class="col-md-10 mt-4 voting-option-set bg-light move-container-cursor" data-id="0" data-toggle="tooltip" title="Нажмите и перетащите вопрос для изменения порядка вопросов в анкете.">
+                        <div class="row">
+                            <div class="col form-group mt-3">
+                                <input type="hidden" asp-for="@Model.SelectableAnswers[i].Id"/>
+                                <label asp-for="SelectableAnswers[i].AnswerText"></label>
+                                <input asp-for="SelectableAnswers[i].AnswerText" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col aa-container">
+                            <input type="hidden" asp-for="SelectableAnswers[i].SequenceOrder" class="sequence-order" id="init-sequence-order"/>
+                            <div class="row">
+                                <div class="col form-group form-check">
+                                    <input asp-for="SelectableAnswers[i].IsDefaultAnswer" type="checkbox" class="form-check-input">
+                                    <label asp-for="SelectableAnswers[i].IsDefaultAnswer" class="form-check-label align-bottom"></label>
+                                </div>
+                                <div class="col form-group form-check">
+                                    <input asp-for="SelectableAnswers[i].IsInvolvesComment" type="checkbox" class="form-check-input">
+                                    <label asp-for="SelectableAnswers[i].IsInvolvesComment" class="form-check-label align-bottom"></label>
+                                </div>
+                            </div>
+    
+                        </div>
+                    </div>
+                }
+            </div>
+    
+            <div class="col-sm-7 mt-4 add-container">
+                <input type="button" value="&#10011; Добавить ответ" class="add btn btn-outline-primary"/>
+            </div>
+        </div>
+        <div class="col form-group mt-5">
+            <button type="button" class="btn btn-outline-primary" id="back-button">Отмена</button>
+            <button type="submit" class="btn btn-primary ml-2">Сохранить</button>
+        </div>
+    
+    </form>
+    <div class="col-md-10 mt-4 bg-light voting-option-set move-container-cursor" data-id="" id="option-template" style="display: none" data-toggle="tooltip" title="Нажмите и перетащите вопрос для изменения порядка вопросов в анкете.">
+        <div class="mt-3" id="0">
+            <div class="row mb-0">
+                <div class="col-md"></div>
+                <div class="col-md-1">
+                    <h1 class="js-remove mb-0">&times;</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col form-group">
+                    <label asp-for="SelectableAnswers[0].AnswerText"></label>
+                    <input asp-for="SelectableAnswers[0].AnswerText" class="form-control" required>
+                </div>
+            </div>
+            <div class="col">
+                <input type="hidden" asp-for="SelectableAnswers[0].SequenceOrder" class="sequence-order"/>
+                <div class="row">
+                    <div class="col form-group form-check">
+                        <input asp-for="SelectableAnswers[0].IsDefaultAnswer" type="checkbox" class="form-check-input isdef"/>
+                        <label asp-for="SelectableAnswers[0].IsDefaultAnswer" class="form-check-label align-bottom"></label>
+                    </div>
+                    <div class="col form-group form-check">
+                        <input asp-for="SelectableAnswers[0].IsInvolvesComment" type="checkbox" class="form-check-input iscomment"/>
+                        <label asp-for="SelectableAnswers[0].IsInvolvesComment" class="form-check-label align-bottom"></label>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 @section Scripts {
