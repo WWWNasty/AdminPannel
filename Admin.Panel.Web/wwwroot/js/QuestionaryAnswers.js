@@ -10,10 +10,11 @@ $('.add').click(function () {
 
 
     const elements = $(newNode).find('input');
-
+    countAnsw = parseInt($('#answer-options-count').text());
     elements.each((_, input) => {
-        input.setAttribute('id', input.id.replace('0', countAnsw.toString()));
-        input.setAttribute('name', input.name.replace('0', countAnsw.toString()));
+        let index = countAnsw;
+        input.setAttribute('id', input.id.replace('0', index.toString()));
+        input.setAttribute('name', input.name.replace('0', index.toString()));
     })
 
 

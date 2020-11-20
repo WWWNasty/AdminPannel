@@ -36,3 +36,11 @@ const WritePageNumberAfter = async event =>{
     $('#currentpg').val(pgNumber);
 };
 pgnumbernext.click(WritePageNumberAfter);
+
+let resetpgn = $('.resetpgn');
+const ResetPagination = async event =>{
+    debugger;
+    let pgNumber = 1
+    $('#currentpg').val(pgNumber);
+};
+resetpgn.click(ResetPagination);
