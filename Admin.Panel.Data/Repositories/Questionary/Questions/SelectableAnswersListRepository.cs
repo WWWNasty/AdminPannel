@@ -159,7 +159,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 		                                                VALUES (@SelectableAnswersListId,@QuestionaryInputFieldTypeId)",
                                 new AnswersListInputType
                                 {
-                                    SelectableAnswersListId = selectableAnswersList.Id,
+                                    SelectableAnswersListId = objTypeId,
                                     QuestionaryInputFieldTypeId = controlId
                                 }, transaction);
                         }

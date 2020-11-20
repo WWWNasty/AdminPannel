@@ -89,7 +89,6 @@ else
                 <h4>Вопрос</h4>
             </div>
         </div>
-
         <div class="row">
             <div class="col form-group mt-2">
                 <label asp-for="QuestionaryQuestions[0].QuestionText"></label>
@@ -100,7 +99,6 @@ else
             <input asp-for="QuestionaryQuestions[0].CanSkipQuestion" type="checkbox" class="form-check-input chk-skip-input"/>
             <label asp-for="QuestionaryQuestions[0].CanSkipQuestion" class="form-check-label align-bottom">Это обязательный вопрос</label>
         </div>
-
         <div class="row aa-container">
             <div class="">
                 <input type="hidden" asp-for="QuestionaryQuestions[0].SequenceOrder" class="sequence-order" id="init-sequence-order"/>
@@ -319,7 +317,6 @@ else
                     <input asp-for="QuestionaryQuestions[0].QuestionText" class="form-control" required>
                 </div>
             </div>
-
             <div class="col form-group form-check">
                 <input asp-for="QuestionaryQuestions[0].CanSkipQuestion" type="checkbox" class="form-check-input chk-skip-input"/>
                 <label asp-for="QuestionaryQuestions[0].CanSkipQuestion" class="form-check-label align-bottom">Это обязательный вопрос</label>
@@ -366,9 +363,7 @@ else
                 </div>
             </div>
         </div>
-
         @* TODO доствание списка ответов опционально<div id="option-container"> *@
-
     </div>
 </div>
 

@@ -6,6 +6,8 @@ $('.add').click(function () {
 
     newNode.removeAttribute('style');
     newNode.removeAttribute('id');
+    newNode.dataset.id = countAnsw.toString();
+
 
     const elements = $(newNode).find('input');
 
@@ -20,14 +22,31 @@ $('.add').click(function () {
     //spans.each((_, span) => span.setAttribute('data-valmsg-for', span.data_valmsg_for.replace('0', countAnsw.toString())));
 
     newNode.classList.add('answer-option');
+debugger;
+    //откуда берем data-id
+    let votingOptionSets = $('#simpleList').find(".voting-option-set").toArray();
+    //куда записываем индекс
+    let inputs = $('#simpleList').find(".sequence-order").toArray();
+    let index = 0;
+    let i = 0;
+    for(index; index < inputs.length; index++){
+        inputs[index].value = index;
+        console.log(index, "сортировка записана в модель");
+        i = index+1;
+    }
+    
+    let node = $('#simpleList').append(newNode);
 
-    let create = $('.add-container').before(newNode);
+    let seq = $(node).find(".sequence-order").last();
+    seq.val(i.toString());
+    let z = seq.value;
     countAnsw++;
-
+    let c = $('#answer-options-count');
+        c.text(countAnsw);
+    console.log(countAnsw);
 })
 
-function addDeleteButtonHandler() {
-
+function addDeleteButtonHandler() { 
     $('.delete').click(deleteVotingOption);
 }
 
@@ -41,5 +60,13 @@ function deleteVotingOption() {
 
 $(document).ready(async () => {
     countAnsw = parseInt($('#answer-options-count').text());
+    firstSequenceOrder();
     addDeleteButtonHandler();
 })
+function firstSequenceOrder(){
+    debugger;
+    const container = $('#simpleList');
+    let inputContainer = $(container).find(".aa-container");
+    let input = $(inputContainer).find("#init-sequence-order")
+    input.val("0");
+}
