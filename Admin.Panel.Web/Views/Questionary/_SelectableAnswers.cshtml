@@ -20,4 +20,29 @@
             </div>
         </div>
     </div>
+    <div class="col aa-container">
+        <div class="row">
+            <div class="col form-group">
+                <div class="row">
+                    <label asp-for="QuestionaryQuestions[i].SelectableAnswers"></label>
+                </div>
+                <div class="row">
+                    <select class="new-selectpicker" asp-for="QuestionaryQuestions[i].SelectableAnswersIds"
+                            asp-items="Model.SelectableAnswers.Select(o => new SelectListItem(o.AnswerText, o.Id.ToString()))" required>
+                        <option selected="selected" disabled="disabled"></option>
+                    </select>
+                </div>
+            </div>
+            @foreach (var answr in Model.SelectableAnswers)
+            {
+                <div>
+                    @answr.AnswerText
+                </div>
+                <div class="col form-group form-check">
+                    <input asp-for="@answr.IsInvolvesComment" type="checkbox" class="form-check-input">
+                    <label asp-for="SelectableAnswers[i]" class="form-check-label align-bottom">Нужен комментарий</label>
+                </div>
+            }
+        </div>
+    </div>
 }

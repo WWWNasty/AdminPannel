@@ -34,8 +34,14 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         
         public string SelectableAnswersListName { get; set; }
         
+        public List<int> SelectableAnswersIds { get; set; }
+        
+        [Display(Name = "Ответ по умолчанию")]
         public List<SelectableAnswers> SelectableAnswers { get; set; }
-        
-        
+        // [Display(Name = "Ответ по умолчанию")]
+        // public bool IsDefaultAnswer { get; set; }
+        //
+        // [Display(Name = "Комментарий к вопросу")]
+        // public bool IsInvolvesComment { get; set; }
     }
 }

@@ -74,17 +74,17 @@
                         </div>
                         <div class="col aa-container">
                             <input type="hidden" asp-for="SelectableAnswers[i].SequenceOrder" class="sequence-order" id="init-sequence-order"/>
-                            <div class="row">
-                                <div class="col form-group form-check">
-                                    <input asp-for="SelectableAnswers[i].IsDefaultAnswer" type="checkbox" class="form-check-input">
-                                    <label asp-for="SelectableAnswers[i].IsDefaultAnswer" class="form-check-label align-bottom"></label>
-                                </div>
-                                <div class="col form-group form-check">
-                                    <input asp-for="SelectableAnswers[i].IsInvolvesComment" type="checkbox" class="form-check-input">
-                                    <label asp-for="SelectableAnswers[i].IsInvolvesComment" class="form-check-label align-bottom"></label>
-                                </div>
-                            </div>
-    
+                            @* <div class="row"> *@
+                            @*     <div class="col form-group form-check"> *@
+                            @*         <input asp-for="SelectableAnswers[i].IsDefaultAnswer" type="checkbox" class="form-check-input"> *@
+                            @*         <label asp-for="SelectableAnswers[i].IsDefaultAnswer" class="form-check-label align-bottom"></label> *@
+                            @*     </div> *@
+                            @*     <div class="col form-group form-check"> *@
+                            @*         <input asp-for="SelectableAnswers[i].IsInvolvesComment" type="checkbox" class="form-check-input"> *@
+                            @*         <label asp-for="SelectableAnswers[i].IsInvolvesComment" class="form-check-label align-bottom"></label> *@
+                            @*     </div> *@
+                            @* </div> *@
+                            @* *@
                         </div>
                     </div>
                 }
@@ -116,16 +116,16 @@
             </div>
             <div class="col">
                 <input type="hidden" asp-for="SelectableAnswers[0].SequenceOrder" class="sequence-order"/>
-                <div class="row">
-                    <div class="col form-group form-check">
-                        <input asp-for="SelectableAnswers[0].IsDefaultAnswer" type="checkbox" class="form-check-input isdef"/>
-                        <label asp-for="SelectableAnswers[0].IsDefaultAnswer" class="form-check-label align-bottom"></label>
-                    </div>
-                    <div class="col form-group form-check">
-                        <input asp-for="SelectableAnswers[0].IsInvolvesComment" type="checkbox" class="form-check-input iscomment"/>
-                        <label asp-for="SelectableAnswers[0].IsInvolvesComment" class="form-check-label align-bottom"></label>
-                    </div>
-                </div>
+                @* <div class="row"> *@
+                @*     <div class="col form-group form-check"> *@
+                @*         <input asp-for="SelectableAnswers[0].IsDefaultAnswer" type="checkbox" class="form-check-input isdef"/> *@
+                @*         <label asp-for="SelectableAnswers[0].IsDefaultAnswer" class="form-check-label align-bottom"></label> *@
+                @*     </div> *@
+                @*     <div class="col form-group form-check"> *@
+                @*         <input asp-for="SelectableAnswers[0].IsInvolvesComment" type="checkbox" class="form-check-input iscomment"/> *@
+                @*         <label asp-for="SelectableAnswers[0].IsInvolvesComment" class="form-check-label align-bottom"></label> *@
+                @*     </div> *@
+                @* </div> *@
             </div>
         </div>
     </div>

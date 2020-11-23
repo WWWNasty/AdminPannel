@@ -137,14 +137,12 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             foreach (var answer in selectableAnswersList.SelectableAnswers)
                             {
                                 cn.Execute(
-                                    @"INSERT INTO  SelectableAnswers(SelectableAnswersListId,AnswerText,IsDefaultAnswer,IsInvolvesComment,SequenceOrder)
-		                                                VALUES (@SelectableAnswersListId,@AnswerText,@IsDefaultAnswer,@IsInvolvesComment,@SequenceOrder)",
+                                    @"INSERT INTO  SelectableAnswers(SelectableAnswersListId,AnswerText,SequenceOrder)
+		                                                VALUES (@SelectableAnswersListId,@AnswerText,@SequenceOrder)",
                                     new SelectableAnswers
                                     {
                                         SelectableAnswersListId = objTypeId,
                                         AnswerText = answer.AnswerText,
-                                        IsDefaultAnswer = answer.IsDefaultAnswer,
-                                        IsInvolvesComment = answer.IsInvolvesComment,
                                         SequenceOrder = answer.SequenceOrder
                                     }, transaction);
                             }
@@ -238,15 +236,13 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             foreach (SelectableAnswers answer in oldAnswers)
                             {
                                 connection.Execute(
-                                    @"UPDATE SelectableAnswers SET AnswerText=@AnswerText,IsDefaultAnswer=@IsDefaultAnswer,IsInvolvesComment=@IsInvolvesComment,SequenceOrder=@SequenceOrder 
+                                    @"UPDATE SelectableAnswers SET AnswerText=@AnswerText,SequenceOrder=@SequenceOrder 
                                         WHERE Id=@Id",
                                     new SelectableAnswers
                                     {
                                         Id = answer.Id,
                                         SelectableAnswersListId = answersLists.Id,
                                         AnswerText = answer.AnswerText,
-                                        IsDefaultAnswer = answer.IsDefaultAnswer,
-                                        IsInvolvesComment = answer.IsInvolvesComment,
                                         SequenceOrder = answer.SequenceOrder
                                     }, transaction);
                             }
@@ -258,14 +254,12 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             foreach (SelectableAnswers objectProperty in newAnswers)
                             {
                                 connection.Execute(
-                                    @"INSERT INTO  SelectableAnswers(SelectableAnswersListId,AnswerText,IsDefaultAnswer,IsInvolvesComment,SequenceOrder)
-		                                                    VALUES (@SelectableAnswersListId,@AnswerText,@IsDefaultAnswer,@IsInvolvesComment,@SequenceOrder)",
+                                    @"INSERT INTO  SelectableAnswers(SelectableAnswersListId,AnswerText,SequenceOrder)
+		                                                    VALUES (@SelectableAnswersListId,@AnswerText,@SequenceOrder)",
                                     new SelectableAnswers
                                     {
                                         SelectableAnswersListId = answersLists.Id,
                                         AnswerText = objectProperty.AnswerText,
-                                        IsDefaultAnswer = objectProperty.IsDefaultAnswer,
-                                        IsInvolvesComment = objectProperty.IsInvolvesComment,
                                         SequenceOrder = objectProperty.SequenceOrder
                                     }, transaction);
                             }
