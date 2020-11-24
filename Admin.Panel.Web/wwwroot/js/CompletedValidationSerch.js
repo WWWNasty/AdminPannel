@@ -1,13 +1,16 @@
 $(document).ready(async () => {
     debugger;
     let selects = $('.selectpicker');
-    selects.each((_, select) => {
-        if (select.value === "") {
-            const parent = $(select).parents('.bootstrap-select');
-            let dropdown = $(parent).find('.dropdown-toggle');
-            dropdown.prop('disabled', true);
-        }
-    })
+    if (selects.get(0).value !== "" || selects.get(1).value !== "" || selects.get(2).value !== ""){
+        selects.each((_, select) => {
+            if (select.value === "") {
+                const parent = $(select).parents('.bootstrap-select');
+                let dropdown = $(parent).find('.dropdown-toggle');
+                dropdown.prop('disabled', true);
+            }
+        })
+    }
+    console.log(selects[0].value, "sfs");
 })
 
 let input = $('.selectpicker');

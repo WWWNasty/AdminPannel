@@ -40,13 +40,15 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 		                                                                FROM QuestionaryQuestions p 
 		                                                                INNER JOIN QuestionaryInputFieldTypes f ON f.Id = p.QuestionaryInputFieldTypeId
 																		INNER JOIN SelectableAnswersLists l ON l.Id = p.SelectableAnswersListId
-				                                                                where QuestionaryId = @QuestionaryId",
+				                                                                where QuestionaryId = @QuestionaryId
+				                                                                order by p.SequenceOrder asc",
                         new {QuestionaryId = id}).ToList();
 
                     foreach (var question in questions)
                     {
                         var answ = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers
-				                                                              where SelectableAnswersListId = @SelectableAnswersListId",
+				                                                              where SelectableAnswersListId = @SelectableAnswersListId
+				                                                              order by SequenceOrder asc",
                             new {SelectableAnswersListId = question.SelectableAnswersListId}).ToList();
                         question.SelectableAnswers = answ;
                         //инвертирование из можно пропустить вопрос в вопрос обязателен ли

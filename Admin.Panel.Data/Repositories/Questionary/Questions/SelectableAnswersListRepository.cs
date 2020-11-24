@@ -36,7 +36,8 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                     var obj = cn.Query<SelectableAnswersLists>(query, new {@Id = id}).SingleOrDefault();
                     //получение вариантов ответов
                     List<SelectableAnswers> answerses = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers 
-				                                                                where SelectableAnswersListId = @SelectableAnswersListId",
+				                                                                where SelectableAnswersListId = @SelectableAnswersListId
+				                                                                order by SequenceOrder asc",
                         new {@SelectableAnswersListId = id}).ToList();
 
                     obj.SelectableAnswers = answerses;
