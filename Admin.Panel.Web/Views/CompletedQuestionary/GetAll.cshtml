@@ -143,9 +143,9 @@
                         </li>
                     }
                     //Вычисление номера списка страниц
-                    int listNum = (int) Math.Floor((Model.PageNumber - 1.0d) / maxPageListSize);
+                    int listNum = (int) Math.Floor((Model.PageNumber + 1 - 1.0d) / maxPageListSize);
 
-                    for (int pageElem = listNum * maxPageListSize + 1, counter = 0; counter < maxPageListSize; counter++, pageElem++)
+                    for (int pageElem = listNum * maxPageListSize+1 , counter = 0; counter < maxPageListSize; counter++, pageElem++)
                     {
                         if (pageElem == Model.PageNumber)
                         {

@@ -1,3 +1,15 @@
+$(document).ready(async () => {
+    debugger;
+    let selects = $('.selectpicker');
+    selects.each((_, select) => {
+        if (select.value === "") {
+            const parent = $(select).parents('.bootstrap-select');
+            let dropdown = $(parent).find('.dropdown-toggle');
+            dropdown.prop('disabled', true);
+        }
+    })
+})
+
 let input = $('.selectpicker');
 
 const Validate = async event => {

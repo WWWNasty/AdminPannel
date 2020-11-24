@@ -33,21 +33,23 @@ namespace Admin.Panel.Data.Repositories.Questionary.Completed
                     int pageSize = 50;
                     int pageIndex = model.PageNumber;
                     var query =
-                        @" SELECT a.Id AS Id, a.CompanyId AS CompanyId, a.CompanyName AS CompanyName, a.Тип AS ObjectType, a.ObjectTypeId AS ObjectTypeId,
+                        @";WITH NumberedAnswers AS(
+                        SELECT a.Id AS Id, a.CompanyId AS CompanyId, a.CompanyName AS CompanyName, a.Тип AS ObjectType, a.ObjectTypeId AS ObjectTypeId,
                         a.Объект AS ObjectName, a.QuestionaryObjectsId AS ObjectId, a.Описание AS Description, a.Время AS Date, a.Номер AS PhoneNumber, a.Вопрос AS Question,
-                        a.Значение AS Answer, a.Комментарий AS Comment
-                        FROM vw_Answers AS a";
+                        a.Значение AS Answer, a.Комментарий AS Comment, ROW_NUMBER() OVER (ORDER BY a.Время DESC) as RowNumber
+	                    FROM vw_Answers AS a";
 
                     if (model.CompanyIds != null && model.CompanyIds.Length != 0)
                     {
                         model.TotalItems = connection.Query<int>("SELECT COUNT(*) FROM vw_Answers AS a Where a.CompanyId IN @CompanyId", new {@CompanyId = model.CompanyIds}).FirstOrDefault();
                         var queryString = query + @" WHERE a.CompanyId IN @CompanyId
-                        order by a.Время desc
-                        OFFSET     @skip ROWS       
-                        FETCH NEXT @take ROWS ONLY";
+                        )
+                        SELECT Id, CompanyId, CompanyName, ObjectType, ObjectTypeId, ObjectName, ObjectId, [Description], [Date], PhoneNumber,Question, Answer, Comment
+	                    FROM NumberedAnswers a
+	                    WHERE RowNumber BETWEEN @skip AND @take";
                         List<CompletedQuestionary> result = connection
                             .Query<CompletedQuestionary>(queryString,
-                                new {@CompanyId = model.CompanyIds, @skip = (pageIndex -1) * pageSize, @take = pageSize}).ToList();
+                                new {@CompanyId = model.CompanyIds, @skip = (pageSize * pageIndex) - (pageSize - 1), @take = pageSize * pageIndex}).ToList();
                         model.CompletedQuestionaries = result;
                         model.PageSize = pageSize;
                         return model;
@@ -57,12 +59,13 @@ namespace Admin.Panel.Data.Repositories.Questionary.Completed
                     {
                         model.TotalItems = connection.Query<int>("SELECT COUNT(*) FROM vw_Answers AS a Where a.ObjectTypeId IN @ObjectTypeId", new {@ObjectTypeId = model.ObjectTypeIds}).FirstOrDefault();
                         var queryString = query + @" WHERE a.ObjectTypeId IN @ObjectTypeId 
-                        order by a.Время desc                        
-                        OFFSET     @skip ROWS       
-                        FETCH NEXT @take ROWS ONLY";
+                        )
+                        SELECT Id, CompanyId, CompanyName, ObjectType, ObjectTypeId, ObjectName, ObjectId, [Description], [Date], PhoneNumber,Question, Answer, Comment
+	                    FROM NumberedAnswers a
+	                    WHERE RowNumber BETWEEN @skip AND @take";
                         List<CompletedQuestionary> result = connection
                             .Query<CompletedQuestionary>(queryString,
-                                new {@ObjectTypeId = model.ObjectTypeIds, @skip = (pageIndex -1) * pageSize, @take = pageSize}).ToList();
+                                new {@ObjectTypeId = model.ObjectTypeIds, @skip = (pageSize * pageIndex) - (pageSize - 1), @take = pageSize * pageIndex}).ToList();
                         model.CompletedQuestionaries = result;
                         model.PageSize = pageSize;
                         return model;
@@ -72,12 +75,13 @@ namespace Admin.Panel.Data.Repositories.Questionary.Completed
                     {
                         model.TotalItems = connection.Query<int>("SELECT COUNT(*) FROM vw_Answers AS a Where a.QuestionaryObjectsId IN @QuestionaryObjectsId", new {@QuestionaryObjectsId =  model.ObjectIds}).FirstOrDefault();
                         var queryString = query + @" WHERE a.QuestionaryObjectsId IN @QuestionaryObjectsId 
-                        order by a.Время desc
-                        OFFSET     @skip ROWS       
-                        FETCH NEXT @take ROWS ONLY";
+                        )
+                        SELECT Id, CompanyId, CompanyName, ObjectType, ObjectTypeId, ObjectName, ObjectId, [Description], [Date], PhoneNumber,Question, Answer, Comment
+	                    FROM NumberedAnswers a
+	                    WHERE RowNumber BETWEEN @skip AND @take";
                         List<CompletedQuestionary> result = connection
                             .Query<CompletedQuestionary>(queryString,
-                                new {@QuestionaryObjectsId = model.ObjectIds, @skip = (pageIndex -1) * pageSize, @take = pageSize})
+                                new {@QuestionaryObjectsId = model.ObjectIds, @skip = (pageSize * pageIndex) - (pageSize - 1), @take = pageSize * pageIndex})
                             .ToList();
                         model.CompletedQuestionaries = result;
                         model.PageSize = pageSize;
