@@ -16,6 +16,6 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         [Display(Name = "Сортировка")]
         public int SequenceOrder { get; set; }
         
-        
-        public bool IsInvolvesComment { get; set; }    }
+        public bool IsInvolvesComment { get; set; }    
+    }
 }

@@ -59,7 +59,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
             }
         }
 
-        public async Task<SelectableAnswers[]> GetSelectableAnswersAsync(int id)
+        public async Task<List<SelectableAnswers>> GetSelectableAnswersAsync(int id)
         {
             using (var cn = new SqlConnection(_connectionString))
             {
@@ -67,9 +67,9 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 
                 try
                 {
-                    SelectableAnswers[] answerses = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers 
+                    List<SelectableAnswers> answerses = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers 
 				                                                                where SelectableAnswersListId = @SelectableAnswersListId",
-                        new {@SelectableAnswersListId = id}).ToArray();
+                        new {@SelectableAnswersListId = id}).ToList();
 
                     return answerses;
                 }

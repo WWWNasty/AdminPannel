@@ -35,6 +35,7 @@ namespace Admin.Panel.Core.Entities.Questionary
 
         [Display(Name = "Активный")]
         public bool IsUsed { get; set; }
+        
         public string CompanyName { get; set; }
 
         public bool IsCodeUnique { get; set; } = true;
