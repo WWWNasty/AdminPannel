@@ -68,8 +68,8 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 try
                 {
                     List<SelectableAnswers> answerses = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers 
-				                                                                where SelectableAnswersListId = @SelectableAnswersListId",
-                        new {@SelectableAnswersListId = id}).ToList();
+				                                                                where SelectableAnswersListId = @SelectableAnswersListId order by SequenceOrder asc",
+                        new {SelectableAnswersListId = id}).ToList();
 
                     return answerses;
                 }

@@ -33,7 +33,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                     INNER JOIN QuestionaryObjectTypes t ON q.ObjectTypeId = t.Id 
                                     INNER JOIN Companies c ON q.CompanyId = c.CompanyId
                                     WHERE q.Id=@Id";
-                    var obj = cn.Query<QuestionaryDto>(query, new {@Id = id}).SingleOrDefault();
+                    var obj = cn.Query<QuestionaryDto>(query, new {Id = id}).SingleOrDefault();
 
                     List<QuestionaryQuestions> questions = cn.Query<QuestionaryQuestions>(@"SELECT 
 	                                                                p.* , f.Name AS QuestionaryInputFieldTypeName, l.Name AS SelectableAnswersListName  
@@ -241,6 +241,10 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 
                                 if (question.QuestionaryAnswerOptions.Count != 0)
                                 {
+                                    connection.Execute(
+                                        @"DELETE  QuestionaryAnswerOptions WHERE QuestionaryId = @QuestionaryId",
+                                        new { @QuestionaryId = question.Id}, transaction);
+                                    
                                     foreach (var option in question.QuestionaryAnswerOptions)
                                     {
                                             connection.Execute(
@@ -252,7 +256,6 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                                     SelectableAnswerId = option.SelectableAnswerId,
                                                     QuestionaryId = question.Id
                                                 }, transaction);
-                                        
                                     }
                                 }
                             }
