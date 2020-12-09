@@ -6,10 +6,10 @@ namespace Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfac
 {
     public interface IObjectPropertiesRepository
     {
-        public Task<ObjectProperty> GetAsync(int id);
-        public Task<List<ObjectProperty>> GetAllAsync();
-        public Task<List<ObjectProperty>> GetAllActiveAsync();
-        public Task<ObjectProperty> CreateAsync(ObjectProperty obj);
-        public Task<ObjectProperty> UpdateAsync(ObjectProperty obj);
+        // public Task<ObjectProperty> GetAsync(int id);
+        // public Task<List<ObjectProperty>> GetAllAsync();
+        // public Task<List<ObjectProperty>> GetAllActiveAsync();
+        // public Task<ObjectProperty> CreateAsync(ObjectProperty obj);
+        // public Task<ObjectProperty> UpdateAsync(ObjectProperty obj);
     }
 }

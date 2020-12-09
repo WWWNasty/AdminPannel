@@ -81,14 +81,14 @@
                                 <div class="col">
                                     @if (User.Identity.IsAuthenticated)
                                     {
-                                        if (User.IsInRole("SuperAdministrator"))
-                                        {
-                                            <a asp-controller="Property" asp-action="Update" asp-route-Id="@prop.Id" style="color: black;"> @Html.DisplayFor(modelItem => prop.Name)</a>
-                                        }
-                                        else
-                                        {
-                                            <h7>@prop.Name</h7>
-                                        }
+@*                                         if (User.IsInRole("SuperAdministrator")) *@
+@*                                         { *@
+@*                                             <a asp-controller="Property" asp-action="Update" asp-route-Id="@prop.Id" style="color: black;"> @Html.DisplayFor(modelItem => prop.Name)</a> *@
+@*                                         } *@
+@*                                         else *@
+@*                                         { *@
+@*                                             <h7>@prop.Name</h7> *@
+@*                                         } *@
                                     }
                                 </div>
                                 <div class="col">
@@ -119,14 +119,14 @@
                                 <div class="col">
                                     @if (User.Identity.IsAuthenticated)
                                     {
-                                        if (User.IsInRole("SuperAdministrator"))
-                                        {
-                                            <a asp-controller="Property" asp-action="Update" asp-route-Id="@prop.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => prop.Name)</a>
-                                        }
-                                        else
-                                        {
-                                            <h7 style="color: #CDCDCD;">@prop.Name</h7>
-                                        }
+@*                                         if (User.IsInRole("SuperAdministrator")) *@
+@*                                         { *@
+@*                                             <a asp-controller="Property" asp-action="Update" asp-route-Id="@prop.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => prop.Name)</a> *@
+@*                                         } *@
+@*                                         else *@
+@*                                         { *@
+@*                                             <h7 style="color: #CDCDCD;">@prop.Name</h7> *@
+@*                                         } *@
                                     }
                                 </div>
                                 <div class="col">

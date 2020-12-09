@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Admin.Panel.Data.Repositories.Questionary
 {
-    public class QuestionaryObjectTypesRepository: IQuestionaryObjectTypesRepository
+    public class QuestionaryObjectTypesRepository : IQuestionaryObjectTypesRepository
     {
         private readonly string _connectionString;
 
@@ -28,7 +28,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 try
                 {
                     var query = @"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id";
-                    var obj = cn.Query<QuestionaryObjectType>(query, new { @Id = id }).SingleOrDefault();
+                    var obj = cn.Query<QuestionaryObjectType>(query, new {@Id = id}).SingleOrDefault();
 
 
                     var properties = cn.Query<ObjectProperty>(@"SELECT 
@@ -36,9 +36,10 @@ namespace Admin.Panel.Data.Repositories.Questionary
 		                                                                FROM ObjectProperties AS p
 			                                                                INNER JOIN ObjectPropertyToObjectTypes AS po ON po.ObjectPropertyId = p.Id
 				                                                                where 
-					                                                                po.QuestionaryObjectTypeId = @QuestionaryObjectTypeId", new { QuestionaryObjectTypeId = id }).ToList();
-                    
-                    obj.SelectedObjectProperties = properties;
+					                                                                po.QuestionaryObjectTypeId = @QuestionaryObjectTypeId",
+                        new {QuestionaryObjectTypeId = id}).ToList();
+
+                    obj.ObjectProperties = properties;
                     return obj;
                 }
                 catch (Exception ex)
@@ -83,7 +84,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 }
             }
         }
-        
+
         public async Task<QuestionaryObjectType> CreateAsync(QuestionaryObjectType obj)
         {
             using (var cn = new SqlConnection(_connectionString))
@@ -100,24 +101,24 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 SELECT QuestionaryObjectTypeId = @@IDENTITY";
                         var objTypeId = cn.ExecuteScalar<int>(query, obj, transaction);
 
-                        if (obj.SelectedPropertiesId != null)
-                        {
-                            foreach (int objectProperty in obj.SelectedPropertiesId)
-                            {
-                                cn.Execute(
-                                    @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
-		                                                VALUES (@QuestionaryObjectTypeId,@ObjectPropertyId)",
-                                    new ObjectPropertyToObjectTypes
-                                    {
-                                        QuestionaryObjectTypeId = objTypeId,
-                                        ObjectPropertyId = Convert.ToInt32(objectProperty),
-                                    }, transaction);
-                            }
-                        }
+                        // if (obj.SelectedPropertiesId != null)
+                        // {
+                        //     foreach (int objectProperty in obj.SelectedPropertiesId)
+                        //     {
+                        //         cn.Execute(
+                        //             @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
+                        //                           VALUES (@QuestionaryObjectTypeId,@ObjectPropertyId)",
+                        //             new ObjectPropertyToObjectTypes
+                        //             {
+                        //                 QuestionaryObjectTypeId = objTypeId,
+                        //                 ObjectPropertyId = Convert.ToInt32(objectProperty),
+                        //             }, transaction);
+                        //     }
+                        // }
 
-                        if (obj.NewSelectedObjectProperties != null)
+                        if (obj.ObjectProperties != null)
                         {
-                            foreach (ObjectProperty objectProperty in obj.NewSelectedObjectProperties)
+                            foreach (ObjectProperty objectProperty in obj.ObjectProperties)
                             {
                                 //создание свойств
                                 var objectPropertyId = cn.ExecuteScalar<int>(
@@ -125,7 +126,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                             VALUES(@Name,@NameInReport,@IsUsedInReport,'Text',1)
                                             SELECT QuestionaryObjectTypeId = @@IDENTITY",
                                     objectProperty, transaction);
-                                
+
                                 // добавление свойств типу объекта
                                 cn.Execute(
                                     @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
@@ -138,8 +139,9 @@ namespace Admin.Panel.Data.Repositories.Questionary
                             }
                         }
 
-                        var result = cn.Query<QuestionaryObjectType>(@"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id", 
-                            new { @Id = objTypeId }, transaction).SingleOrDefault();
+                        var result = cn.Query<QuestionaryObjectType>(
+                            @"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id",
+                            new {@Id = objTypeId}, transaction).SingleOrDefault();
 
                         transaction.Commit();
 
@@ -165,55 +167,74 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     {
                         var query = @"UPDATE QuestionaryObjectTypes SET Name=@Name,IsUsed=@IsUsed 
                          WHERE Id=@Id";
+                        await connection.ExecuteAsync(query, obj, transaction);
 
-                        //дропаем все проперти обьекту
-                        connection.Execute(
-                            @"DELETE FROM ObjectPropertyToObjectTypes WHERE QuestionaryObjectTypeId = @QuestionaryObjectTypeId",
-                            new {QuestionaryObjectTypeId = obj.Id},transaction);
+                        // //дропаем все проперти обьекту
+                        // connection.Execute(
+                        //     @"DELETE FROM ObjectPropertyToObjectTypes WHERE QuestionaryObjectTypeId = @QuestionaryObjectTypeId",
+                        //     new {QuestionaryObjectTypeId = obj.Id},transaction);
+                        // //добавляем проперти если есть обьекту
+                        // if (obj.SelectedPropertiesId != null)
+                        // {
+                        //     foreach (int objectProperty in obj.SelectedPropertiesId)
+                        //     {
+                        //         connection.Execute(
+                        //             @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
+                        //                               VALUES (@QuestionaryObjectTypeId,@ObjectPropertyId)",
+                        //             new ObjectPropertyToObjectTypes
+                        //             {
+                        //                 QuestionaryObjectTypeId = obj.Id,
+                        //                 ObjectPropertyId = Convert.ToInt32(objectProperty),
+                        //             },transaction);
+                        //     }
+                        // }
 
-                        await connection.ExecuteAsync(query, obj,transaction);
+                        List<ObjectProperty> newProperties = new List<ObjectProperty>();
+                        List<ObjectProperty> oldProperties = new List<ObjectProperty>();
 
-                        //добавляем проперти если есть обьекту
-                        if (obj.SelectedPropertiesId != null)
+                        foreach (var property in obj.ObjectProperties)
                         {
-                            foreach (int objectProperty in obj.SelectedPropertiesId)
+                            if (property.Id != 0)
                             {
-                                connection.Execute(
-                                    @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
-		                                                    VALUES (@QuestionaryObjectTypeId,@ObjectPropertyId)",
-                                    new ObjectPropertyToObjectTypes
-                                    {
-                                        QuestionaryObjectTypeId = obj.Id,
-                                        ObjectPropertyId = Convert.ToInt32(objectProperty),
-                                    },transaction);
+                                oldProperties.Add(property);
+                            }
+                            else
+                            {
+                                newProperties.Add(property);
                             }
                         }
 
-                        if (obj.NewSelectedObjectProperties != null && obj.NewSelectedObjectProperties.Count != 0)
+                        foreach (ObjectProperty objectProperty in oldProperties)
                         {
-                            foreach (ObjectProperty objectProperty in obj.NewSelectedObjectProperties)
-                            {
-                                //создание свойств
-                                var objectPropertyId = connection.ExecuteScalar<int>(
-                                    @"INSERT INTO ObjectProperties(Name,NameInReport,IsUsedInReport,ReportCellStyle,IsUsed) 
-                                            VALUES(@Name,@NameInReport,@IsUsedInReport,'Text',1)
+                            connection.Execute(
+                                @"UPDATE ObjectProperties SET Name=@Name,NameInReport=@NameInReport,IsUsedInReport=@IsUsedInReport,ReportCellStyle='Text',IsUsed=@IsUsed 
+                                        WHERE Id=@Id",
+                                objectProperty, transaction);
+                        }
+
+                        foreach (ObjectProperty objectProperty in newProperties)
+                        {
+                            //создание свойств
+                            var objectPropertyId = connection.ExecuteScalar<int>(
+                                @"INSERT INTO ObjectProperties(Name,NameInReport,IsUsedInReport,ReportCellStyle,IsUsed) 
+                                            VALUES(@Name,@NameInReport,@IsUsedInReport,'Text',@IsUsed)
                                             SELECT QuestionaryObjectTypeId = @@IDENTITY",
-                                    objectProperty, transaction);
+                                objectProperty, transaction);
 
-                                // добавление свойств типу объекта
-                                connection.Execute(
-                                    @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
+                            // добавление свойств типу объекта
+                            connection.Execute(
+                                @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
 		                                                VALUES (@QuestionaryObjectTypeId,@ObjectPropertyId)",
-                                    new ObjectPropertyToObjectTypes
-                                    {
-                                        QuestionaryObjectTypeId = obj.Id,
-                                        ObjectPropertyId = objectPropertyId,
-                                    }, transaction);
-                            }
+                                new ObjectPropertyToObjectTypes
+                                {
+                                    QuestionaryObjectTypeId = obj.Id,
+                                    ObjectPropertyId = objectPropertyId,
+                                }, transaction);
                         }
+
 
                         transaction.Commit();
-                        
+
                         return obj;
                     }
                     catch (Exception ex)

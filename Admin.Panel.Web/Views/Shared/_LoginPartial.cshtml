@@ -20,10 +20,10 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        if (User.IsInRole("PropertiesObjectRead") || User.IsInRole("UsersRead"))
-                        {
-                            <a asp-controller="Property" asp-action="Create" class="dropdown-item">Свойства типов объектов</a>
-                        }
+@*                         if (User.IsInRole("PropertiesObjectRead") || User.IsInRole("UsersRead")) *@
+@*                         { *@
+@*                             <a asp-controller="Property" asp-action="Create" class="dropdown-item">Свойства типов объектов</a> *@
+@*                         } *@
 
                         if (User.IsInRole("TypesObjectRead") || User.IsInRole("UsersRead"))
                         {
@@ -61,7 +61,7 @@
                         if (User.IsInRole("SuperAdministrator"))
                         {
                             <div class="dropdown-divider"></div>
-                            <a asp-controller="Property" asp-action="Create" class="dropdown-item">Все свойства типов объектов</a>
+                            //<a asp-controller="Property" asp-action="Create" class="dropdown-item">Все свойства типов объектов</a>
                             <a asp-controller="ObjectTypesProperties" asp-action="GetAll" class="dropdown-item">Все типы объектов</a>
                             <a asp-controller="ObjectsPropValues" asp-action="GetAll" class="dropdown-item">Все обьекты</a>
                             <a asp-controller="Company" asp-action="GetAll" class="dropdown-item">Все компании</a>

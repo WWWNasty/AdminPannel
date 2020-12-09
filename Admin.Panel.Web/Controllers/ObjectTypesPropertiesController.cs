@@ -19,7 +19,7 @@ namespace Admin.Panel.Web.Controllers
             IQuestionaryObjectTypesRepository questionaryObjectTypesRepository,
             IQuestionaryObjectTypesService questionaryObjectTypesService,
             ILogger<QuestionaryController> logger)
-        {
+        { 
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
             _questionaryObjectTypesService = questionaryObjectTypesService;
             _logger = logger;
@@ -46,8 +46,8 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "SuperAdministrator, TypesObjectEdit")]
         public async Task<IActionResult> Create()
         {
-            QuestionaryObjectType model = await _questionaryObjectTypesService.GetAllProperties();
-            return View(model);
+            //QuestionaryObjectType model = await _questionaryObjectTypesService.GetAllProperties();
+            return View();
         }
 
         [HttpPost]
@@ -61,8 +61,7 @@ namespace Admin.Panel.Web.Controllers
                 _logger.LogInformation("Тип объекта успешно создан: {0}.", model.Name);
                 return RedirectToAction("GetAll", "ObjectTypesProperties");
             }
-
-            model = await _questionaryObjectTypesService.GetAllProperties();
+            //model = await _questionaryObjectTypesService.GetAllProperties();
             return View(model);
         }
 
