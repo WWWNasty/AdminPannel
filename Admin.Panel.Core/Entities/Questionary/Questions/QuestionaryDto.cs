@@ -26,7 +26,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         public string CompanyName { get; set; }
         
         [Required(ErrorMessage = "Не указаны вопросы!")]
-        public List<QuestionaryQuestions> QuestionaryQuestions { get; set; }
+        public List<QuestionaryQuestions> QuestionaryQuestions { get; set; } = new List<QuestionaryQuestions>();
 
         [Display(Name = "Компания")]
         public List<ApplicationCompany> ApplicationCompanies { get; set; }
@@ -39,8 +39,12 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         
         [Display(Name = "Тип Объекта")]
         public List<QuestionaryObjectType> QuestionaryObjectTypes { get; set; }
-
+        
+        [Display(Name = "Ответ по умолчанию")]
+        public List<SelectableAnswers> SelectableAnswers { get; set; }
         public int IndexCurrentQuestion { get; set; }
         public bool IfQuestionaryCurrentInCompany { get; set; }
+        
+        
     }
 }

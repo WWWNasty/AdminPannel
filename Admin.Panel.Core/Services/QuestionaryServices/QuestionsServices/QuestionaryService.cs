@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Entities.Questionary;
@@ -17,19 +18,22 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
         private readonly IQuestionaryInputFieldTypesRepository _questionaryInputFieldTypesRepository;
         private readonly ICompanyRepository _companyRepository;
         private readonly IQuestionaryRepository _questionaryRepository;
+        private readonly IQuestionaryInputFieldTypesRepository _fieldTypesRepository;
 
         public QuestionaryService(
             IQuestionaryObjectTypesRepository questionaryObjectTypesRepository,
             ISelectableAnswersListRepository selectableAnswersListRepository,
             IQuestionaryInputFieldTypesRepository questionaryInputFieldTypesRepository,
             ICompanyRepository companyRepository,
-            IQuestionaryRepository questionaryRepository)
+            IQuestionaryRepository questionaryRepository, 
+            IQuestionaryInputFieldTypesRepository fieldTypesRepository)
         {
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
             _selectableAnswersListRepository = selectableAnswersListRepository;
             _questionaryInputFieldTypesRepository = questionaryInputFieldTypesRepository;
             _companyRepository = companyRepository;
             _questionaryRepository = questionaryRepository;
+            _fieldTypesRepository = fieldTypesRepository;
         }
 
         private async Task<QuestionaryDto> GetAllForQuestionary()
@@ -71,10 +75,13 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
                         List<QuestionaryInputFieldTypes> currentInputFields =
                             await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
                         question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+                  
+                        List<SelectableAnswers> current =
+                            await _selectableAnswersListRepository.GetSelectableAnswersAsync(question.SelectableAnswersListId);
+                        question.CurrentSelectableAnswerses = current;
                     }
                 }
             }
-
             return model;
         }
 
@@ -93,6 +100,9 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
                         List<QuestionaryInputFieldTypes> currentInputFields =
                             await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
                         question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+                        List<SelectableAnswers> current =
+                            await _selectableAnswersListRepository.GetSelectableAnswersAsync(question.SelectableAnswersListId);
+                        question.CurrentSelectableAnswerses = current;
                     }
                 }
             }
@@ -115,6 +125,9 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
                         List<QuestionaryInputFieldTypes> currentInputFields =
                             await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
                         question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+                        List<SelectableAnswers> current =
+                            await _selectableAnswersListRepository.GetSelectableAnswersAsync(question.SelectableAnswersListId);
+                        question.CurrentSelectableAnswerses = current;
                     }
                 }
             }
@@ -137,10 +150,12 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
                         List<QuestionaryInputFieldTypes> currentInputFields =
                             await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
                         question.CurrentQuestionaryInputFieldTypes = currentInputFields;
+                        List<SelectableAnswers> current =
+                            await _selectableAnswersListRepository.GetSelectableAnswersAsync(question.SelectableAnswersListId);
+                        question.CurrentSelectableAnswerses = current;
                     }
                 }
             }
-
             return model;
         }
 
@@ -149,6 +164,19 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             var current =
                 _questionaryRepository.IfQuestionaryCurrentInCompanyAsync(idCompany, idObjType, idQuestionary);
             return current;
+        }
+
+        public async Task<QuestionaryDto> AnswersGetAll(int id, int index, int qqId)
+        {
+            QuestionaryDto model = new QuestionaryDto();
+            model.QuestionaryInputFieldTypes = await _fieldTypesRepository.GetAllCurrent(id);
+            model.IndexCurrentQuestion = index;
+            foreach (var _ in Enumerable.Range(0, index + 1))
+            {
+                model.QuestionaryQuestions.Add( new QuestionaryQuestions());
+            }
+            model.SelectableAnswers = await _selectableAnswersListRepository.GetSelectableAnswersAsync(id);
+            return model;
         }
     }
 }

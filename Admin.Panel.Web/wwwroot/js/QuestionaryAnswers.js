@@ -68,6 +68,6 @@ function firstSequenceOrder(){
     debugger;
     const container = $('#simpleList');
     let inputContainer = $(container).find(".aa-container");
-    let input = $(inputContainer).find("#init-sequence-order")
-    input.val("0");
+    let order = $(inputContainer).find("#init-sequence-order")
+    order.val("0");
 }

@@ -33,26 +33,30 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                     INNER JOIN QuestionaryObjectTypes t ON q.ObjectTypeId = t.Id 
                                     INNER JOIN Companies c ON q.CompanyId = c.CompanyId
                                     WHERE q.Id=@Id";
-                    var obj = cn.Query<QuestionaryDto>(query, new {@Id = id}).SingleOrDefault();
+                    var obj = cn.Query<QuestionaryDto>(query, new {Id = id}).SingleOrDefault();
 
                     List<QuestionaryQuestions> questions = cn.Query<QuestionaryQuestions>(@"SELECT 
-	                                                                p.* , f.Name AS QuestionaryInputFieldTypeName, l.Name AS SelectableAnswersListName 
+	                                                                p.* , f.Name AS QuestionaryInputFieldTypeName, l.Name AS SelectableAnswersListName  
 		                                                                FROM QuestionaryQuestions p 
 		                                                                INNER JOIN QuestionaryInputFieldTypes f ON f.Id = p.QuestionaryInputFieldTypeId
 																		INNER JOIN SelectableAnswersLists l ON l.Id = p.SelectableAnswersListId
-				                                                                where QuestionaryId = @QuestionaryId
-				                                                                order by p.SequenceOrder asc",
+				                                                                where QuestionaryId = @QuestionaryId",
                         new {QuestionaryId = id}).ToList();
 
+                    List<int> questionIds = new List<int>();
                     foreach (var question in questions)
                     {
-                        var answ = cn.Query<SelectableAnswers>(@"SELECT * FROM SelectableAnswers
-				                                                              where SelectableAnswersListId = @SelectableAnswersListId
-				                                                              order by SequenceOrder asc",
-                            new {SelectableAnswersListId = question.SelectableAnswersListId}).ToList();
-                        question.SelectableAnswers = answ;
                         //инвертирование из можно пропустить вопрос в вопрос обязателен ли
                         question.CanSkipQuestion = !question.CanSkipQuestion;
+                        questionIds.Add(question.Id);
+                    }
+
+                    var answ = cn.Query<QuestionaryAnswerOptions>(@"SELECT * FROM QuestionaryAnswerOptions
+                                                                                        where QuestionaryId IN @QuestionaryId",
+                        new {QuestionaryId = questionIds.ToArray()}).ToList();
+                    foreach (var question in questions)
+                    {
+                        question.QuestionaryAnswerOptions = answ.Where(o => o.QuestionaryId == question.Id).ToList();
                     }
 
                     obj.QuestionaryQuestions = questions;
@@ -134,10 +138,11 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                         {
                             foreach (var question in selectableAnswersList.QuestionaryQuestions)
                             {
-                                cn.Execute(
+                                var questionId = cn.ExecuteScalar<int>(
                                     @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectableAnswersListId,SequenceOrder,IsUsed)
-		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,1)",
-                                    new QuestionaryQuestions()
+		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,1);
+                                                        SELECT QuestionaryId = @@IDENTITY",
+                                    new QuestionaryQuestions
                                     {
                                         QuestionaryId = objTypeId,
                                         QuestionText = question.QuestionText,
@@ -146,6 +151,22 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                         SelectableAnswersListId = question.SelectableAnswersListId,
                                         SequenceOrder = question.SequenceOrder
                                     }, transaction);
+                                
+                                foreach (var option in question.QuestionaryAnswerOptions)
+                                {
+                                    
+                                        //add answr option
+                                        cn.Execute(
+                                            @"INSERT INTO  QuestionaryAnswerOptions(QuestionaryId,SelectableAnswerId,IsInvolvesComment)
+		                                                VALUES (@QuestionaryId,@SelectableAnswerId,@IsInvolvesComment)",
+                                            new QuestionaryAnswerOptions
+                                            {
+                                                IsInvolvesComment = option.IsInvolvesComment,
+                                                SelectableAnswerId = option.SelectableAnswerId,
+                                                QuestionaryId = questionId
+                                            }, transaction);
+                                    
+                                }
                             }
                         }
 
@@ -190,8 +211,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             {
                                 oldQuestions.Add(question);
                             }
-
-                            if (question.Id == 0)
+                            else
                             {
                                 newQuestions.Add(question);
                             }
@@ -204,7 +224,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             {
                                 connection.Execute(
                                     @"UPDATE QuestionaryQuestions SET QuestionaryId=@QuestionaryId,QuestionText=@QuestionText,QuestionaryInputFieldTypeId=@QuestionaryInputFieldTypeId,CanSkipQuestion=@CanSkipQuestion, 
-                                        SelectableAnswersListId=@SelectableAnswersListId,SequenceOrder=@SequenceOrder,IsUsed=@IsUsed
+                                        SelectableAnswersListId=@SelectableAnswersListId,SequenceOrder=@SequenceOrder,IsUsed=@IsUsed, DefaultAnswerId=@DefaultAnswerId
                                         WHERE Id=@Id",
                                     new QuestionaryQuestions
                                     {
@@ -215,8 +235,29 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                         CanSkipQuestion = !question.CanSkipQuestion,
                                         SelectableAnswersListId = question.SelectableAnswersListId,
                                         SequenceOrder = question.SequenceOrder,
-                                        IsUsed = question.IsUsed
+                                        IsUsed = question.IsUsed,
+                                        DefaultAnswerId = question.DefaultAnswerId
                                     }, transaction);
+
+                                if (question.QuestionaryAnswerOptions.Count != 0)
+                                {
+                                    connection.Execute(
+                                        @"DELETE  QuestionaryAnswerOptions WHERE QuestionaryId = @QuestionaryId",
+                                        new { @QuestionaryId = question.Id}, transaction);
+                                    
+                                    foreach (var option in question.QuestionaryAnswerOptions)
+                                    {
+                                            connection.Execute(
+                                                @"INSERT INTO  QuestionaryAnswerOptions(QuestionaryId,SelectableAnswerId,IsInvolvesComment)
+                                      		                                                VALUES (@QuestionaryId,@SelectableAnswerId,@IsInvolvesComment)",
+                                                new QuestionaryAnswerOptions
+                                                {
+                                                    IsInvolvesComment = option.IsInvolvesComment,
+                                                    SelectableAnswerId = option.SelectableAnswerId,
+                                                    QuestionaryId = question.Id
+                                                }, transaction);
+                                    }
+                                }
                             }
                         }
 
@@ -226,8 +267,8 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             foreach (var question in newQuestions)
                             {
                                 connection.Execute(
-                                    @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectableAnswersListId,SequenceOrder,IsUsed)
-		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,@IsUsed)",
+                                    @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectableAnswersListId,SequenceOrder,IsUsed,DefaultAnswerId)
+		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,@IsUsed,@DefaultAnswerId)",
                                     new QuestionaryQuestions
                                     {
                                         QuestionaryId = questionary.Id,
@@ -236,8 +277,28 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                         CanSkipQuestion = !question.CanSkipQuestion,
                                         SelectableAnswersListId = question.SelectableAnswersListId,
                                         SequenceOrder = question.SequenceOrder,
-                                        IsUsed = question.IsUsed
+                                        IsUsed = question.IsUsed,
+                                        DefaultAnswerId = question.DefaultAnswerId
                                     }, transaction);
+
+                                if (question.QuestionaryAnswerOptions.Count != 0)
+                                {
+                                    foreach (var option in question.QuestionaryAnswerOptions)
+                                    {
+                                        
+                                            //add answr
+                                            connection.Execute(
+                                                @"INSERT INTO  QuestionaryAnswerOptions(QuestionaryId,SelectableAnswerId,IsInvolvesComment)
+                                  		                                                VALUES (@QuestionaryId,@SelectableAnswerId,@IsInvolvesComment)",
+                                                new QuestionaryAnswerOptions
+                                                {
+                                                    IsInvolvesComment = option.IsInvolvesComment,
+                                                    SelectableAnswerId = option.SelectableAnswerId,
+                                                    QuestionaryId = question.Id
+                                                }, transaction);
+                                        
+                                    }
+                                }
                             }
                         }
 

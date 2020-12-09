@@ -1,4 +1,5 @@
 @using Admin.Panel.Core.Entities.Questionary
+@using Admin.Panel.Core.Entities.Questionary.Questions
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model Admin.Panel.Core.Entities.Questionary.Questions.QuestionaryDto
 
@@ -7,16 +8,65 @@
 }
 @if (Model.QuestionaryInputFieldTypes.Count != 0)
 {
-    <div class="col-md-10 ">
-        <div class="col">
-            <div class="row">
-                <label asp-for="QuestionaryInputFieldTypes"></label>
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <div class="col">
+                    <div class="row">
+                        <label asp-for="QuestionaryInputFieldTypes"></label>
+                    </div>
+                    <div class="row">
+                        <select class="new-selectpicker" asp-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId"
+                                asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))" required>
+                            <option selected="selected" disabled="disabled"></option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="row">
-                <select class="new-selectpicker" asp-for="QuestionaryQuestions[i].QuestionaryInputFieldTypeId"
-                        asp-items="Model.QuestionaryInputFieldTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))" required>
-                    <option selected="selected" disabled="disabled"></option>
-                </select>
+            <div class="col">
+                <div class="col">
+                    <div class="row">
+                        <label asp-for="SelectableAnswers"></label>
+                    </div>
+                    <div class="row">
+                        <select class="new-selectpicker" asp-for="QuestionaryQuestions[i].DefaultAnswerId"
+                                asp-items="Model.SelectableAnswers.Select(o => new SelectListItem(o.AnswerText, o.Id.ToString()))">
+                            <option selected="selected" disabled="disabled"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p>
+            @* <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Ответы</a> *@
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#multiCollapse_@i" aria-expanded="false" aria-controls="multiCollapse_@i">Ответы</button>
+        </p>
+        <div class="row">
+            <div class="col">
+                <div class="collapse multi-collapse" id="multiCollapse_@i">
+                    <div class="col aa-container">
+                        @for (int answr = 0; answr < Model.SelectableAnswers.Count; answr++)
+                        {
+                            <div class="row">
+                                <div class="col">
+                                    <div>@Model.SelectableAnswers[answr].AnswerText</div>
+                                </div>
+                                <div class="col form-group form-check">
+                                    @{
+                                        Model.QuestionaryQuestions[i].QuestionaryAnswerOptions.Add(new QuestionaryAnswerOptions
+                                        {
+                                            SelectableAnswerId = Model.SelectableAnswers[answr].Id
+                                        });
+                                    }
+                                    <input type="hidden" asp-for="@Model.QuestionaryQuestions[i].QuestionaryAnswerOptions[answr].SelectableAnswerId"/>
+                                    <input asp-for="@Model.QuestionaryQuestions[i].QuestionaryAnswerOptions[answr].IsInvolvesComment" type="checkbox" class="form-check-input">
+                                    <label asp-for="@Model.SelectableAnswers[answr].IsInvolvesComment" class="form-check-label align-bottom">Комментарий</label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     </div>

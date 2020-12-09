@@ -33,7 +33,7 @@ namespace Admin.Panel.Web.Controllers
         {
             QuestionaryDto mod = new QuestionaryDto();
             QuestionaryDto model = await _questionaryService.GetAllForQuestionaryCreate(mod);
-
+            model.QuestionaryQuestions.Add(new QuestionaryQuestions());
             return View(model);
         }
 
@@ -197,13 +197,9 @@ namespace Admin.Panel.Web.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult> AnswersGetAll(int id, [FromQuery] int index)
+        public async Task<ActionResult> AnswersGetAll(int id, [FromQuery] int index, [FromQuery] int qqId )
         {
-            //TODO доставать каждому вопросу варианты ответов со значением коммента и по умолчанию ли
-            var inputTypes = await _fieldTypesRepository.GetAllCurrent(id);
-            QuestionaryDto model = new QuestionaryDto();
-            model.QuestionaryInputFieldTypes = inputTypes;
-            model.IndexCurrentQuestion = index;
+            QuestionaryDto model = await _questionaryService.AnswersGetAll(id, index, qqId);
             return PartialView("_SelectableAnswers", model);
         }
     }

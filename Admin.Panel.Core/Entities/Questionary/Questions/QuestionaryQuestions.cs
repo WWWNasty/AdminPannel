@@ -31,11 +31,12 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         public bool IsUsed { get; set; }
 
         public List<QuestionaryInputFieldTypes> CurrentQuestionaryInputFieldTypes { get; set; }
+
+        public List<SelectableAnswers> CurrentSelectableAnswerses { get; set; }
         
-        public string SelectableAnswersListName { get; set; }
+        public List<QuestionaryAnswerOptions> QuestionaryAnswerOptions { get; set; } = new List<QuestionaryAnswerOptions>();
         
-        public List<SelectableAnswers> SelectableAnswers { get; set; }
-        
-        
+        // [Display(Name = "Ответ по умолчанию")]
+        public int? DefaultAnswerId { get; set; }
     }
 }
