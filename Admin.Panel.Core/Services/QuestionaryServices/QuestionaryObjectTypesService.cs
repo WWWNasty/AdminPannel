@@ -8,14 +8,15 @@ namespace Admin.Panel.Core.Services.QuestionaryServices
 {
     public class QuestionaryObjectTypesService : IQuestionaryObjectTypesService
     {
-        private readonly IObjectPropertiesRepository _objectPropertiesRepository;
         private readonly IQuestionaryObjectTypesRepository _questionaryObjectTypesRepository;
+        private readonly ICompanyRepository _companyRepository;
 
-        public QuestionaryObjectTypesService(IObjectPropertiesRepository objectPropertiesRepository,
-            IQuestionaryObjectTypesRepository questionaryObjectTypesRepository)
+        public QuestionaryObjectTypesService(
+            IQuestionaryObjectTypesRepository questionaryObjectTypesRepository, 
+            ICompanyRepository companyRepository)
         {
-            _objectPropertiesRepository = objectPropertiesRepository;
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
+            _companyRepository = companyRepository;
         }
 
         // public async Task<QuestionaryObjectType> GetAllProperties()
@@ -30,9 +31,15 @@ namespace Admin.Panel.Core.Services.QuestionaryServices
 
         public async Task<QuestionaryObjectType> GetObjectForUpdare(int id)
         {
-            //List<ObjectProperty> allProperties = await _objectPropertiesRepository.GetAllActiveAsync();
             var obj = await _questionaryObjectTypesRepository.GetAsync(id);
-            //obj.ObjectProperties = allProperties;
+            obj.Companies = await _companyRepository.GetAllActiveAsync();
+            return obj;
+        }
+
+        public async Task<QuestionaryObjectType> GetObjectForUpdareForUser(int id, string userId)
+        {
+            var obj = await _questionaryObjectTypesRepository.GetAsync(id);
+            obj.Companies = await _companyRepository.GetAllActiveForUserAsync(userId);
             return obj;
         }
     }

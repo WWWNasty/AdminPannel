@@ -30,8 +30,8 @@ namespace Admin.Panel.Core.Entities.Questionary
         [Display(Name = "Тип объекта")]
         public string ObjectTypeName { get; set; }
         
-        [Required(ErrorMessage = "Поле обязательно5!")]
-        public int CompanyId { get; set; }
+        //[Required(ErrorMessage = "Поле обязательно5!")]
+        //public int CompanyId { get; set; }
 
         [Display(Name = "Активный")]
         public bool IsUsed { get; set; }
@@ -46,8 +46,8 @@ namespace Admin.Panel.Core.Entities.Questionary
         [Display(Name = "Тип объекта")]
         public List<QuestionaryObjectType> QuestionaryObjectTypes { get; set; }
         
-        [Display(Name = "Компания")]
-        public List<ApplicationCompany> Companies { get; set; }
+        // [Display(Name = "Компания")]
+        // public List<ApplicationCompany> Companies { get; set; }
 
     }
 }

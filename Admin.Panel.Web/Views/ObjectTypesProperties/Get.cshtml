@@ -17,7 +17,12 @@
                 {
                     <a asp-controller="ObjectTypesProperties" asp-action="Update" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
                 }
-                if(!User.IsInRole("SuperAdministrator"))
+                if(User.IsInRole("TypesObjectEdit"))
+                {
+                    <a asp-controller="ObjectTypesProperties" asp-action="UpdateForUser" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
+                                                                                                                                                                                 
+                }
+                else
                 {
                     <h4 class="text-success">@Model.Name</h4>
                 }

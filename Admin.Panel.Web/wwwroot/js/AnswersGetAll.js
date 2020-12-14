@@ -1,11 +1,7 @@
 let input = $('.input-answers');
-
 const loadAnswers = async event => {
     const id = event.target.value;
     const index = event.target.attributes.itemIndex.value;
-    //const qqId = event.target.attributes.qqId.value;
-
-    debugger;
 
     const partial = await $.get(global.GetUri(`Questionary/AnswersGetAll/${id}?index=${index}`));
     

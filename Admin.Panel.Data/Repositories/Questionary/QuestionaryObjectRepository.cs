@@ -32,9 +32,9 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 {
                     var query = @"SELECT o.*, ot.Name AS ObjectTypeName, c.CompanyName  FROM QuestionaryObjects AS o 
                                           INNER JOIN QuestionaryObjectTypes AS ot ON o.ObjectTypeId = ot.Id
-                                          INNER JOIN Companies AS c ON o.CompanyId = c.CompanyId
+                                          INNER JOIN Companies AS c ON ot.CompanyId = c.CompanyId
                                             WHERE o.Id=@Id";
-                    var obj = cn.Query<QuestionaryObject>(query, new {@Id = id}).SingleOrDefault();
+                    var obj = cn.Query<QuestionaryObject>(query, new {Id = id}).SingleOrDefault();
 
                     var properties = cn.Query<ObjectPropertyValues>(@"SELECT 
 	                                                                po.*, p.IsUsedInReport, p.Name, p.NameInReport, p.ReportCellStyle
@@ -150,8 +150,8 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     try
                     {
                         var query =
-                            @"INSERT INTO QuestionaryObjects(Code,Description,Updated,Name,ObjectTypeId,CompanyId,IsUsed) 
-                                VALUES(@Code,@Description,@Updated,@Name,@ObjectTypeId,@CompanyId,1);
+                            @"INSERT INTO QuestionaryObjects(Code,Description,Updated,Name,ObjectTypeId,IsUsed) 
+                                VALUES(@Code,@Description,@Updated,@Name,@ObjectTypeId,1);
                                 SELECT QuestionaryObjectId = @@IDENTITY";
                         var objId = cn.ExecuteScalar<int>(query, obj, transaction);
 
@@ -197,7 +197,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     try
                     {
                         var query =
-                            @"UPDATE QuestionaryObjects SET Code=@Code,Description=@Description,Updated=@Updated,Name=@Name,ObjectTypeId=@ObjectTypeId,CompanyId=@CompanyId,IsUsed=@IsUsed 
+                            @"UPDATE QuestionaryObjects SET Code=@Code,Description=@Description,Updated=@Updated,Name=@Name,ObjectTypeId=@ObjectTypeId,IsUsed=@IsUsed 
                                       WHERE Id=@Id";
 
                         connection.Execute(query, obj, transaction);

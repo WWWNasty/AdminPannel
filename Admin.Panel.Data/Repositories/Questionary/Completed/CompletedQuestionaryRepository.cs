@@ -39,22 +39,23 @@ namespace Admin.Panel.Data.Repositories.Questionary.Completed
                         a.Значение AS Answer, a.Комментарий AS Comment, ROW_NUMBER() OVER (ORDER BY a.Время DESC) as RowNumber
 	                    FROM vw_Answers AS a";
 
-                    if (model.CompanyIds != null && model.CompanyIds.Length != 0)
+                    if (model.ObjectIds != null && model.ObjectIds.Length != 0)
                     {
-                        model.TotalItems = connection.Query<int>("SELECT COUNT(*) FROM vw_Answers AS a Where a.CompanyId IN @CompanyId", new {@CompanyId = model.CompanyIds}).FirstOrDefault();
-                        var queryString = query + @" WHERE a.CompanyId IN @CompanyId
+                        model.TotalItems = connection.Query<int>("SELECT COUNT(*) FROM vw_Answers AS a Where a.QuestionaryObjectsId IN @QuestionaryObjectsId", new {@QuestionaryObjectsId =  model.ObjectIds}).FirstOrDefault();
+                        var queryString = query + @" WHERE a.QuestionaryObjectsId IN @QuestionaryObjectsId 
                         )
                         SELECT Id, CompanyId, CompanyName, ObjectType, ObjectTypeId, ObjectName, ObjectId, [Description], [Date], PhoneNumber,Question, Answer, Comment
 	                    FROM NumberedAnswers a
 	                    WHERE RowNumber BETWEEN @skip AND @take";
                         List<CompletedQuestionary> result = connection
                             .Query<CompletedQuestionary>(queryString,
-                                new {@CompanyId = model.CompanyIds, @skip = (pageSize * pageIndex) - (pageSize - 1), @take = pageSize * pageIndex}).ToList();
+                                new {@QuestionaryObjectsId = model.ObjectIds, @skip = (pageSize * pageIndex) - (pageSize - 1), @take = pageSize * pageIndex})
+                            .ToList();
                         model.CompletedQuestionaries = result;
                         model.PageSize = pageSize;
                         return model;
                     }
-
+                    
                     if (model.ObjectTypeIds != null && model.ObjectTypeIds.Length != 0)
                     {
                         model.TotalItems = connection.Query<int>("SELECT COUNT(*) FROM vw_Answers AS a Where a.ObjectTypeId IN @ObjectTypeId", new {@ObjectTypeId = model.ObjectTypeIds}).FirstOrDefault();
@@ -70,19 +71,18 @@ namespace Admin.Panel.Data.Repositories.Questionary.Completed
                         model.PageSize = pageSize;
                         return model;
                     }
-
-                    if (model.ObjectIds != null && model.ObjectIds.Length != 0)
+                    
+                    if (model.CompanyIds != null && model.CompanyIds.Length != 0)
                     {
-                        model.TotalItems = connection.Query<int>("SELECT COUNT(*) FROM vw_Answers AS a Where a.QuestionaryObjectsId IN @QuestionaryObjectsId", new {@QuestionaryObjectsId =  model.ObjectIds}).FirstOrDefault();
-                        var queryString = query + @" WHERE a.QuestionaryObjectsId IN @QuestionaryObjectsId 
+                        model.TotalItems = connection.Query<int>("SELECT COUNT(*) FROM vw_Answers AS a Where a.CompanyId IN @CompanyId", new {@CompanyId = model.CompanyIds}).FirstOrDefault();
+                        var queryString = query + @" WHERE a.CompanyId IN @CompanyId
                         )
                         SELECT Id, CompanyId, CompanyName, ObjectType, ObjectTypeId, ObjectName, ObjectId, [Description], [Date], PhoneNumber,Question, Answer, Comment
 	                    FROM NumberedAnswers a
 	                    WHERE RowNumber BETWEEN @skip AND @take";
                         List<CompletedQuestionary> result = connection
                             .Query<CompletedQuestionary>(queryString,
-                                new {@QuestionaryObjectsId = model.ObjectIds, @skip = (pageSize * pageIndex) - (pageSize - 1), @take = pageSize * pageIndex})
-                            .ToList();
+                                new {@CompanyId = model.CompanyIds, @skip = (pageSize * pageIndex) - (pageSize - 1), @take = pageSize * pageIndex}).ToList();
                         model.CompletedQuestionaries = result;
                         model.PageSize = pageSize;
                         return model;

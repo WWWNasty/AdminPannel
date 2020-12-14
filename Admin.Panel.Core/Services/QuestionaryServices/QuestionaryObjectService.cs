@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities;
 using Admin.Panel.Core.Entities.Questionary;
@@ -25,17 +26,14 @@ namespace Admin.Panel.Core.Services.QuestionaryServices
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
             List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
 
-            model.Companies = companies;
             model.QuestionaryObjectTypes = objTypes;
             return model;
         }
 
         public async Task<QuestionaryObject> GetAllForCreateForUser(QuestionaryObject model, string userId)
         {
-            List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(userId);
-            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
+            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveForUserAsync(Convert.ToInt32(userId)); 
 
-            model.Companies = companies;
             model.QuestionaryObjectTypes = objTypes;
                     
             return model;
@@ -43,10 +41,8 @@ namespace Admin.Panel.Core.Services.QuestionaryServices
 
         public async Task<QuestionaryObject> GetAllForUpdate(QuestionaryObject model)
         {
-            List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
             List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
 
-            model.Companies = companies;
             model.QuestionaryObjectTypes = objTypes;
 
             return model;
@@ -54,10 +50,8 @@ namespace Admin.Panel.Core.Services.QuestionaryServices
 
         public async Task<QuestionaryObject> GetAllForUpdateForUser(QuestionaryObject model, string userId)
         {
-            List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(userId);
-            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
+            List<QuestionaryObjectType> objTypes = await _questionaryObjectTypesRepository.GetAllActiveForUserAsync(Convert.ToInt32(userId));
 
-            model.Companies = companies;
             model.QuestionaryObjectTypes = objTypes;
 
             return model;

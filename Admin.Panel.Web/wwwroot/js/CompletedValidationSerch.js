@@ -1,32 +1,50 @@
 $(document).ready(async () => {
-    debugger;
-    let selects = $('.selectpicker');
-    if (selects.get(0).value !== "" || selects.get(1).value !== "" || selects.get(2).value !== ""){
-        selects.each((_, select) => {
-            if (select.value === "") {
-                const parent = $(select).parents('.bootstrap-select');
-                let dropdown = $(parent).find('.dropdown-toggle');
-                dropdown.prop('disabled', true);
-            }
-        })
-    }
-    console.log(selects[0].value, "sfs");
+    // debugger;
+    // let selects = $('.selectpicker');
+    // if (selects.get(0).value !== "" || selects.get(1).value !== "" || selects.get(2).value !== ""){
+    //     selects.each((_, select) => {
+    //         if (select.value === "") {
+    //             const parent = $(select).parents('.bootstrap-select');
+    //             let dropdown = $(parent).find('.dropdown-toggle');
+    //             dropdown.prop('disabled', true);
+    //         }
+    //     })
+    // }
 })
 
-let input = $('.selectpicker');
+function replaceOptions(selector, options) {
+    const select = $(selector);
+    
+    select.empty();
+    
+    options.forEach(option => select.append(`<option value="${option.Id}">${option.Name}</option>`));
 
-const Validate = async event => {
-    const ides = event.target.value;
-    let selects = $('.selectpicker');
-    selects.each((_, select) => {
-        if (select !== event.target) {
-            const parent = $(select).parents('.bootstrap-select');
-            let dropdown = $(parent).find('.dropdown-toggle');
-            dropdown.prop('disabled', Boolean(ides));
-        }
-    })
+    select.selectpicker('refresh');
+}
+
+let companiesFilter = $('.companiesFilter');
+const GetSearchObjects = async event => {
+    const values = $(event.target).selectpicker('val');
+    console.log(values);
+    const filteredTypesObj = formData.objectTypes.filter(type => values.includes(type.CompanyId.toString()));
+    replaceOptions('#ObjectTypeIds', filteredTypesObj);
+    debugger;
+    let objTypeIds = filteredTypesObj.map(type => type.Id);
+   
+    const filteredObj = formData.objects.filter(obj => objTypeIds.includes(obj.ObjectTypeId));
+    replaceOptions('#ObjectIds', filteredObj);
 };
-input.change(Validate);
+
+companiesFilter.change(GetSearchObjects);
+
+let objecTypesFilter = $('.objecTypesFilter');
+const GetObjects = async event => {
+    const values = $(event.target).selectpicker('val');
+    console.log(values);
+    const filteredObj = formData.objects.filter(obj => values.includes(obj.ObjectTypeId.toString()));
+    replaceOptions('#ObjectIds', filteredObj);
+};
+objecTypesFilter.change(GetObjects);
 
 let pgnumber = $('.pgnumber');
 const WritePageNumber = async event =>{

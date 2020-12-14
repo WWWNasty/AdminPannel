@@ -1,9 +1,19 @@
 ﻿@using Admin.Panel.Core.Entities
 @using System.Security.Claims
+@using Newtonsoft.Json
 @model Admin.Panel.Core.Entities.Questionary.Completed.QueryParameters
 @{
     ViewData["Title"] = "Результаты";
 }
+
+<script type="text/javascript">
+    const formData = {
+    companies: @Html.Raw(JsonConvert.SerializeObject(Model.ApplicationCompanies)),
+    objectTypes: @Html.Raw(JsonConvert.SerializeObject(Model.QuestionaryObjectTypes)),
+    objects: @Html.Raw(JsonConvert.SerializeObject(Model.QuestionaryObjects))
+    };
+</script>
+
 <form method="post" asp-antiforgery="true">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="col">
@@ -12,8 +22,8 @@
                 <div class="form-group">
                     <div class="col-md-11">
                         <label asp-for="ApplicationCompanies">Компания</label>
-                        <select class="selectpicker" asp-for="CompanyIds"
-                                asp-items="Model.ApplicationCompanies.Select(p => new SelectListItem(p.CompanyName, p.CompanyId.ToString()))"
+                        <select class="selectpicker companiesFilter" asp-for="CompanyIds"
+                                asp-items="Model.ApplicationCompanies.Select( p => new SelectListItem(p.CompanyName, p.CompanyId.ToString()))"
                                 multiple>
                         </select>
                     </div>
@@ -23,7 +33,7 @@
                 <div class="form-group">
                     <div class="col-md-11">
                         <label asp-for="QuestionaryObjectTypes">Тип объекта</label>
-                        <select class="selectpicker" asp-for="ObjectTypeIds"
+                        <select class="selectpicker objecTypesFilter" asp-for="ObjectTypeIds"
                                 asp-items="Model.QuestionaryObjectTypes.Select(p => new SelectListItem(p.Name, p.Id.ToString()))"
                                 multiple>
                         </select>

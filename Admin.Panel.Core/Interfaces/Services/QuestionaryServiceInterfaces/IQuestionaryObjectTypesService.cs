@@ -7,5 +7,6 @@ namespace Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces
     {
         //Task<QuestionaryObjectType> GetAllProperties();
         Task<QuestionaryObjectType> GetObjectForUpdare(int id);
+        Task<QuestionaryObjectType> GetObjectForUpdareForUser(int id, string userId);
     }
 }

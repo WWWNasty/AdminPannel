@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
@@ -27,7 +26,9 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 await cn.OpenAsync();
                 try
                 {
-                    var query = @"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id";
+                    var query = @"SELECT t.*, c.CompanyName AS CompanyName  FROM QuestionaryObjectTypes AS t 
+																			INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId
+				                                                               WHERE t.Id=@Id";
                     var obj = cn.Query<QuestionaryObjectType>(query, new {@Id = id}).SingleOrDefault();
 
 
@@ -56,8 +57,32 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 await connection.OpenAsync();
                 try
                 {
-                    var query = "SELECT * FROM QuestionaryObjectTypes";
+                    var query = @"SELECT t.*, c.CompanyName AS CompanyName  FROM QuestionaryObjectTypes AS t 
+                    INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId";
                     var result = connection.Query<QuestionaryObjectType>(query).ToList();
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
+        public async Task<List<QuestionaryObjectType>> GetAllForUserAsync(int userId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    int[] companiesId = connection
+                        .Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @Id",
+                            new {@Id = userId}).ToArray();
+                    
+                    var query = @"SELECT t.*, c.CompanyName AS CompanyName  FROM QuestionaryObjectTypes AS t 
+                    INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId WHERE CompanyId IN @CompanyId";
+                    var result = connection.Query<QuestionaryObjectType>(query, new{CompanyId = companiesId}).ToList();
                     return result;
                 }
                 catch (Exception ex)
@@ -74,8 +99,32 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 await connection.OpenAsync();
                 try
                 {
-                    var query = "SELECT * FROM QuestionaryObjectTypes WHERE IsUsed = 1";
+                    var query = @"SELECT t.*, c.CompanyName AS CompanyName  FROM QuestionaryObjectTypes AS t 
+                    INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId WHERE t.IsUsed = 1";
                     var result = connection.Query<QuestionaryObjectType>(query).ToList();
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
+        public async Task<List<QuestionaryObjectType>> GetAllActiveForUserAsync(int userId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    int[] companiesId = connection
+                        .Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @Id",
+                            new {@Id = userId}).ToArray();
+                    
+                    var query = @"SELECT t.*, c.CompanyName AS CompanyName  FROM QuestionaryObjectTypes AS t 
+                    INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId WHERE t.IsUsed = 1 AND CompanyId IN @CompanyId";
+                    var result = connection.Query<QuestionaryObjectType>(query, new{CompanyId = companiesId}).ToList();
                     return result;
                 }
                 catch (Exception ex)
@@ -96,8 +145,8 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     try
                     {
                         var query =
-                            @"INSERT INTO QuestionaryObjectTypes(Name, IsUsed) 
-                                VALUES(@Name,1);
+                            @"INSERT INTO QuestionaryObjectTypes(Name, IsUsed, CompanyId) 
+                                VALUES(@Name,1, @CompanyId);
                                 SELECT QuestionaryObjectTypeId = @@IDENTITY";
                         var objTypeId = cn.ExecuteScalar<int>(query, obj, transaction);
 
@@ -165,7 +214,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 {
                     try
                     {
-                        var query = @"UPDATE QuestionaryObjectTypes SET Name=@Name,IsUsed=@IsUsed 
+                        var query = @"UPDATE QuestionaryObjectTypes SET Name=@Name,IsUsed=@IsUsed,CompanyId=@CompanyId 
                          WHERE Id=@Id";
                         await connection.ExecuteAsync(query, obj, transaction);
 

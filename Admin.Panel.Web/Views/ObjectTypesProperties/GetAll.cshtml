@@ -5,9 +5,9 @@
     @{
         ViewData["Title"] = "Все типы Объектов";
     }
-    
-    
-    
+
+
+
     @if (User.Identity.IsAuthenticated)
     {
         <div class="form-group">
@@ -15,14 +15,18 @@
                 <div class="col">
                     <h4>@ViewBag.Title</h4>
                 </div>
-                @if (User.IsInRole("SuperAdministrator") || User.IsInRole("TypesObjectEdit"))
-                    {
-                        <a asp-controller="ObjectTypesProperties" asp-action="Create" class="btn btn-outline-primary">&#10011; Создать тип объекта</a>
-                    }
+                @if (User.IsInRole("SuperAdministrator"))
+                {
+                    <a asp-controller="ObjectTypesProperties" asp-action="Create" class="btn btn-outline-primary">&#10011; Создать тип объекта</a>
+                }
+                @if(User.IsInRole("TypesObjectEdit"))
+                {
+                    <a asp-controller="ObjectTypesProperties" asp-action="CreateForUser" class="btn btn-outline-primary">&#10011; Создать тип объекта</a>
+                }
             </div>
         </div>
-    
-        <div class="card" >
+
+        <div class="card">
             <div class="card-header">
                 <div class="row">
                     <div class="col">
@@ -57,7 +61,7 @@
                             else
                             {
                                 <div class="col">
-                                    <a asp-controller="ObjectTypesProperties" asp-action="Get" asp-route-Id="@obj.Id" style="color: #CDCDCD;" > @Html.DisplayFor(modelItem => obj.Name)</a>
+                                    <a asp-controller="ObjectTypesProperties" asp-action="Get" asp-route-Id="@obj.Id" style="color: #CDCDCD;"> @Html.DisplayFor(modelItem => obj.Name)</a>
                                 </div>
                                 <div class="col">
                                     <div class="row">
@@ -65,7 +69,7 @@
                                         <h7 style="color: #CDCDCD;">не активно</h7>
                                     </div>
                                 </div>
-                            } 
+                            }
                         </div>
                     </li>
                 }

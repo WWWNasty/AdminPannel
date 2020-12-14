@@ -41,29 +41,6 @@
                     </div>
                 </div>
             </div>
-    
-            <div class="col">
-                <div class="form-group">
-                    @{
-                        List<SelectListItem> lst1 = new List<SelectListItem>();
-    
-                        for (int i = Model.Companies.Count - 1; i >= 0; i--)
-                        {
-                            lst1.Add(new SelectListItem {Text = Model.Companies[i].CompanyName, Value = Model.Companies[i].CompanyId.ToString()});
-                        }
-                    }
-                    <div class="col">
-                        <div class="row">
-                            <label asp-for="Companies"></label>
-                        </div>
-                        <div class="row">
-                            <select asp-for="CompanyId" asp-items="lst1" class=" selectpicker" required>
-                                <option selected="selected" disabled="disabled"></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     
         <div class="form-group">

@@ -27,14 +27,13 @@
 
                         if (User.IsInRole("TypesObjectRead") || User.IsInRole("UsersRead"))
                         {
-                            <a asp-controller="ObjectTypesProperties" asp-action="GetAll" class="dropdown-item">Типы объектов</a>
+                            <a asp-controller="ObjectTypesProperties" asp-action="GetAllForUser" class="dropdown-item">Типы объектов</a>
                         }
 
                         if (User.IsInRole("ObjectRead") || User.IsInRole("UsersRead"))
                         {
                             <a asp-controller="ObjectsPropValues" asp-action="GetAllForUser" class="dropdown-item">Обьекты</a>
                         }
-
 
                         if (User.IsInRole("AnswerRead") || User.IsInRole("UsersRead"))
                         {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary.Completed;
@@ -70,5 +71,15 @@ namespace Admin.Panel.Web.Controllers
             model = await _completedQuestionaryService.GetAllForUser(model, userId);
             return View("GetAll", model);
         }
+        
+        // [HttpGet]
+        // [Authorize]
+        // public async Task<ActionResult> AnswersGetAll(int? idCompany,  [FromQuery] int? idObjType, [FromQuery] int? idObject )
+        // {
+        //     
+        //     List<> prop = await _questionaryObjectRepository.GetPropertiesForUpdate(idObject);
+        //     QueryParameters model = new QueryParameters {SelectedObjectPropertyValues = prop};
+        //     return PartialView("", model);        
+        // }
     }
 }

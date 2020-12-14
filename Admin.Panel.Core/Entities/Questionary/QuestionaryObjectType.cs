@@ -19,6 +19,14 @@ namespace Admin.Panel.Core.Entities.Questionary
         [Display(Name = "Создать новое свойство")]
         public List<ObjectProperty> ObjectProperties { get; set; }
         
+        [Required(ErrorMessage = "Поле обязательно5!")]
+        public int CompanyId { get; set; }
+        
+        public string CompanyName { get; set; }
+        
+        [Display(Name = "Компания")]
+        public List<ApplicationCompany> Companies { get; set; }
+
         //public List<int> SelectedPropertiesId { get; set; }
         
         [Display(Name = "Активный")]

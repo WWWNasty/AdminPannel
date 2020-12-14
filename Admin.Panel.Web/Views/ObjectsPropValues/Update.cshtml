@@ -38,22 +38,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="form-group">
-                    <div class="col-md-10">
-                        <div class="col">
-                            <div class="row">
-                                <label asp-for="Companies"></label>
-                            </div>
-                            <div class="row">
-                                <select class="selectpicker" asp-for="CompanyId"
-                                        asp-items="Model.Companies.Select(company => new SelectListItem(company.CompanyName, company.CompanyId.ToString(), Model.CompanyId == company.CompanyId))" required>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     
         <div class="form-group form-check">
