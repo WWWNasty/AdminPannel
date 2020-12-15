@@ -10,8 +10,7 @@
             <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].Id"/>
             <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].Name"/>
             <input type="hidden" asp-for="@Model.SelectedObjectPropertyValues[i].ObjectPropertyId"/>
-            <h7 class="card-title">@Model.SelectedObjectPropertyValues[i].Name</h7>
-
+            <label asp-for="@Model.SelectedObjectPropertyValues[i].Value">@Model.SelectedObjectPropertyValues[i].Name</label>
             <input asp-for="@Model.SelectedObjectPropertyValues[i].Value" class="form-control" required>
         </div>
     </div>

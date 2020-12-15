@@ -18,17 +18,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
             _companyRepository = companyRepository;
         }
-
-        // public async Task<QuestionaryObjectType> GetAllProperties()
-        // {
-        //     //List<ObjectProperty> properties = await _objectPropertiesRepository.GetAllActiveAsync();
-        //     QuestionaryObjectType createProperties = new QuestionaryObjectType
-        //     {
-        //         ObjectProperties = properties
-        //     };
-        //     return createProperties;
-        // }
-
+        
         public async Task<QuestionaryObjectType> GetObjectForUpdare(int id)
         {
             var obj = await _questionaryObjectTypesRepository.GetAsync(id);

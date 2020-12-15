@@ -20,9 +20,8 @@
                 if(User.IsInRole("TypesObjectEdit"))
                 {
                     <a asp-controller="ObjectTypesProperties" asp-action="UpdateForUser" asp-route-Id="@Model.Id" class="text-success"> @Html.DisplayFor(modelItem => Model.Name)</a>
-                                                                                                                                                                                 
                 }
-                else
+                if(!User.IsInRole("SuperAdministrator") && !User.IsInRole("TypesObjectEdit"))
                 {
                     <h4 class="text-success">@Model.Name</h4>
                 }

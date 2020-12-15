@@ -44,7 +44,7 @@
                 <div class="form-group">
                     <div class="col-md-11">
                         <label asp-for="QuestionaryObjects">Объект</label>
-                        <select class="selectpicker" asp-for="ObjectIds"
+                        <select class="selectpicker objectsFilter" asp-for="ObjectIds"
                                 asp-items="Model.QuestionaryObjects.Select(p => new SelectListItem(p.Name, p.Id.ToString()))"
                                 multiple>
                         </select>

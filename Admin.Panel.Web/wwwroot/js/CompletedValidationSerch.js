@@ -1,37 +1,44 @@
-$(document).ready(async () => {
-    // debugger;
-    // let selects = $('.selectpicker');
-    // if (selects.get(0).value !== "" || selects.get(1).value !== "" || selects.get(2).value !== ""){
-    //     selects.each((_, select) => {
-    //         if (select.value === "") {
-    //             const parent = $(select).parents('.bootstrap-select');
-    //             let dropdown = $(parent).find('.dropdown-toggle');
-    //             dropdown.prop('disabled', true);
-    //         }
-    //     })
-    // }
-})
-
 function replaceOptions(selector, options) {
     const select = $(selector);
-    
+
     select.empty();
-    
+
     options.forEach(option => select.append(`<option value="${option.Id}">${option.Name}</option>`));
 
     select.selectpicker('refresh');
 }
 
+$(document).ready(async () => {
+    debugger;
+       const values = $('.companiesFilter').selectpicker('val');
+       const typeObjs = $('.objecTypesFilter').selectpicker('val');
+       const objs = $('.objectsFilter').selectpicker('val');
+       
+       const filteredTypesObj = formData.objectTypes.filter(type => values.includes(type.CompanyId.toString()));
+       replaceOptions('#ObjectTypeIds', filteredTypesObj);
+
+       let objTypeIds = filteredTypesObj.map(type => type.Id);
+       const filteredObj = formData.objects.filter(obj => objTypeIds.includes(obj.ObjectTypeId));
+       replaceOptions('#ObjectIds', filteredObj);
+
+    $('.objecTypesFilter').selectpicker('val', typeObjs);
+    $('.objectsFilter').selectpicker('val', objs);
+
+    $('.selectpicker').selectpicker('render');
+    $('.selectpicker').selectpicker('refresh');
+})
+
+
 let companiesFilter = $('.companiesFilter');
 const GetSearchObjects = async event => {
     const values = $(event.target).selectpicker('val');
-    console.log(values);
     const filteredTypesObj = formData.objectTypes.filter(type => values.includes(type.CompanyId.toString()));
+    
     replaceOptions('#ObjectTypeIds', filteredTypesObj);
-    debugger;
+    
     let objTypeIds = filteredTypesObj.map(type => type.Id);
-   
     const filteredObj = formData.objects.filter(obj => objTypeIds.includes(obj.ObjectTypeId));
+    
     replaceOptions('#ObjectIds', filteredObj);
 };
 
