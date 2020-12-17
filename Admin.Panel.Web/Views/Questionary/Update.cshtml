@@ -45,24 +45,24 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="form-group">
-        <div class="col">
-            <div class="col-md-10">
-                <div class="col">
-                    <div class="row">
-                        <label asp-for="QuestionaryObjectTypes">Выберите тип объекта</label>
-                    </div>
-                    <div class="row">
-                        <select class="selectpicker" asp-for="ObjectTypeId"
-                                asp-items="Model.QuestionaryObjectTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))" required>
-                            <option selected="selected" disabled="disabled"></option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="row" id="object-type-container">
+    @* <div class="form-group"> *@
+    @*     <div class="col"> *@
+    @*         <div class="col-md-10"> *@
+    @*             <div class="col"> *@
+    @*                 <div class="row"> *@
+    @*                     <label asp-for="QuestionaryObjectTypes">Выберите тип объекта</label> *@
+    @*                 </div> *@
+    @*                 <div class="row"> *@
+    @*                     <select class="selectpicker" asp-for="ObjectTypeId" *@
+    @*                             asp-items="Model.QuestionaryObjectTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))" required> *@
+    @*                         <option selected="selected" disabled="disabled"></option> *@
+    @*                     </select> *@
+    @*                 </div> *@
+    @*             </div> *@
+    @*         </div> *@
+    @*     </div> *@
+    @* </div> *@
 
     <div class="form-group">
         <div class="col">
@@ -72,10 +72,28 @@
                         <label asp-for="ApplicationCompanies">Выберите компанию</label>
                     </div>
                     <div class="row">
-                        <select class="selectpicker" asp-for="CompanyId"
+                        <select class="selectpicker companyIdToObjType" asp-for="CompanyId"
                                 asp-items="Model.ApplicationCompanies.Select(o => new SelectListItem(o.CompanyName, o.CompanyId.ToString()))" required>
                             <option selected="selected" disabled="disabled"></option>
                         </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="object-type-container">
+        <div class="form-group">
+            <div class="col">
+                <div class="col-md-10">
+                    <div class="col">
+                        <div class="row">
+                            <label asp-for="QuestionaryObjectTypes">Выберите тип объекта</label>
+                        </div>
+                        <div class="row">
+                            <select asp-for="ObjectTypeId" asp-items="Model.QuestionaryObjectTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))" class="selectpicker" required>
+                                <option selected="selected" disabled="disabled"></option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -178,28 +196,28 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <p class="ml-3">
                                     <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#multiCollapse_@i" aria-expanded="false" aria-controls="multiCollapse_@i">Ответы</button>
                                 </p>
-                                    <div class="col">
-                                        <div class="collapse multi-collapse" id="multiCollapse_@i">
-                                            <div class="col aa-container">
-                                                @for (int answr = 0; answr < Model.QuestionaryQuestions[i].CurrentSelectableAnswerses.Count; answr++)
-                                                {
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <div>@Model.QuestionaryQuestions[i].CurrentSelectableAnswerses[answr].AnswerText</div>
-                                                        </div>
-                                                        <div class="col form-group form-check">
-                                                            <input type="hidden" asp-for="@Model.QuestionaryQuestions[i].QuestionaryAnswerOptions[answr].SelectableAnswerId"/>
-                                                            <input asp-for="@Model.QuestionaryQuestions[i].QuestionaryAnswerOptions[answr].IsInvolvesComment" type="checkbox" class="form-check-input">
-                                                            <label asp-for="@Model.SelectableAnswers[answr].IsInvolvesComment" class="form-check-label align-bottom">Комментарий</label>
-                                                        </div>
+                                <div class="col">
+                                    <div class="collapse multi-collapse" id="multiCollapse_@i">
+                                        <div class="col aa-container">
+                                            @for (int answr = 0; answr < Model.QuestionaryQuestions[i].CurrentSelectableAnswerses.Count; answr++)
+                                            {
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div>@Model.QuestionaryQuestions[i].CurrentSelectableAnswerses[answr].AnswerText</div>
                                                     </div>
-                                                }
-                                            </div>
+                                                    <div class="col form-group form-check">
+                                                        <input type="hidden" asp-for="@Model.QuestionaryQuestions[i].QuestionaryAnswerOptions[answr].SelectableAnswerId"/>
+                                                        <input asp-for="@Model.QuestionaryQuestions[i].QuestionaryAnswerOptions[answr].IsInvolvesComment" type="checkbox" class="form-check-input">
+                                                        <label asp-for="@Model.SelectableAnswers[answr].IsInvolvesComment" class="form-check-label align-bottom">Комментарий</label>
+                                                    </div>
+                                                </div>
+                                            }
                                         </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -274,7 +292,7 @@
                     </div>
                 </div>
 
-                <div class="form-group option-container input-field-type">
+                <div class="form-group option-container input-field-type col">
 
                 </div>
 

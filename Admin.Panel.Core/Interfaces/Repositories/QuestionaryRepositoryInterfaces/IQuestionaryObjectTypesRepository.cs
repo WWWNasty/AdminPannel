@@ -13,5 +13,6 @@ namespace Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfac
         public Task<List<QuestionaryObjectType>> GetAllActiveForUserAsync(int userId);
         public Task<QuestionaryObjectType> CreateAsync(QuestionaryObjectType obj);
         public Task<QuestionaryObjectType> UpdateAsync(QuestionaryObjectType obj);
+        public Task<List<QuestionaryObjectType>> GetAllCurrent(int id);
     }
 }

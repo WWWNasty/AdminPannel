@@ -154,8 +154,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                 
                                 foreach (var option in question.QuestionaryAnswerOptions)
                                 {
-                                    
-                                        //add answr option
+                                    //add answr option
                                         cn.Execute(
                                             @"INSERT INTO  QuestionaryAnswerOptions(QuestionaryId,SelectableAnswerId,IsInvolvesComment)
 		                                                VALUES (@QuestionaryId,@SelectableAnswerId,@IsInvolvesComment)",
@@ -165,7 +164,6 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                                 SelectableAnswerId = option.SelectableAnswerId,
                                                 QuestionaryId = questionId
                                             }, transaction);
-                                    
                                 }
                             }
                         }

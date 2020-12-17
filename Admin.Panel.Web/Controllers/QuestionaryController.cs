@@ -31,8 +31,8 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "SuperAdministrator, QuestionaryEdit")]
         public async Task<IActionResult> Create()
         {
-            QuestionaryDto mod = new QuestionaryDto();
-            QuestionaryDto model = await _questionaryService.GetAllForQuestionaryCreate(mod);
+            QuestionaryDto model = new QuestionaryDto();
+            model = await _questionaryService.GetAllForQuestionaryCreate(model);
             model.QuestionaryQuestions.Add(new QuestionaryQuestions());
             return View(model);
         }
@@ -66,9 +66,10 @@ namespace Admin.Panel.Web.Controllers
         [Authorize(Roles = "QuestionaryEdit")]
         public async Task<IActionResult> CreateForUser()
         {
-            QuestionaryDto mod = new QuestionaryDto();
+            QuestionaryDto model = new QuestionaryDto();
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var model = await _questionaryService.GetAllForQuestionaryForUserCreate(mod, userId);
+            model = await _questionaryService.GetAllForQuestionaryForUserCreate(model, userId);
+            model.QuestionaryQuestions.Add(new QuestionaryQuestions());
             return View("Create", model);
         }
 
@@ -201,6 +202,14 @@ namespace Admin.Panel.Web.Controllers
         {
             QuestionaryDto model = await _questionaryService.AnswersGetAll(id, index, qqId);
             return PartialView("_SelectableAnswers", model);
+        }
+        
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> ObjectTypesGetAll(int id)
+        {
+            QuestionaryDto model = await _questionaryService.ObjectTypesGetAll(id);
+            return PartialView("_ObjectTypes", model);
         }
     }
 }

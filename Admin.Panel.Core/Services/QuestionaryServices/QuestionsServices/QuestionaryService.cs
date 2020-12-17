@@ -50,7 +50,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
 
         private async Task<QuestionaryDto> GetAllForQuestionaryUser(string idUser)
         {
-            List<QuestionaryObjectType> objectTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
+            List<QuestionaryObjectType> objectTypes = await _questionaryObjectTypesRepository.GetAllActiveForUserAsync(Convert.ToInt32(idUser));
             List<SelectableAnswersLists> answersListTypes = await _selectableAnswersListRepository.GetAllActiveAsync();
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(idUser);
             QuestionaryDto obj = new QuestionaryDto();
@@ -114,7 +114,6 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
         {
             var allForObj = await GetAllForQuestionaryUser(idUser);
             model.ApplicationCompanies = allForObj.ApplicationCompanies;
-            model.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes;
             model.SelectableAnswersLists = allForObj.SelectableAnswersLists;
             if (model.QuestionaryQuestions != null)
             {
@@ -131,6 +130,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
                     }
                 }
             }
+            model.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes.Where(t => t.CompanyId == model.CompanyId).ToList();
 
             return model;
         }
@@ -176,6 +176,13 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
                 model.QuestionaryQuestions.Add( new QuestionaryQuestions());
             }
             model.SelectableAnswers = await _selectableAnswersListRepository.GetSelectableAnswersAsync(id);
+            return model;
+        }
+
+        public async Task<QuestionaryDto> ObjectTypesGetAll(int id)
+        {
+            QuestionaryDto model = new QuestionaryDto();
+            model.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllCurrent(id);
             return model;
         }
     }

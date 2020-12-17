@@ -111,7 +111,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 {
                     var query = @"SELECT * FROM Companies c 
                                     INNER JOIN ApplicationUserCompany ac ON c.CompanyId = ac.CompanyId
-                                        WHERE c.IsUsed = 1 AND ac.UserId =@UserId";
+                                        WHERE c.IsUsed = 1 AND ac.UserId = @UserId";
                     var сompanies = await connection.QueryAsync<ApplicationCompany>(query, new {@UserId = Convert.ToInt32(userId)});
                     return сompanies.ToList();
                 }

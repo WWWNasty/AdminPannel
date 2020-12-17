@@ -79,10 +79,10 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     int[] companiesId = connection
                         .Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @Id",
                             new {@Id = userId}).ToArray();
-                    
+
                     var query = @"SELECT t.*, c.CompanyName AS CompanyName  FROM QuestionaryObjectTypes AS t 
-                    INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId WHERE CompanyId IN @CompanyId";
-                    var result = connection.Query<QuestionaryObjectType>(query, new{CompanyId = companiesId}).ToList();
+                    INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId WHERE t.CompanyId IN @CompanyId";
+                    var result = connection.Query<QuestionaryObjectType>(query, new {CompanyId = companiesId}).ToList();
                     return result;
                 }
                 catch (Exception ex)
@@ -121,10 +121,10 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     int[] companiesId = connection
                         .Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @Id",
                             new {@Id = userId}).ToArray();
-                    
+
                     var query = @"SELECT t.*, c.CompanyName AS CompanyName  FROM QuestionaryObjectTypes AS t 
-                    INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId WHERE t.IsUsed = 1 AND CompanyId IN @CompanyId";
-                    var result = connection.Query<QuestionaryObjectType>(query, new{CompanyId = companiesId}).ToList();
+                    INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId WHERE t.IsUsed = 1 AND t.CompanyId IN @CompanyId";
+                    var result = connection.Query<QuestionaryObjectType>(query, new {CompanyId = companiesId}).ToList();
                     return result;
                 }
                 catch (Exception ex)
@@ -149,21 +149,6 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 VALUES(@Name,1, @CompanyId);
                                 SELECT QuestionaryObjectTypeId = @@IDENTITY";
                         var objTypeId = cn.ExecuteScalar<int>(query, obj, transaction);
-
-                        // if (obj.SelectedPropertiesId != null)
-                        // {
-                        //     foreach (int objectProperty in obj.SelectedPropertiesId)
-                        //     {
-                        //         cn.Execute(
-                        //             @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
-                        //                           VALUES (@QuestionaryObjectTypeId,@ObjectPropertyId)",
-                        //             new ObjectPropertyToObjectTypes
-                        //             {
-                        //                 QuestionaryObjectTypeId = objTypeId,
-                        //                 ObjectPropertyId = Convert.ToInt32(objectProperty),
-                        //             }, transaction);
-                        //     }
-                        // }
 
                         if (obj.ObjectProperties != null)
                         {
@@ -218,26 +203,6 @@ namespace Admin.Panel.Data.Repositories.Questionary
                          WHERE Id=@Id";
                         await connection.ExecuteAsync(query, obj, transaction);
 
-                        // //дропаем все проперти обьекту
-                        // connection.Execute(
-                        //     @"DELETE FROM ObjectPropertyToObjectTypes WHERE QuestionaryObjectTypeId = @QuestionaryObjectTypeId",
-                        //     new {QuestionaryObjectTypeId = obj.Id},transaction);
-                        // //добавляем проперти если есть обьекту
-                        // if (obj.SelectedPropertiesId != null)
-                        // {
-                        //     foreach (int objectProperty in obj.SelectedPropertiesId)
-                        //     {
-                        //         connection.Execute(
-                        //             @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
-                        //                               VALUES (@QuestionaryObjectTypeId,@ObjectPropertyId)",
-                        //             new ObjectPropertyToObjectTypes
-                        //             {
-                        //                 QuestionaryObjectTypeId = obj.Id,
-                        //                 ObjectPropertyId = Convert.ToInt32(objectProperty),
-                        //             },transaction);
-                        //     }
-                        // }
-
                         List<ObjectProperty> newProperties = new List<ObjectProperty>();
                         List<ObjectProperty> oldProperties = new List<ObjectProperty>();
 
@@ -290,6 +255,27 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     {
                         throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                     }
+                }
+            }
+        }
+
+        public async Task<List<QuestionaryObjectType>> GetAllCurrent(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                try
+                {
+                    var query = @"SELECT * FROM QuestionaryObjectTypes WHERE CompanyId = @CompanyId AND IsUsed = 1";
+                    var result =
+                         connection.Query<QuestionaryObjectType>(query,
+                            new {@CompanyId = id});
+                    return result.ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
                 }
             }
         }

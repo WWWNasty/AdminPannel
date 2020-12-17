@@ -101,10 +101,12 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     int[] companiesId = connection
                         .Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @Id",
                             new {@Id = userId}).ToArray();
-                    
+                    int[] objectTypeId = connection
+                        .Query<int>(@"SELECT o.Id FROM QuestionaryObjectTypes o WHERE CompanyId IN @CompaniesId",
+                            new {@CompaniesId = companiesId}).ToArray();
                     var result = connection
-                        .Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE CompanyId IN @CompanyId",
-                            new {@CompanyId = companiesId}).ToList();
+                        .Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE ObjectTypeId IN @ObjectTypeId",
+                            new {@ObjectTypeId = objectTypeId}).ToList();
                     
                     return result;
                 }

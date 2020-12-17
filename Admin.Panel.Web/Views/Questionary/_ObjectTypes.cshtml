@@ -1,0 +1,19 @@
+@model Admin.Panel.Core.Entities.Questionary.Questions.QuestionaryDto
+
+<div class="form-group">
+    <div class="col">
+        <div class="col-md-10">
+            <div class="col">
+                <div class="row">
+                    <label asp-for="QuestionaryObjectTypes">Выберите тип объекта</label>
+                </div>
+                <div class="row">
+                    <select class="new-selectpicker" asp-for="ObjectTypeId" 
+                            asp-items="Model.QuestionaryObjectTypes.Select(o => new SelectListItem(o.Name, o.Id.ToString()))" required>
+                        <option selected="selected" disabled="disabled"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

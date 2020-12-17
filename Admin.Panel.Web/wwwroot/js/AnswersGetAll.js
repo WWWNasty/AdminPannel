@@ -14,4 +14,21 @@ const loadAnswers = async event => {
     $(element).find('.new-selectpicker').selectpicker();
 };
 
-input.change(loadAnswers); 
+input.change(loadAnswers);
+
+let idToObjType = $('.companyIdToObjType');
+const loadObjectType = async event => {
+    const id = event.target.value;
+debugger;
+    const partial = await $.get(global.GetUri(`Questionary/ObjectTypesGetAll/${id}`));
+
+    const parent = $(event.target).parents('#object-type-container');
+
+    const element = parent.find('.object-type-container');
+
+    element.html(partial);
+
+    $(element).find('.new-selectpicker').selectpicker();
+};
+
+idToObjType.change(loadObjectType);
