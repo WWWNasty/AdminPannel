@@ -40,7 +40,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
 					                                                                po.QuestionaryObjectTypeId = @QuestionaryObjectTypeId",
                         new {QuestionaryObjectTypeId = id}).ToList();
 
-                    obj.ObjectProperties = properties;
+                    obj.ObjectProperties = properties.Count == 0 ? new List<ObjectProperty>() {new ObjectProperty()} : properties;
                     return obj;
                 }
                 catch (Exception ex)

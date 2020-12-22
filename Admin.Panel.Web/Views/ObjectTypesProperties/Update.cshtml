@@ -25,6 +25,13 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" name="Id" value="@Model.Id"/>
+        <div class="form-group">
+            <div class="col-md-10">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" required>
+            </div>
+        </div>
         <div class="col">
             <div class="form-group">
                 <div class="col-md-10">
@@ -41,50 +48,44 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" name="Id" value="@Model.Id"/>
-        <div class="form-group">
-            <div class="col-md-10">
-                <label asp-for="Name"></label>
-                <input asp-for="Name" class="form-control" required>
-            </div>
-        </div>
-
+        
         @foreach (int i in Range(0, Model.ObjectProperties.Count))
-        {
-            <div class="col-md-10 mt-4 voting-option-set mt-3 card" id="0">
-                <div class="col">
+            {
+                <div class="col-md-10 mt-4 voting-option-set mt-3 card" id="0">
                     <div class="col">
-                        <div class="row mt-3">
-                            <div class="col-md-9">
-                                <input type="hidden" asp-for="@Model.ObjectProperties[i].Id"/>
-                                        <label asp-for="ObjectProperties[i].Name">Название свойства</label>
-                                <input asp-for="ObjectProperties[i].Name" class="form-control" required>
+                        <div class="col">
+                            <div class="row mt-3">
+                                <div class="col-md-9">
+                                    <input type="hidden" asp-for="@Model.ObjectProperties[i].Id"/>
+                                    <label asp-for="ObjectProperties[i].Name">Название свойства</label>
+                                    <input asp-for="ObjectProperties[i].Name" class="form-control" required>
+                                </div>
+                                <div class="col mt-5 form-check">
+                                    <input asp-for="ObjectProperties[i].IsUsed" type="checkbox" class="form-check-input"/>
+                                    <label asp-for="ObjectProperties[i].IsUsed" class="form-check-label align-bottom">Это свойство активно</label>
+                                </div>
                             </div>
-                            <div class="col mt-5 form-check">
-                                <input asp-for="ObjectProperties[i].IsUsed" type="checkbox" class="form-check-input"/>
-                                <label asp-for="ObjectProperties[i].IsUsed" class="form-check-label align-bottom">Это свойство активно</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="col">
+                            <div class="row mt-2">
+                                <div class="col-md-9">
+                                    <label asp-for="ObjectProperties[i].NameInReport"></label>
+                                    <input asp-for="ObjectProperties[i].NameInReport" class="form-control" required>
+                                </div>
+                                <div class="col form-group form-check mt-5">
+                                    <input asp-for="ObjectProperties[i].IsUsedInReport" type="checkbox" class="form-check-input"/>
+                                    <label asp-for="ObjectProperties[i].IsUsedInReport" class="form-check-label align-bottom"></label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="col">
-                        <div class="row mt-2">
-                            <div class="col-md-9">
-                                <label asp-for="ObjectProperties[i].NameInReport"></label>
-                                <input asp-for="ObjectProperties[i].NameInReport" class="form-control" required>
-                            </div>
-                            <div class="col form-group form-check mt-5">
-                                <input asp-for="ObjectProperties[i].IsUsedInReport" type="checkbox" class="form-check-input"/>
-                                <label asp-for="ObjectProperties[i].IsUsedInReport" class="form-check-label align-bottom"></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
+            }
 
-        <span style="display: none" id="answer-options-count">@Model.ObjectProperties.Count</span>
+            <span style="display: none" id="answer-options-count">@Model.ObjectProperties.Count</span>
+        
 
         <div class="col-sm-7 mt-2 add-container">
             <input type="button" value="Добавить свойство" class="add btn btn-outline-secondary mt-3"/>
