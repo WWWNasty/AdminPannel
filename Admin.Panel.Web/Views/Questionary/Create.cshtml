@@ -393,6 +393,8 @@ else
 
 </div>
 
+<div id="reactRoot"></div>
+
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
@@ -400,5 +402,10 @@ else
     <script src="~/js/query-sortable.js"></script>
     <script src="~/js/QuestionaryQuestions.js"></script>
     <script src="~/js/AnswersGetAll.js"></script>
-
+    
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@@material-ui/core@4.11.2/umd/material-ui.production.min.js"></script>
+    
+    <script src="~/js/react/App.js"></script>
 }
