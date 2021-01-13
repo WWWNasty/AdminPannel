@@ -106,7 +106,6 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
                     }
                 }
             }
-
             return model;
         }
 

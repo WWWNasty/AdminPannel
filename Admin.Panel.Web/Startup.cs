@@ -80,6 +80,7 @@ namespace Admin.Panel.Web
                 options.Password.RequireUppercase = true;
                 options.Password.RequireDigit = true;
             });
+            services.AddControllers();
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
             services.AddRazorPages();
@@ -110,6 +111,7 @@ namespace Admin.Panel.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

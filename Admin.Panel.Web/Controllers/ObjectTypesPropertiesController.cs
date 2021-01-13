@@ -32,7 +32,7 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "SuperAdministrator, TypesObjectRead")]
+        [Authorize(Roles = "SuperAdministrator")]
         public async Task<ActionResult> GetAll()
         {
             List<QuestionaryObjectType> model = await _questionaryObjectTypesRepository.GetAllAsync();
