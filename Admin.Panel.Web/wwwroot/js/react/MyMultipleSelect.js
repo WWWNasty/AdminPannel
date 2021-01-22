@@ -1,4 +1,6 @@
 const MyMultipleSelect = props => {
+  console.log(props);
+
   function getStyles(name, personName, theme) {
     return {
       fontWeight: personName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium
@@ -27,7 +29,8 @@ const MyMultipleSelect = props => {
   const MenuProps = {
     PaperProps: {
       style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP // width: 250,
+        maxHeight: 700 //ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        // width: 250,
 
       }
     }
@@ -39,10 +42,11 @@ const MyMultipleSelect = props => {
   };
 
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(FormControl, {
+    required: true,
     className: `${classes.formControl} col-md-3`
   }, /*#__PURE__*/React.createElement(InputLabel, {
     id: "demo-mutiple-chip-label"
-  }, "Chip"), /*#__PURE__*/React.createElement(Select, {
+  }, props.selectName), /*#__PURE__*/React.createElement(Select, {
     labelId: "demo-mutiple-chip-label",
     id: "demo-mutiple-chip",
     multiple: true,
@@ -53,18 +57,19 @@ const MyMultipleSelect = props => {
     }),
     renderValue: selected => /*#__PURE__*/React.createElement("div", {
       className: classes.chips
-    }, props.selectOptions.filter(option => selected.indexOf(option.id) > -1).map(option => /*#__PURE__*/React.createElement(Chip, {
+    }, props.selectOptions.flatMap(option => option.questionaryObjects).filter(option => selected.indexOf(option.id) > -1).map(option => /*#__PURE__*/React.createElement(Chip, {
       key: option.id,
       label: option.name,
       className: classes.chip
     }))),
     MenuProps: MenuProps
-  }, props.selectOptions.map(item => /*#__PURE__*/React.createElement(MenuItem, {
-    value: item.id
+  }, props.selectOptions?.map(item => [/*#__PURE__*/React.createElement(ListSubheader, null, item.name), item.questionaryObjects.map(object => /*#__PURE__*/React.createElement(MenuItem, {
+    key: object.id,
+    value: object.id
   }, /*#__PURE__*/React.createElement(Checkbox, {
-    checked: props.selectedValue.indexOf(item.id) > -1
+    checked: props.selectedValue.indexOf(object.id) > -1
   }), /*#__PURE__*/React.createElement(ListItemText, {
-    primary: item.name
-  }))))));
+    primary: object.name
+  })))]))));
 };
 //# sourceMappingURL=MyMultipleSelect.js.map

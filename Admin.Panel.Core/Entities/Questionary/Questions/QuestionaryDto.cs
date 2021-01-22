@@ -42,6 +42,8 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         
         [Display(Name = "Ответ по умолчанию")]
         public List<SelectableAnswers> SelectableAnswers { get; set; }
+        public List<QuestionaryObject> QuestionaryObjects { get; set; }
+        public List<ObjectProperty> ObjectProperties { get; set; }
         public int IndexCurrentQuestion { get; set; }
         public bool IfQuestionaryCurrentInCompany { get; set; }
 

@@ -8,6 +8,10 @@ const DraggableCard = (props) =>{
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setState({ ...state, [event.target.name]: event.target.checked });
     };
+    const removeFriend = index => () => {
+        props.setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
+        props.setCounter(prevCounter => prevCounter - 1);
+    };
     const useStyles = makeStyles((theme: any) =>
         createStyles({
             root: {
@@ -45,7 +49,7 @@ const DraggableCard = (props) =>{
                         />
                     </div>
                     <div className='row'>
-                        <TextField id="standard-basic" label="Текст вопроса" />
+                        <TextField required id="standard-basic" label="Текст вопроса" />
                         <FormControlLabel
                             control={
                                 <Switch
@@ -55,7 +59,7 @@ const DraggableCard = (props) =>{
                                     color="primary"
                                 />
                             }
-                            label="Вопрос активен"
+                            label="Обязательный вопрос"
                         />
                        
                     </div>
@@ -93,7 +97,7 @@ const DraggableCard = (props) =>{
                 </div>
               
                 <ListItemSecondaryAction>
-                    <IconButton>
+                    <IconButton onClick={removeFriend(props.index)}>
                         <Icon>delete</Icon>
                     </IconButton>
                 </ListItemSecondaryAction>

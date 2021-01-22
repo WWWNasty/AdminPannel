@@ -10,7 +10,6 @@ const sortable = Sortable.create(el, {
             ctrl = evt.target;
         if (Sortable.utils.is(ctrl, ".js-remove")) {
             // Click on remove button
-            debugger;
             const container = $(item).parents("form");
             let inputs = $(container).children('input');
             let is_def = $(item).find(".isdef").attr("name");
@@ -24,13 +23,11 @@ const sortable = Sortable.create(el, {
 
                 let nameHidden = $(this).attr("name");
                 if (is_def === nameHidden || is_comment === nameHidden) {
-                    debugger;
                     $(this).remove();
                     console.log('хиддены удалены');
                 }
 
             });
-            debugger;
             let setsSimpleList = $('#simpleList').children('.voting-option-set');
             $(setsSimpleList).each((index, element) => {
 
@@ -72,7 +69,6 @@ const sortable = Sortable.create(el, {
             const order = sortable.toArray();
             console.log(order);
 
-            debugger;
             //откуда берем data-id
             let votingOptionSets = $('#simpleList').find(".voting-option-set").toArray();
             //куда записываем индекс

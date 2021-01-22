@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Entities.Questionary.Questions;
@@ -28,12 +29,23 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "SuperAdministrator")]
+        [Authorize]
         public async Task<ActionResult<QuestionaryDto>> Get()
         {
             QuestionaryDto model = new QuestionaryDto();
-            model = await _questionaryService.GetAllForQuestionaryCreate(model);
+
+            if (User.IsInRole("SuperAdministrator"))
+            {
+                model = await _questionaryService.GetAllForQuestionaryCreate(model);
+            }
+            else
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                model = await _questionaryService.GetAllForQuestionaryForUserCreate(model, userId);
+            }
             return Ok(model);
         }
+      
+        
     }
 }

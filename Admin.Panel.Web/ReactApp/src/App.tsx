@@ -8,6 +8,9 @@
 
 declare const MaterialUI;
 declare const ReactBeautifulDnd;
+declare const ReactHookForm;
+declare const yup;
+
 
 const {
     colors,
@@ -59,16 +62,19 @@ const {
     createStyles,
     FormGroup,
     Slide,
-    StepLabel
+    StepLabel,
+    Collapse,
+    Snackbar
 } = MaterialUI;
 
 const { DragDropContext, Draggable, Droppable } = ReactBeautifulDnd;
 const {useState} = React;
+const {useForm, Controller, useFormContext} = ReactHookForm;
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '95%',
-    },
+    },  
     button: {
         marginRight: theme.spacing(1),
     },
@@ -95,6 +101,9 @@ function getStepContent(step) {
     const [companies, setCompanies] =   React.useState<SelectOption[]>([]);
     const [selectedCompanies, setSelectedCompanies] = React.useState<number[]>([]);
     
+    const [selectedQuestionaryObject, setQuestionaryObject] = React.useState([]);
+    const [objectProperties, setObjectProperties] = React.useState([]);
+    
     React.useEffect(() => {
         (async () => {
             const response = await fetch("/api/QuestionaryApi", {
@@ -102,13 +111,13 @@ function getStepContent(step) {
                 headers: {"Accept": "application/json"},
                 credentials: "include"
             });
-            debugger;
             // console.log(response);
             if (response.ok === true) {
                 const selectOptions = await response.json();
-                // console.log(selectOptions);
                 let opt: SelectOption[] = selectOptions.questionaryObjectTypes;
                 setObjectTypes(opt);
+                let prop: TypeObjectProperties[] = selectOptions.objectProperties;
+                setObjectProperties(prop);
                 let companies: SelectOption[] = selectOptions.applicationCompanies.map(company => ({id: company.companyId, name: company.companyName}));
                 setCompanies(companies);
             }
@@ -117,10 +126,12 @@ function getStepContent(step) {
     
     switch (step) {
         case 0:
-            return <FirstStep selectOptionsTypes = {objectTypes} selectedValueTypes = {selectedObjectType} setSelectedValueTypes = {setSelectedObjectType}
+            return <FirstStep setObjectTypes={setObjectTypes} selectOptionsTypes = {objectTypes} selectedValueTypes = {selectedObjectType} setSelectedValueTypes = {setSelectedObjectType}
                               selectOptionsСompanies = {companies} selectedValueСompanies = {selectedCompanies} setSelectedValueСompanies = {setSelectedCompanies}/>;
         case 1:
-            return <SecondStep selectOptionsСompanies = {companies} selectedValueСompanies = {selectedCompanies} setSelectedValueСompanies = {setSelectedCompanies}/>;
+            return <SecondStep
+                objectProperties={objectProperties} setObjectProperties={setObjectProperties}
+                selectOptions = {objectTypes} selectedValue = {selectedQuestionaryObject} setSelectedValue = {setQuestionaryObject}/>;
         case 2:
             return <ThirdStep/>;
         default:
@@ -289,9 +300,23 @@ function HorizontalLabelPositionBelowStepper() {
 }
 
 function App() {
+    const dialogForm = useForm();
+    const {register, handleSubmit} = dialogForm;
+    const onSubmit = data => {
+        console.log(data);
+        const response = fetch("/api/ObjectTypeApi", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            credentials: "include",
+            body: JSON.stringify(data)
+        })
+    };
+    
     return (
         <div>
-            <HorizontalLabelPositionBelowStepper/>
+            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+                <HorizontalLabelPositionBelowStepper/>
+            </form>
             <CloseAlertDialog/>
         </div>
         );

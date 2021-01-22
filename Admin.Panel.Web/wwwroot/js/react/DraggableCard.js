@@ -14,6 +14,11 @@ const DraggableCard = props => {
     });
   };
 
+  const removeFriend = index => () => {
+    props.setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
+    props.setCounter(prevCounter => prevCounter - 1);
+  };
+
   const useStyles = makeStyles(theme => createStyles({
     root: {
       width: '80%'
@@ -49,6 +54,7 @@ const DraggableCard = props => {
   })), /*#__PURE__*/React.createElement("div", {
     className: "row"
   }, /*#__PURE__*/React.createElement(TextField, {
+    required: true,
     id: "standard-basic",
     label: "\u0422\u0435\u043A\u0441\u0442 \u0432\u043E\u043F\u0440\u043E\u0441\u0430"
   }), /*#__PURE__*/React.createElement(FormControlLabel, {
@@ -58,7 +64,7 @@ const DraggableCard = props => {
       name: "checked",
       color: "primary"
     }),
-    label: "\u0412\u043E\u043F\u0440\u043E\u0441 \u0430\u043A\u0442\u0438\u0432\u0435\u043D"
+    label: "\u041E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0432\u043E\u043F\u0440\u043E\u0441"
   })), /*#__PURE__*/React.createElement("div", {
     className: `${classes.root} mt-3`
   }, /*#__PURE__*/React.createElement(Accordion, null, /*#__PURE__*/React.createElement(AccordionSummary, {
@@ -91,6 +97,8 @@ const DraggableCard = props => {
       name: "antoine"
     }),
     label: "Antoine Llorca"
-  }))))))), /*#__PURE__*/React.createElement(ListItemSecondaryAction, null, /*#__PURE__*/React.createElement(IconButton, null, /*#__PURE__*/React.createElement(Icon, null, "delete")))));
+  }))))))), /*#__PURE__*/React.createElement(ListItemSecondaryAction, null, /*#__PURE__*/React.createElement(IconButton, {
+    onClick: removeFriend(props.index)
+  }, /*#__PURE__*/React.createElement(Icon, null, "delete")))));
 };
 //# sourceMappingURL=DraggableCard.js.map

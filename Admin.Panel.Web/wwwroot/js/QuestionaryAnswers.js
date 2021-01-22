@@ -23,7 +23,7 @@ $('.add').click(function () {
     //spans.each((_, span) => span.setAttribute('data-valmsg-for', span.data_valmsg_for.replace('0', countAnsw.toString())));
 
     newNode.classList.add('answer-option');
-debugger;
+
     //откуда берем data-id
     let votingOptionSets = $('#simpleList').find(".voting-option-set").toArray();
     //куда записываем индекс
@@ -52,7 +52,6 @@ function addDeleteButtonHandler() {
 }
 
 function deleteVotingOption() {
-    debugger;
     if (countAnsw > 1) {
         let del = $('.answer-option').last().remove();
         countAnsw--;
@@ -65,7 +64,6 @@ $(document).ready(async () => {
     addDeleteButtonHandler();
 })
 function firstSequenceOrder(){
-    debugger;
     const container = $('#simpleList');
     let inputContainer = $(container).find(".aa-container");
     let order = $(inputContainer).find("#init-sequence-order")

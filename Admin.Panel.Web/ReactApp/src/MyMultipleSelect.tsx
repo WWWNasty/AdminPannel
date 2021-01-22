@@ -1,4 +1,12 @@
-const MyMultipleSelect = (props) => {
+interface QuestionaryObjecTypes extends SelectOption {
+    questionaryObjects: SelectOption[];
+    companyId: number;
+}
+
+const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selectedValue: any, setSelectedValue: any, selectName: string }) => {
+
+    console.log(props);
+
     function getStyles(name, personName, theme) {
         return {
             fontWeight:
@@ -7,6 +15,7 @@ const MyMultipleSelect = (props) => {
                     : theme.typography.fontWeightMedium,
         };
     }
+
     const useStyles = makeStyles((theme) => ({
         formControl: {
             margin: theme.spacing(0),
@@ -30,7 +39,8 @@ const MyMultipleSelect = (props) => {
     const MenuProps = {
         PaperProps: {
             style: {
-                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                 maxHeight: 700,
+                 //ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
                 // width: 250,
             },
         },
@@ -41,37 +51,37 @@ const MyMultipleSelect = (props) => {
     };
     return (
         <div>
-            <FormControl className={`${classes.formControl} col-md-3`}>
-                <InputLabel id="demo-mutiple-chip-label">Chip</InputLabel>
+            <FormControl required className={`${classes.formControl} col-md-3`}>
+                <InputLabel id="demo-mutiple-chip-label">{props.selectName}</InputLabel>
                 <Select
                     labelId="demo-mutiple-chip-label"
                     id="demo-mutiple-chip"
                     multiple
                     value={props.selectedValue}
                     onChange={handleChange}
-                    input={<Input id="select-multiple-chip" />}
+                    input={<Input id="select-multiple-chip"/>}
                     renderValue={(selected) => (
                         <div className={classes.chips}>
-                            {props.selectOptions.filter(option => selected.indexOf(option.id) > -1).map((option) => (
-                                <Chip key={option.id} label={option.name} className={classes.chip} />
-                            ))}
+                            {props.selectOptions
+                                .flatMap(option => option.questionaryObjects)
+                                .filter(option => selected.indexOf(option.id) > -1)
+                                .map((option) =>
+                                    <Chip key={option.id} label={option.name} className={classes.chip}/>
+                                )}
                         </div>
                     )}
-                    MenuProps={MenuProps}
-                >
-                    {props.selectOptions.map((item) =>
-                        <MenuItem value={item.id}>
-                            <Checkbox checked={props.selectedValue.indexOf(item.id) > -1} />
-                            <ListItemText primary={item.name} />
-                        </MenuItem>)}
+                    MenuProps={MenuProps}>
 
+                    {props.selectOptions?.map(item => [
+                        <ListSubheader>{item.name}</ListSubheader>,
+                        item.questionaryObjects.map((object) =>
+                            <MenuItem key={object.id} value={object.id}>
+                                <Checkbox checked={props.selectedValue.indexOf(object.id) > -1}/>
+                                <ListItemText primary={object.name}/>
+                            </MenuItem>)
+                    ])}
+                    
                 </Select>
-                {/*<ListSubheader>Category 1</ListSubheader>*/}
-                {/*<MenuItem value={1}>Option 1</MenuItem>*/}
-                {/*<MenuItem value={2}>Option 2</MenuItem>*/}
-                {/*<ListSubheader>Category 2</ListSubheader>*/}
-                {/*<MenuItem value={3}>Option 3</MenuItem>*/}
-                {/*<MenuItem value={4}>Option 4</MenuItem>*/}
             </FormControl>
         </div>
     );

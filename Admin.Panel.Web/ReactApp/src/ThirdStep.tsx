@@ -1,12 +1,24 @@
-const ThirdStep = () =>{
-    return(
+const ThirdStep = () => {
+    const {register, handleSubmit} = useForm();
+
+    const onSubmit = data => {
+        console.log(data);
+    };
+
+
+    return (
         <div>
-            <DraggableComponent/>
-            <div>
-                <IconButton color="primary" aria-label="add" className="mt-50 mb-50 ml-50">
-                    <Icon>add</Icon>
-                </IconButton>
-            </div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <TextField
+                    required
+                    autoFocus
+                    margin="dense"
+                    id="standard-required"
+                    label="Название"
+                    fullWidth
+                />
+                <DraggableComponent/>
+            </form>
         </div>
     );
 }

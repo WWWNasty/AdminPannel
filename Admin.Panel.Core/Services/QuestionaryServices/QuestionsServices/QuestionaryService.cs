@@ -19,6 +19,8 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
         private readonly ICompanyRepository _companyRepository;
         private readonly IQuestionaryRepository _questionaryRepository;
         private readonly IQuestionaryInputFieldTypesRepository _fieldTypesRepository;
+        private readonly IQuestionaryObjectRepository _questionaryObjectRepository;
+        private readonly IObjectPropertiesRepository _objectPropertiesRepository;
 
         public QuestionaryService(
             IQuestionaryObjectTypesRepository questionaryObjectTypesRepository,
@@ -26,7 +28,9 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             IQuestionaryInputFieldTypesRepository questionaryInputFieldTypesRepository,
             ICompanyRepository companyRepository,
             IQuestionaryRepository questionaryRepository, 
-            IQuestionaryInputFieldTypesRepository fieldTypesRepository)
+            IQuestionaryInputFieldTypesRepository fieldTypesRepository, 
+            IQuestionaryObjectRepository questionaryObjectRepository, 
+            IObjectPropertiesRepository objectPropertiesRepository)
         {
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
             _selectableAnswersListRepository = selectableAnswersListRepository;
@@ -34,6 +38,8 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             _companyRepository = companyRepository;
             _questionaryRepository = questionaryRepository;
             _fieldTypesRepository = fieldTypesRepository;
+            _questionaryObjectRepository = questionaryObjectRepository;
+            _objectPropertiesRepository = objectPropertiesRepository;
         }
 
         private async Task<QuestionaryDto> GetAllForQuestionary()
@@ -41,10 +47,14 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             List<QuestionaryObjectType> objectTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
             List<SelectableAnswersLists> answersListTypes = await _selectableAnswersListRepository.GetAllActiveAsync();
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveAsync();
+            List<QuestionaryObject> objects = await _questionaryObjectRepository.GetAllActiveAsync();
+            List<ObjectProperty> prop = await _objectPropertiesRepository.GetAllAsync();
             QuestionaryDto obj = new QuestionaryDto();
             obj.ApplicationCompanies = companies;
             obj.QuestionaryObjectTypes = objectTypes;
             obj.SelectableAnswersLists = answersListTypes;
+            obj.QuestionaryObjects = objects;
+            obj.ObjectProperties = prop;
             return obj;
         }
 
@@ -53,10 +63,14 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             List<QuestionaryObjectType> objectTypes = await _questionaryObjectTypesRepository.GetAllActiveForUserAsync(Convert.ToInt32(idUser));
             List<SelectableAnswersLists> answersListTypes = await _selectableAnswersListRepository.GetAllActiveAsync();
             List<ApplicationCompany> companies = await _companyRepository.GetAllActiveForUserAsync(idUser);
+            List<QuestionaryObject> objects = await _questionaryObjectRepository.GetAllActiveForUserAsync(Convert.ToInt32(idUser));
+
             QuestionaryDto obj = new QuestionaryDto();
             obj.ApplicationCompanies = companies;
             obj.QuestionaryObjectTypes = objectTypes;
             obj.SelectableAnswersLists = answersListTypes;
+            obj.QuestionaryObjects = objects;
+
             return obj;
         }
 
@@ -65,6 +79,12 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             var obj = await GetAllForQuestionary();
             model.ApplicationCompanies = obj.ApplicationCompanies;
             model.QuestionaryObjectTypes = obj.QuestionaryObjectTypes;
+            //получить все объекты и пропсы для типов объектов
+            foreach (var objectType in model.QuestionaryObjectTypes)
+            {
+                objectType.ObjectProperties = obj.ObjectProperties.Where(p => p.QuestionaryObjectTypeId == objectType.Id).ToList();
+                objectType.QuestionaryObjects = obj.QuestionaryObjects.Where(o => o.ObjectTypeId == objectType.Id).ToList();
+            }
             model.SelectableAnswersLists = obj.SelectableAnswersLists;
             if (model.QuestionaryQuestions != null)
             {
@@ -90,9 +110,16 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             var allForQuestionary = await GetAllForQuestionary();
             model.ApplicationCompanies = allForQuestionary.ApplicationCompanies;
             model.QuestionaryObjectTypes = allForQuestionary.QuestionaryObjectTypes;
+            //получить все объекты и пропсы для типов объектов 
+            foreach (var objectType in model.QuestionaryObjectTypes)
+            {
+                objectType.ObjectProperties = allForQuestionary.ObjectProperties.Where(p => p.QuestionaryObjectTypeId == objectType.Id).ToList();
+                objectType.QuestionaryObjects = allForQuestionary.QuestionaryObjects.Where(o => o.ObjectTypeId == objectType.Id).ToList();
+            }
             model.SelectableAnswersLists = allForQuestionary.SelectableAnswersLists;
             if (model.QuestionaryQuestions != null)
             {
+                //todo переделать запрос в бд без циклов
                 foreach (QuestionaryQuestions question in model.QuestionaryQuestions)
                 {
                     if (question.SelectableAnswersListId != 0)
@@ -113,6 +140,12 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
         {
             var allForObj = await GetAllForQuestionaryUser(idUser);
             model.ApplicationCompanies = allForObj.ApplicationCompanies;
+            model.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes.Where(t => t.CompanyId == model.CompanyId).ToList();
+            //получить все объекты и пропсы для типов объектов в репозитории
+            foreach (var objectType in model.QuestionaryObjectTypes)
+            {
+                objectType.QuestionaryObjects = allForObj.QuestionaryObjects.Where(o => o.ObjectTypeId == objectType.Id).ToList();
+            }
             model.SelectableAnswersLists = allForObj.SelectableAnswersLists;
             if (model.QuestionaryQuestions != null)
             {
@@ -129,8 +162,6 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
                     }
                 }
             }
-            model.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes.Where(t => t.CompanyId == model.CompanyId).ToList();
-
             return model;
         }
 
@@ -139,6 +170,11 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             var obj = await GetAllForQuestionaryUser(idUser);
             model.ApplicationCompanies = obj.ApplicationCompanies;
             model.QuestionaryObjectTypes = obj.QuestionaryObjectTypes;
+            //получить все объекты и пропсы для типов объектов в репозитории
+            foreach (var objectType in model.QuestionaryObjectTypes)
+            {
+                objectType.QuestionaryObjects = obj.QuestionaryObjects.Where(o => o.ObjectTypeId == objectType.Id).ToList();
+            }
             model.SelectableAnswersLists = obj.SelectableAnswersLists;
             if (model.QuestionaryQuestions != null)
             {

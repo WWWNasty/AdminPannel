@@ -1,13 +1,9 @@
-function CardProp() {
+function CardProp(props) {
   const classes = useStyles();
-  const [state, setState] = React.useState({
-    checked: true
-  });
 
-  const handleChange = event => {
-    setState({ ...state,
-      [event.target.name]: event.target.checked
-    });
+  const removeFriend = index => () => {
+    props.setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
+    props.setCounter(prevCounter => prevCounter - 1);
   };
 
   return /*#__PURE__*/React.createElement(Card, {
@@ -19,19 +15,31 @@ function CardProp() {
     className: 'd-flex'
   }, "\u0441\u0432\u043E\u0439\u0441\u0442\u0432\u043E", /*#__PURE__*/React.createElement(IconButton, {
     "aria-label": "delete",
-    className: `${classes.margin} ml-auto`
-  }, /*#__PURE__*/React.createElement(Icon, null, "delete")))), /*#__PURE__*/React.createElement(TextField, {
-    id: "standard-basic",
+    className: `${classes.margin} ml-auto`,
+    onClick: removeFriend(props.index)
+  }, /*#__PURE__*/React.createElement(Icon, null, "delete")))), /*#__PURE__*/React.createElement(Controller, {
+    as: TextField,
+    name: `objectProperties[${props.index}].name`,
+    className: "mr-3 col-md-3",
+    defaultValue: "",
+    required: true,
+    control: props.form.control,
     label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435"
-  }), /*#__PURE__*/React.createElement(TextField, {
-    id: "standard-basic",
+  }), /*#__PURE__*/React.createElement(Controller, {
+    as: TextField,
+    name: `objectProperties[${props.index}].nameInReport`,
+    className: "mr-3 col-md-3",
+    defaultValue: "",
+    required: true,
+    control: props.form.control,
+    margin: "dense",
     label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0432 \u043E\u0442\u0447\u0435\u0442\u0435"
   }), /*#__PURE__*/React.createElement(FormControlLabel, {
-    control: /*#__PURE__*/React.createElement(Checkbox, {
-      checked: state.checked,
-      onChange: handleChange,
-      name: "checkedB",
-      color: "primary"
+    control: /*#__PURE__*/React.createElement(Switch, {
+      className: "mr-3",
+      name: `objectProperties[${props.index}].isUsedInReport`,
+      color: "primary",
+      inputRef: props.registerForm
     }),
     label: "\u042D\u0442\u043E \u043F\u043E\u043B\u0435 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0432 \u043E\u0442\u0447\u0435\u0442\u0435"
   })));
