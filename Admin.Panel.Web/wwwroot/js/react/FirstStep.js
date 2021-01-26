@@ -10,8 +10,10 @@ const FirstStep = props => {
   const classes = useStyles();
   const [openAlertGreen, setOpenAlertGreen] = React.useState(false);
   const [openAlertRed, setOpenAlertRed] = React.useState(false);
-  const firstStepForm = useForm();
-  const selectedCompany = firstStepForm.watch('company');
+  const form = useFormContext(); //console.log(form);
+  //const { reset, register } = form;
+
+  const selectedCompany = form.watch('company');
   const availableObjectTypes = props.selectOptionsTypes.filter(type => type.companyId == selectedCompany);
 
   const handleClose = () => {
@@ -25,31 +27,26 @@ const FirstStep = props => {
   }, /*#__PURE__*/React.createElement(MySelect, {
     required: true,
     selectOptions: props.selectOptionsСompanies,
-    selectedValue: props.selectedValueСompanies,
-    form: firstStepForm,
-    name: "company",
-    setSelectedValue: selectedValue => {
-      props.setSelectedValueTypes(null);
-      props.setSelectedValueСompanies(selectedValue);
-    },
+    form: form,
+    name: "company" // setSelectedValue={selectedValue => {
+    //     props.setSelectedValueTypes(null);
+    // }} 
+    ,
     nameSwlect: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043A\u043E\u043C\u043F\u0430\u043D\u0438\u044E"
   }), /*#__PURE__*/React.createElement(MySelect, {
     required: true,
-    name: "objectType",
+    name: "objectTypeId",
     selectOptions: availableObjectTypes,
-    form: firstStepForm,
-    selectedValue: props.selectedValueTypes,
+    form: form,
     setSelectedValue: props.setSelectedValueTypes,
     nameSwlect: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0438\u043F \u043E\u0431\u044A\u0435\u043A\u0442\u0430"
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(FormDialogObjectType, {
-    form: firstStepForm,
+    form: form,
     setOpenAlertRed: setOpenAlertRed,
     setOpenAlertGreen: setOpenAlertGreen,
     setObjectTypes: props.setObjectTypes,
     selectOptionsTypes: props.selectOptionsTypes,
-    selectOptions: props.selectOptionsСompanies,
-    selectedValue: props.selectedValueСompanies,
-    setSelectedValue: props.setSelectedValueСompanies
+    selectOptions: props.selectOptionsСompanies
   })), /*#__PURE__*/React.createElement(Snackbar, {
     open: openAlertGreen,
     autoHideDuration: 6000,

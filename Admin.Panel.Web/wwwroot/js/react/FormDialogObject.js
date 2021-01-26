@@ -1,5 +1,7 @@
 const FormDialogObject = props => {
   const dialogForm = useForm();
+  const form = useFormContext();
+  const selectedObjectTypeId = form.watch('objectTypeId');
   const {
     register,
     handleSubmit,
@@ -7,9 +9,9 @@ const FormDialogObject = props => {
   } = dialogForm;
 
   const onSubmit = data => {
-    console.log(data);
-    data.a = '1';
-    const response = fetch("/api/ObjectTypeApi", {
+    data.objectTypeId = selectedObjectTypeId;
+    data.selectedObjectPropertyValues.forEach(prop => prop.objectPropertyId = Number(prop.objectPropertyId));
+    const response = fetch("/api/QuestionaryObjectApi", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -17,6 +19,16 @@ const FormDialogObject = props => {
       credentials: "include",
       body: JSON.stringify(data)
     });
+    props.setObjectTypes([data, ...props.selectOptions]);
+    setOpen(false);
+
+    if (response) {
+      props.setOpenAlertGreen(true);
+    } else {
+      props.setOpenAlertRed(true);
+    }
+
+    return false;
   };
 
   const [open, setOpen] = React.useState(false);
@@ -78,7 +90,22 @@ const FormDialogObject = props => {
     fullWidth: true,
     multiline: true,
     rows: 4
-  })), /*#__PURE__*/React.createElement(DialogActions, null, /*#__PURE__*/React.createElement(Button, {
+  }), props.selectedObjectype.objectProperties?.map((item, index) => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Controller, {
+    as: TextField,
+    name: `selectedObjectPropertyValues[${index}].value`,
+    control: control,
+    defaultValue: "",
+    required: true,
+    margin: "dense",
+    id: "standard-required",
+    label: item.name,
+    fullWidth: true
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    ref: register,
+    name: `selectedObjectPropertyValues[${index}].objectPropertyId`,
+    value: item.id
+  })))), /*#__PURE__*/React.createElement(DialogActions, null, /*#__PURE__*/React.createElement(Button, {
     onClick: handleClose,
     color: "primary"
   }, "\u041E\u0442\u043C\u0435\u043D\u0430"), /*#__PURE__*/React.createElement(Button, {

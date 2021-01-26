@@ -11,7 +11,6 @@ const ReactHookFormSelect = ({
     id: labelId
   }, label), /*#__PURE__*/React.createElement(Controller, {
     as: /*#__PURE__*/React.createElement(Select, {
-      required: true,
       labelId: labelId,
       label: label
     }, children),
@@ -23,15 +22,18 @@ const ReactHookFormSelect = ({
 
 const MySelect = props => {
   const classes = useStyles();
+  const {
+    control
+  } = useFormContext();
   return /*#__PURE__*/React.createElement(FormControl, {
     className: `${classes.formControl} col-md-3 mr-3`
   }, /*#__PURE__*/React.createElement(ReactHookFormSelect, {
+    required: true,
     name: props.name,
     label: props.nameSwlect,
     defaultValue: props.selectedValue,
     className: classes.selectEmpty,
-    control: props.form.control //error={!!errors.nome}
-
+    control: control
   }, props.selectOptions?.map(item => /*#__PURE__*/React.createElement(MenuItem, {
     value: item.id
   }, item.name)) ?? []));

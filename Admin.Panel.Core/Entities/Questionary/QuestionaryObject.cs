@@ -13,14 +13,14 @@ namespace Admin.Panel.Core.Entities.Questionary
         public string Code { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно!")]
-        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 2)]
+        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 1)]
         [Display(Name = "Описание")]
         public string Description { get; set; }
         
         public DateTime Updated { get; set; } = DateTime.UtcNow;
         
         [Required(ErrorMessage = "Поле обязательно!")]
-        [StringLength(150, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 2)]
+        [StringLength(150, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 1)]
         [Display(Name = "Название")]
         public string Name { get; set; }
         

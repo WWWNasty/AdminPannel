@@ -58,7 +58,7 @@ const {
     Accordion,
     AccordionSummary,
     AccordionDetails,
-    Theme, 
+    Theme,
     createStyles,
     FormGroup,
     Slide,
@@ -67,18 +67,22 @@ const {
     Snackbar
 } = MaterialUI;
 
-const { DragDropContext, Draggable, Droppable } = ReactBeautifulDnd;
+const {DragDropContext, Draggable, Droppable} = ReactBeautifulDnd;
 const {useState} = React;
-const {useForm, Controller, useFormContext} = ReactHookForm;
+const {useForm, Controller, useFormContext, FormProvider} = ReactHookForm;
+
+
+console.log(useFormContext);
+console.log(FormProvider);
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '95%',
-    },  
+    },
     button: {
         marginRight: theme.spacing(1),
     },
-    backButton:{
+    backButton: {
         marginRight: theme.spacing(1),
     },
     completed: {
@@ -94,16 +98,10 @@ function getSteps() {
     return ['Выбор типа объекта', 'Выбор объекта', 'Создание анкеты'];
 }
 
-function getStepContent(step) {
+function getStepContent(step: number, form: any) {
     const [objectTypes, setObjectTypes] = React.useState<SelectOption[]>([]);
-    const [selectedObjectType, setSelectedObjectType] = React.useState<number>(null);
+    const [companies, setCompanies] = React.useState<SelectOption[]>([]);
 
-    const [companies, setCompanies] =   React.useState<SelectOption[]>([]);
-    const [selectedCompanies, setSelectedCompanies] = React.useState<number[]>([]);
-    
-    const [selectedQuestionaryObject, setQuestionaryObject] = React.useState([]);
-    const [objectProperties, setObjectProperties] = React.useState([]);
-    
     React.useEffect(() => {
         (async () => {
             const response = await fetch("/api/QuestionaryApi", {
@@ -111,29 +109,37 @@ function getStepContent(step) {
                 headers: {"Accept": "application/json"},
                 credentials: "include"
             });
-            // console.log(response);
+
             if (response.ok === true) {
                 const selectOptions = await response.json();
-                let opt: SelectOption[] = selectOptions.questionaryObjectTypes;
-                setObjectTypes(opt);
-                let prop: TypeObjectProperties[] = selectOptions.objectProperties;
-                setObjectProperties(prop);
-                let companies: SelectOption[] = selectOptions.applicationCompanies.map(company => ({id: company.companyId, name: company.companyName}));
+                let objTypes: SelectOption[] = selectOptions.questionaryObjectTypes;
+                setObjectTypes(objTypes);
+                let companies: SelectOption[] = selectOptions.applicationCompanies.map(company => ({
+                    id: company.companyId,
+                    name: company.companyName
+                }));
                 setCompanies(companies);
             }
         })()
     }, []);
-    
+
+    const selectedObjectTypeId = form.watch('objectTypeId');
+    const selectedObjectype = objectTypes.find(ot => ot.id == selectedObjectTypeId)
     switch (step) {
         case 0:
-            return <FirstStep setObjectTypes={setObjectTypes} selectOptionsTypes = {objectTypes} selectedValueTypes = {selectedObjectType} setSelectedValueTypes = {setSelectedObjectType}
-                              selectOptionsСompanies = {companies} selectedValueСompanies = {selectedCompanies} setSelectedValueСompanies = {setSelectedCompanies}/>;
+            return <FirstStep
+                setObjectTypes={setObjectTypes}
+                selectOptionsTypes={objectTypes}
+                selectOptionsСompanies={companies}
+            />;
         case 1:
             return <SecondStep
-                objectProperties={objectProperties} setObjectProperties={setObjectProperties}
-                selectOptions = {objectTypes} selectedValue = {selectedQuestionaryObject} setSelectedValue = {setQuestionaryObject}/>;
+                form={form}
+                selectOptions={objectTypes}
+                selectedObjectype={selectedObjectype}
+            />;
         case 2:
-            return <ThirdStep/>;
+            return <ThirdStep form={form}/>;
         default:
             return 'Unknown step';
     }
@@ -244,10 +250,12 @@ function getStepContent(step) {
 // }
 
 //альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
-function HorizontalLabelPositionBelowStepper() {
+function HorizontalLabelPositionBelowStepper(props) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
+    const form = useFormContext();
+    // const {register} = form;
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -278,7 +286,7 @@ function HorizontalLabelPositionBelowStepper() {
                     </div>
                 ) : (
                     <div>
-                        <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                        <Typography className={classes.instructions}>{getStepContent(activeStep, form)}</Typography>
                         <div>
                             <Button
                                 disabled={activeStep === 0}
@@ -300,8 +308,8 @@ function HorizontalLabelPositionBelowStepper() {
 }
 
 function App() {
-    const dialogForm = useForm();
-    const {register, handleSubmit} = dialogForm;
+    const form = useForm({shouldUnregister: false});
+    const {register, handleSubmit} = form;
     const onSubmit = data => {
         console.log(data);
         const response = fetch("/api/ObjectTypeApi", {
@@ -311,15 +319,17 @@ function App() {
             body: JSON.stringify(data)
         })
     };
-    
+
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-                <HorizontalLabelPositionBelowStepper/>
+                <FormProvider {...form}>
+                    <HorizontalLabelPositionBelowStepper/>
+                </FormProvider>
             </form>
             <CloseAlertDialog/>
         </div>
-        );
+    );
 }
 
 ReactDOM.render(<App/>, document.getElementById('reactRoot'));

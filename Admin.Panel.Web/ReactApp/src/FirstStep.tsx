@@ -1,4 +1,5 @@
 const FirstStep = (props) => {
+    
     const useStyles = makeStyles((theme: any) =>
         createStyles({
             root: {
@@ -12,9 +13,10 @@ const FirstStep = (props) => {
     const classes = useStyles();
     const [openAlertGreen, setOpenAlertGreen] = React.useState(false);
     const [openAlertRed, setOpenAlertRed] = React.useState(false);
-    const firstStepForm = useForm();
-    
-    const selectedCompany = firstStepForm.watch('company');
+    const form = useFormContext();
+    //console.log(form);
+    //const { reset, register } = form;
+    const selectedCompany = form.watch('company');
     const availableObjectTypes = props.selectOptionsTypes.filter(type => type.companyId == selectedCompany)
 
     const handleClose = () => {
@@ -24,30 +26,37 @@ const FirstStep = (props) => {
     return (
         <div>
             <form className={classes.root} autoComplete="off">
-                <MySelect required selectOptions = {props.selectOptionsСompanies} selectedValue = {props.selectedValueСompanies} form={firstStepForm}
+                <MySelect required 
+                          selectOptions={props.selectOptionsСompanies}
+                          form={form}
                           name="company"
-                          setSelectedValue = {selectedValue => {
-                              props.setSelectedValueTypes(null);
-                              props.setSelectedValueСompanies(selectedValue);
-                          }} nameSwlect = "Выберите компанию"/>
-                <MySelect required name="objectType" selectOptions = {availableObjectTypes} form={firstStepForm}
-                          selectedValue = {props.selectedValueTypes} setSelectedValue = {props.setSelectedValueTypes} nameSwlect = "Выберите тип объекта" />
+                          // setSelectedValue={selectedValue => {
+                          //     props.setSelectedValueTypes(null);
+                          // }} 
+                          nameSwlect="Выберите компанию"
+                />
+                <MySelect required 
+                          name="objectTypeId" 
+                          selectOptions={availableObjectTypes} 
+                          form={form}
+                          setSelectedValue={props.setSelectedValueTypes}
+                          nameSwlect="Выберите тип объекта"
+                />
             </form>
             <div>
                 <FormDialogObjectType
-                    form={firstStepForm}
+                    form={form}
                     setOpenAlertRed={setOpenAlertRed}
-                    setOpenAlertGreen = {setOpenAlertGreen}
-                    setObjectTypes = {props.setObjectTypes}
-                    selectOptionsTypes = {props.selectOptionsTypes}
-                selectOptions = {props.selectOptionsСompanies} 
-                selectedValue = {props.selectedValueСompanies} 
-                setSelectedValue = {props.setSelectedValueСompanies}/>
+                    setOpenAlertGreen={setOpenAlertGreen}
+                    setObjectTypes={props.setObjectTypes}
+                    selectOptionsTypes={props.selectOptionsTypes}
+                    selectOptions={props.selectOptionsСompanies}
+                />
             </div>
 
             <Snackbar open={openAlertGreen} autoHideDuration={6000} onClose={handleClose}>
                 <div className="alert alert-success" role="alert">
-                    This is a success alert with 
+                    This is a success alert with
                     <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

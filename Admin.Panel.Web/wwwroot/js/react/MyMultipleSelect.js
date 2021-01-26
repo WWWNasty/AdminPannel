@@ -41,17 +41,21 @@ const MyMultipleSelect = props => {
     props.setSelectedValue(event.target.value);
   };
 
+  const {
+    control
+  } = useFormContext();
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(FormControl, {
-    required: true,
     className: `${classes.formControl} col-md-3`
-  }, /*#__PURE__*/React.createElement(InputLabel, {
-    id: "demo-mutiple-chip-label"
-  }, props.selectName), /*#__PURE__*/React.createElement(Select, {
+  }, /*#__PURE__*/React.createElement(ReactHookFormSelect, {
+    required: true,
     labelId: "demo-mutiple-chip-label",
     id: "demo-mutiple-chip",
     multiple: true,
-    value: props.selectedValue,
-    onChange: handleChange,
+    name: "questionaryObjects",
+    label: props.selectName,
+    defaultValue: props.selectedValue,
+    className: classes.selectEmpty,
+    control: control,
     input: /*#__PURE__*/React.createElement(Input, {
       id: "select-multiple-chip"
     }),
@@ -66,9 +70,7 @@ const MyMultipleSelect = props => {
   }, props.selectOptions?.map(item => [/*#__PURE__*/React.createElement(ListSubheader, null, item.name), item.questionaryObjects.map(object => /*#__PURE__*/React.createElement(MenuItem, {
     key: object.id,
     value: object.id
-  }, /*#__PURE__*/React.createElement(Checkbox, {
-    checked: props.selectedValue.indexOf(object.id) > -1
-  }), /*#__PURE__*/React.createElement(ListItemText, {
+  }, /*#__PURE__*/React.createElement(Checkbox, null), /*#__PURE__*/React.createElement(ListItemText, {
     primary: object.name
   })))]))));
 };

@@ -1,21 +1,24 @@
-const ThirdStep = () => {
-    const {register, handleSubmit} = useForm();
+const ThirdStep = (props) => {
+    const {register, handleSubmit, control} = useFormContext();
 
     const onSubmit = data => {
         console.log(data);
     };
 
-
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <TextField
-                    required
+                <Controller
+                    as={TextField}
                     autoFocus
+                    name="name"
+                    control={control}
+                    defaultValue=""
+                    required
                     margin="dense"
                     id="standard-required"
                     label="Название"
-                    fullWidth
+                    fullWidth={true}
                 />
                 <DraggableComponent/>
             </form>

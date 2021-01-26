@@ -6,7 +6,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
     public class QuestionaryDto: BaseEntity
     {
         [Required(ErrorMessage = "Поле Название - обязательно!")]
-        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 2)]
+        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 1)]
         [Display(Name = "Название Анкеты")]
         public string Name { get; set; }
         

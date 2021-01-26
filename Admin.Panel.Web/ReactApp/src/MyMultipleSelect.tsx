@@ -1,9 +1,10 @@
 interface QuestionaryObjecTypes extends SelectOption {
+    typeObjectProperties: TypeObjectProperties[];
     questionaryObjects: SelectOption[];
     companyId: number;
 }
 
-const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selectedValue: any, setSelectedValue: any, selectName: string }) => {
+const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selectedValue: any, setSelectedValue: any, selectName: string, form: any }) => {
 
     console.log(props);
 
@@ -49,16 +50,21 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
     const handleChange = (event) => {
         props.setSelectedValue(event.target.value);
     };
+    const {control} = useFormContext();
+
     return (
         <div>
-            <FormControl required className={`${classes.formControl} col-md-3`}>
-                <InputLabel id="demo-mutiple-chip-label">{props.selectName}</InputLabel>
-                <Select
+            <FormControl className={`${classes.formControl} col-md-3`}>
+                <ReactHookFormSelect
+                    required
                     labelId="demo-mutiple-chip-label"
                     id="demo-mutiple-chip"
                     multiple
-                    value={props.selectedValue}
-                    onChange={handleChange}
+                    name="questionaryObjects"
+                    label={props.selectName}
+                    defaultValue={props.selectedValue}
+                    className={classes.selectEmpty}
+                    control={control}
                     input={<Input id="select-multiple-chip"/>}
                     renderValue={(selected) => (
                         <div className={classes.chips}>
@@ -76,12 +82,42 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
                         <ListSubheader>{item.name}</ListSubheader>,
                         item.questionaryObjects.map((object) =>
                             <MenuItem key={object.id} value={object.id}>
-                                <Checkbox checked={props.selectedValue.indexOf(object.id) > -1}/>
+                                <Checkbox />
                                 <ListItemText primary={object.name}/>
                             </MenuItem>)
-                    ])}
-                    
-                </Select>
+                    ])}                
+                </ReactHookFormSelect>
+                
+                {/*<InputLabel id="demo-mutiple-chip-label">{props.selectName}</InputLabel>*/}
+                {/*<Select*/}
+                {/*    labelId="demo-mutiple-chip-label"*/}
+                {/*    id="demo-mutiple-chip"*/}
+                {/*    multiple*/}
+                {/*    value={props.selectedValue}*/}
+                {/*    onChange={handleChange}*/}
+                {/*    input={<Input id="select-multiple-chip"/>}*/}
+                {/*    renderValue={(selected) => (*/}
+                {/*        <div className={classes.chips}>*/}
+                {/*            {props.selectOptions*/}
+                {/*                .flatMap(option => option.questionaryObjects)*/}
+                {/*                .filter(option => selected.indexOf(option.id) > -1)*/}
+                {/*                .map((option) =>*/}
+                {/*                    <Chip key={option.id} label={option.name} className={classes.chip}/>*/}
+                {/*                )}*/}
+                {/*        </div>*/}
+                {/*    )}*/}
+                {/*    MenuProps={MenuProps}>*/}
+                
+                {/*    {props.selectOptions?.map(item => [*/}
+                {/*        <ListSubheader>{item.name}</ListSubheader>,*/}
+                {/*        item.questionaryObjects.map((object) =>*/}
+                {/*            <MenuItem key={object.id} value={object.id}>*/}
+                {/*                <Checkbox />*/}
+                {/*                <ListItemText primary={object.name}/>*/}
+                {/*            </MenuItem>)*/}
+                {/*    ])}*/}
+                {/*    */}
+                {/*</Select>*/}
             </FormControl>
         </div>
     );

@@ -17,7 +17,7 @@ const ReactHookFormSelect = ({
             <InputLabel id={labelId}>{label}</InputLabel>
             <Controller
                 as={
-                    <Select required labelId={labelId} label={label}>
+                    <Select labelId={labelId} label={label}>
                         {children}
                     </Select>
                 }
@@ -31,18 +31,17 @@ const ReactHookFormSelect = ({
 
 const MySelect = (props) => {
     const classes = useStyles();
+    const {control} = useFormContext();
     
     return (
-
         <FormControl className={`${classes.formControl} col-md-3 mr-3`}>
             <ReactHookFormSelect
+                required
                 name={props.name}
                 label={props.nameSwlect}
                 defaultValue={props.selectedValue}
                 className={classes.selectEmpty}
-                control={props.form.control}
-                //error={!!errors.nome}
-            >
+                control={control}>
                 {props.selectOptions?.map((item) => <MenuItem value={item.id}>{item.name}</MenuItem>) ?? []}
             </ReactHookFormSelect>
         </FormControl>
