@@ -38,7 +38,6 @@ const FirstStep = props => {
     name: "objectTypeId",
     selectOptions: availableObjectTypes,
     form: form,
-    setSelectedValue: props.setSelectedValueTypes,
     nameSwlect: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0438\u043F \u043E\u0431\u044A\u0435\u043A\u0442\u0430"
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(FormDialogObjectType, {
     form: form,

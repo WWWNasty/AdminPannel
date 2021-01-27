@@ -39,6 +39,27 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
             }
         }
 
+        public async Task<List<QuestionaryInputFieldTypes>> GetAllWithListId()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                try
+                {
+                    var query = @"SELECT i.*, ai.SelectableAnswersListId as SelectableAnswersListId FROM QuestionaryInputFieldTypes i
+                    INNER JOIN AnswersListInputType ai ON i.Id = ai.QuestionaryInputFieldTypeId";
+                    var result =
+                        await connection.QueryAsync<QuestionaryInputFieldTypes>(query);
+                    return result.ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
         public async Task<List<QuestionaryInputFieldTypes>> GetAllCurrent(int id)
         {
             using (var connection = new SqlConnection(_connectionString))

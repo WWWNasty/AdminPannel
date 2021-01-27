@@ -44,6 +44,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         public List<SelectableAnswers> SelectableAnswers { get; set; }
         public List<QuestionaryObject> QuestionaryObjects { get; set; }
         public List<ObjectProperty> ObjectProperties { get; set; }
+        //public List<SelectableAnswers> SelectableAnswerse { get; set; }
         public int IndexCurrentQuestion { get; set; }
         public bool IfQuestionaryCurrentInCompany { get; set; }
 

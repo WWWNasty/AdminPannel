@@ -4,7 +4,7 @@ const ThirdStep = (props) => {
     const onSubmit = data => {
         console.log(data);
     };
-
+    const form = useFormContext();
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -20,7 +20,12 @@ const ThirdStep = (props) => {
                     label="Название"
                     fullWidth={true}
                 />
-                <DraggableComponent/>
+                <DraggableComponent
+                    form={form}
+                    selectableAnswersLists={props.selectableAnswersLists}
+                    questionaryInputFieldTypes={props.questionaryInputFieldTypes}
+                    selectableAnswers={props.selectableAnswers}
+                />
             </form>
         </div>
     );

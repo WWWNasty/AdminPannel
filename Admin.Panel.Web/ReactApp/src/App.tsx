@@ -1,12 +1,4 @@
-﻿// import React from 'react';
-// import { makeStyles } from '@material-ui/core/styles';
-// import Stepper from '@material-ui/core/Stepper';
-// import Step from '@material-ui/core/Step';
-// import StepButton from '@material-ui/core/StepButton';
-// import Button from '@material-ui/core/Button';
-// import Typography from '@material-ui/core/Typography';
-
-declare const MaterialUI;
+﻿declare const MaterialUI;
 declare const ReactBeautifulDnd;
 declare const ReactHookForm;
 declare const yup;
@@ -101,6 +93,9 @@ function getSteps() {
 function getStepContent(step: number, form: any) {
     const [objectTypes, setObjectTypes] = React.useState<SelectOption[]>([]);
     const [companies, setCompanies] = React.useState<SelectOption[]>([]);
+    const [selectableAnswersLists, setSelectableAnswersLists] = React.useState<SelectOption[]>([]);
+    const [questionaryInputFieldTypes, setQuestionaryInputFieldTypes] = React.useState<QuestionaryInputFieldTypes[]>([]);
+    const [selectableAnswers, setSelectableAnswers] = React.useState<SelectOption[]>([]);
 
     React.useEffect(() => {
         (async () => {
@@ -112,19 +107,37 @@ function getStepContent(step: number, form: any) {
 
             if (response.ok === true) {
                 const selectOptions = await response.json();
+
                 let objTypes: SelectOption[] = selectOptions.questionaryObjectTypes;
                 setObjectTypes(objTypes);
+
                 let companies: SelectOption[] = selectOptions.applicationCompanies.map(company => ({
                     id: company.companyId,
                     name: company.companyName
                 }));
                 setCompanies(companies);
+
+                let answersList: SelectOption[] = selectOptions.selectableAnswersLists;
+                setSelectableAnswersLists(answersList);
+
+                let inputFieldTypes: QuestionaryInputFieldTypes[] = selectOptions.questionaryInputFieldTypes;
+                setQuestionaryInputFieldTypes(inputFieldTypes);
+
+                let answers: SelectableAnswers[] = selectOptions.selectableAnswers.map(answer => ({
+                    name: answer.answerText,
+                    id: answer.id,
+                    selectableAnswersListId: answer.selectableAnswersListId
+                }));
+                console.log("ответы" + answers);
+
+                setSelectableAnswers(answers);
             }
         })()
     }, []);
 
     const selectedObjectTypeId = form.watch('objectTypeId');
     const selectedObjectype = objectTypes.find(ot => ot.id == selectedObjectTypeId)
+
     switch (step) {
         case 0:
             return <FirstStep
@@ -139,7 +152,12 @@ function getStepContent(step: number, form: any) {
                 selectedObjectype={selectedObjectype}
             />;
         case 2:
-            return <ThirdStep form={form}/>;
+            return <ThirdStep
+                form={form}
+                selectableAnswersLists={selectableAnswersLists}
+                questionaryInputFieldTypes={questionaryInputFieldTypes}
+                selectableAnswers={selectableAnswers}
+            />;
         default:
             return 'Unknown step';
     }
@@ -296,9 +314,13 @@ function HorizontalLabelPositionBelowStepper(props) {
                             >
                                 Назад
                             </Button>
-                            <Button variant="contained" color="primary" onClick={handleNext}>
-                                {activeStep === steps.length - 1 ? 'Создать' : 'Вперед'}
-                            </Button>
+                            {activeStep === steps.length - 1 ?
+                                <Button variant="contained" color="primary" onClick={handleNext}>
+                                    Создать
+                                </Button> :
+                                <Button type="submit" variant="contained" color="primary" onClick={handleNext}>
+                                    Вперед
+                                </Button>}
                         </div>
                     </div>
                 )}

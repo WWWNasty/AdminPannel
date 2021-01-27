@@ -81,6 +81,24 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
             }
         }
 
+        public async Task<List<SelectableAnswers>> GetAllAnswers()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    var query = "SELECT * FROM SelectableAnswers";
+                    var result = connection.Query<SelectableAnswers>(query).ToList();
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
         public async Task<List<SelectableAnswersLists>> GetAllAsync()
         {
             using (var connection = new SqlConnection(_connectionString))

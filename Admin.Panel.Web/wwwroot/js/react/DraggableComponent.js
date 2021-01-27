@@ -4,6 +4,7 @@ const DraggableComponent = props => {
   //     setItems(getItems(1))
   // },[])
 
+  const form = useFormContext();
   const [indexes, setIndexes] = React.useState([]);
   const [counter, setCounter] = React.useState(0);
 
@@ -35,6 +36,10 @@ const DraggableComponent = props => {
     index: index,
     draggableId: index.toString()
   }, (provided, snapshot) => /*#__PURE__*/React.createElement(DraggableCard, {
+    form: form,
+    selectableAnswersLists: props.selectableAnswersLists,
+    questionaryInputFieldTypes: props.questionaryInputFieldTypes,
+    selectableAnswers: props.selectableAnswers,
     provided: provided,
     snapshot: snapshot,
     item: {

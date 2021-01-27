@@ -4,12 +4,12 @@ const DraggableComponent = (props) => {
     // React.useEffect(() => {
     //     setItems(getItems(1))
     // },[])
-
+    const form = useFormContext();
     const [indexes, setIndexes] = React.useState([]);
     const [counter, setCounter] = React.useState(0);
 
     const addQuestion = () => {
-        
+
         setIndexes(prevIndexes => [...prevIndexes, counter]);
         setCounter(prevCounter => prevCounter + 1);
     };
@@ -38,10 +38,17 @@ const DraggableComponent = (props) => {
                                 {indexes.map(index =>
                                     <Draggable key={index} index={index} draggableId={index.toString()}>
                                         {(provided, snapshot) =>
-                                            <DraggableCard provided={provided} snapshot={snapshot}
-                                                           item={{id: index}}
-                                                           index={index} setIndexes={setIndexes}
-                                                           setCounter={setCounter}/>
+                                            <DraggableCard
+                                                form={form}
+                                                selectableAnswersLists={props.selectableAnswersLists}
+                                                questionaryInputFieldTypes={props.questionaryInputFieldTypes}
+                                                selectableAnswers={props.selectableAnswers}
+                                                provided={provided}
+                                                snapshot={snapshot}
+                                                item={{id: index}}
+                                                index={index} setIndexes={setIndexes}
+                                                setCounter={setCounter}
+                                            />
                                         }
                                     </Draggable>)
 

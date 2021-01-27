@@ -39,7 +39,6 @@ const FirstStep = (props) => {
                           name="objectTypeId" 
                           selectOptions={availableObjectTypes} 
                           form={form}
-                          setSelectedValue={props.setSelectedValueTypes}
                           nameSwlect="Выберите тип объекта"
                 />
             </form>

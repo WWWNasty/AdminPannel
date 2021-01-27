@@ -1,12 +1,17 @@
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 const DraggableCard = props => {
+  const form = useFormContext();
   const [state, setState] = React.useState({
     checked: true,
     gilad: true,
     jason: false,
     antoine: false
   });
+  const {
+    register,
+    control
+  } = useFormContext();
 
   const handleChange = event => {
     setState({ ...state,
@@ -34,6 +39,10 @@ const DraggableCard = props => {
     jason,
     antoine
   } = state;
+  const selectedSelectableAnswersListId = form.watch(`questionaryQuestions[${props.index}].selectableAnswersListId`);
+  const availableSelectableAnswers = props.selectableAnswers.filter(answer => answer.selectableAnswersListId == selectedSelectableAnswersListId);
+  console.log("ответы1" + availableSelectableAnswers);
+  const availableQuestionaryInputFieldTypeses = props.questionaryInputFieldTypes.filter(input => input.selectableAnswersListId == selectedSelectableAnswersListId);
   return /*#__PURE__*/React.createElement("div", {
     className: "mt-3 bg-light"
   }, /*#__PURE__*/React.createElement(ListItem, _extends({
@@ -48,21 +57,42 @@ const DraggableCard = props => {
   }, /*#__PURE__*/React.createElement("div", {
     className: "row"
   }, /*#__PURE__*/React.createElement(ListItemText, {
-    primary: "\u0412\u043E\u043F\u0440\u043E\u0441" //{props.item.primary}
-    // secondary={props.item.secondary}
-
+    primary: "\u0412\u043E\u043F\u0440\u043E\u0441"
   })), /*#__PURE__*/React.createElement("div", {
     className: "row"
-  }, /*#__PURE__*/React.createElement(TextField, {
+  }, /*#__PURE__*/React.createElement(Controller, {
+    as: TextField,
+    name: `questionaryQuestions[${props.index}].questionText`,
+    className: "mr-3 col-md-6",
+    defaultValue: "",
     required: true,
-    id: "standard-basic",
+    control: control,
     label: "\u0422\u0435\u043A\u0441\u0442 \u0432\u043E\u043F\u0440\u043E\u0441\u0430"
+  }), /*#__PURE__*/React.createElement(MySelect, {
+    required: true,
+    name: `questionaryQuestions[${props.index}].selectableAnswersListId`,
+    selectOptions: props.selectableAnswersLists,
+    nameSwlect: "\u0412\u0430\u0440\u0438\u0430\u043D\u0442\u044B \u043E\u0442\u0432\u0435\u0442\u0430"
+  }), /*#__PURE__*/React.createElement(MySelect, {
+    required: true,
+    name: `questionaryQuestions[${props.index}].questionaryInputFieldTypeId`,
+    selectOptions: availableQuestionaryInputFieldTypeses,
+    nameSwlect: "\u0422\u0438\u043F \u0432\u0432\u043E\u0434\u0430"
+  }), /*#__PURE__*/React.createElement(MySelect, {
+    name: `questionaryQuestions[${props.index}].selectableAnswersListId`,
+    selectOptions: availableSelectableAnswers,
+    nameSwlect: "\u041E\u0442\u0432\u0435\u0442 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    ref: register,
+    name: `questionaryQuestions[${props.index}].sequenceOrder`,
+    value: props.index
   }), /*#__PURE__*/React.createElement(FormControlLabel, {
     control: /*#__PURE__*/React.createElement(Switch, {
-      checked: state.checked,
-      onChange: handleChange,
-      name: "checked",
-      color: "primary"
+      className: "mr-3",
+      name: `questionaryQuestions[${props.index}].canSkipQuestion`,
+      color: "primary",
+      inputRef: register
     }),
     label: "\u041E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0432\u043E\u043F\u0440\u043E\u0441"
   })), /*#__PURE__*/React.createElement("div", {
@@ -73,31 +103,19 @@ const DraggableCard = props => {
     id: "panel1a-header"
   }, /*#__PURE__*/React.createElement(Typography, {
     className: classes.heading
-  }, "\u041E\u0442\u0432\u0435\u0442\u044B")), /*#__PURE__*/React.createElement(AccordionDetails, null, /*#__PURE__*/React.createElement(Typography, null, "\u0442\u0443\u0442 \u0431\u0443\u0434\u0443\u0442 \u043E\u0442\u0432\u0435\u0442\u044B", /*#__PURE__*/React.createElement(FormGroup, null, /*#__PURE__*/React.createElement(FormControlLabel, {
+  }, "\u041E\u0442\u0432\u0435\u0442\u044B")), /*#__PURE__*/React.createElement(AccordionDetails, null, /*#__PURE__*/React.createElement(Typography, null, "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043D\u0438\u0436\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u043A\u043E\u0442\u043E\u0440\u044B\u043C \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C \u043A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u0439", /*#__PURE__*/React.createElement(FormGroup, null, availableSelectableAnswers?.map((item, index) => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(FormControlLabel, {
     control: /*#__PURE__*/React.createElement(Checkbox, {
-      checked: gilad,
-      onChange: handleChange,
+      name: `questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].isInvolvesComment`,
       color: "primary",
-      name: "gilad"
+      inputRef: register
     }),
-    label: "Gilad Gray"
-  }), /*#__PURE__*/React.createElement(FormControlLabel, {
-    control: /*#__PURE__*/React.createElement(Checkbox, {
-      checked: jason,
-      onChange: handleChange,
-      color: "primary",
-      name: "jason"
-    }),
-    label: "Jason Killian"
-  }), /*#__PURE__*/React.createElement(FormControlLabel, {
-    control: /*#__PURE__*/React.createElement(Checkbox, {
-      checked: antoine,
-      onChange: handleChange,
-      color: "primary",
-      name: "antoine"
-    }),
-    label: "Antoine Llorca"
-  }))))))), /*#__PURE__*/React.createElement(ListItemSecondaryAction, null, /*#__PURE__*/React.createElement(IconButton, {
+    label: item.name
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    ref: register,
+    name: `questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].selectableAnswerId`,
+    value: item.id
+  }))))))))), /*#__PURE__*/React.createElement(ListItemSecondaryAction, null, /*#__PURE__*/React.createElement(IconButton, {
     onClick: removeFriend(props.index)
   }, /*#__PURE__*/React.createElement(Icon, null, "delete")))));
 };

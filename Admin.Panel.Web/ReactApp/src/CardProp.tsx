@@ -37,7 +37,6 @@ function CardProp(props: {index: number, setIndexes: any, setCounter: any, form:
                 />  
                 
                 <FormControlLabel
-                    
                     control={
                         <Switch
                             className="mr-3"

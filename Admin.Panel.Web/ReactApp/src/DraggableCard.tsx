@@ -1,10 +1,20 @@
+interface QuestionaryInputFieldTypes extends SelectOption {
+    selectableAnswersListId: number;
+}
+interface SelectableAnswers {
+    id: number;
+    name: string;
+    selectableAnswersListId: number;
+}
 const DraggableCard = (props) =>{
+    const form = useFormContext();
     const [state, setState] = React.useState({
         checked: true,
         gilad: true,
         jason: false,
         antoine: false,
     });
+    const {register, control} = useFormContext();
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setState({ ...state, [event.target.name]: event.target.checked });
     };
@@ -25,6 +35,10 @@ const DraggableCard = (props) =>{
     );
     const classes = useStyles();
     const { gilad, jason, antoine } = state;
+    const selectedSelectableAnswersListId = form.watch(`questionaryQuestions[${props.index}].selectableAnswersListId`);
+    const availableSelectableAnswers = props.selectableAnswers.filter(answer => answer.selectableAnswersListId == selectedSelectableAnswersListId);
+    console.log("ответы1" + availableSelectableAnswers);
+    const availableQuestionaryInputFieldTypeses = props.questionaryInputFieldTypes.filter(input => input.selectableAnswersListId == selectedSelectableAnswersListId);
     return(
         <div className="mt-3 bg-light">
             <ListItem
@@ -43,25 +57,50 @@ const DraggableCard = (props) =>{
                 <div className='col'>
                     <div className='row'>
                         <ListItemText
-                            primary= "Вопрос" 
-                            //{props.item.primary}
-                            // secondary={props.item.secondary}
+                            primary= "Вопрос"
                         />
                     </div>
                     <div className='row'>
-                        <TextField required id="standard-basic" label="Текст вопроса" />
+                        <Controller
+                            as={TextField}
+                            name={`questionaryQuestions[${props.index}].questionText`}
+                            className="mr-3 col-md-6"
+                            defaultValue=""
+                            required
+                            control={control}
+                            label="Текст вопроса"
+                        />
+                        <MySelect required
+                                  name={`questionaryQuestions[${props.index}].selectableAnswersListId`}
+                                  selectOptions={props.selectableAnswersLists}
+                                  nameSwlect="Варианты ответа"
+                        />
+                        <MySelect required
+                                  name={`questionaryQuestions[${props.index}].questionaryInputFieldTypeId`}
+                                  selectOptions={availableQuestionaryInputFieldTypeses}
+                                  nameSwlect="Тип ввода"
+                        />
+                        <MySelect name={`questionaryQuestions[${props.index}].selectableAnswersListId`}
+                                  selectOptions={availableSelectableAnswers}
+                                  nameSwlect="Ответ по умолчанию"
+                        />
+                        <input type="hidden"
+                               ref={register}
+                               name={`questionaryQuestions[${props.index}].sequenceOrder`}
+                               value={props.index}
+                        />
                         <FormControlLabel
                             control={
                                 <Switch
-                                    checked={state.checked}
-                                    onChange={handleChange}
-                                    name="checked"
+                                    className="mr-3"
+                                    name={`questionaryQuestions[${props.index}].canSkipQuestion`}
                                     color="primary"
+                                    inputRef={register}
                                 />
                             }
                             label="Обязательный вопрос"
                         />
-                       
+                        
                     </div>
                     <div className={`${classes.root} mt-3`}>
                         <Accordion>
@@ -74,21 +113,67 @@ const DraggableCard = (props) =>{
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Typography>
-                                    тут будут ответы
-
+                                    Выберите ниже ответы которым необходим комментарий
                                     <FormGroup>
-                                        <FormControlLabel
-                                            control={<Checkbox checked={gilad} onChange={handleChange} color="primary" name="gilad" />}
-                                            label="Gilad Gray"
-                                        />
-                                        <FormControlLabel
-                                            control={<Checkbox checked={jason} onChange={handleChange} color="primary" name="jason" />}
-                                            label="Jason Killian"
-                                        />
-                                        <FormControlLabel
-                                            control={<Checkbox checked={antoine} onChange={handleChange} color="primary" name="antoine" />}
-                                            label="Antoine Llorca"
-                                        />
+                                        {availableSelectableAnswers?.map((item, index) =>
+                                            <div>
+                                                {/*<FormControlLabel*/}
+                                                {/*    control={<Checkbox checked={gilad} onChange={handleChange} color="primary" name="gilad" />}*/}
+                                                {/*    label="Gilad Gray"*/}
+                                                {/*/>*/}
+
+                                                <FormControlLabel
+                                                    control={
+                                                        <Checkbox
+                                                            name={`questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].isInvolvesComment`}
+                                                            color="primary"
+                                                            inputRef={register}
+                                                        />
+                                                    }
+                                                    label={item.name}
+                                                />
+                                                <input type="hidden"
+                                                       ref={register}
+                                                       name={`questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].selectableAnswerId`}
+                                                       value={item.id}
+                                                />
+                                                {/*<FormControlLabel*/}
+                                                {/*    color="primary"*/}
+                                                {/*    value={item.id}*/}
+                                                {/*    control={<Checkbox />}*/}
+                                                {/*    label={item.name}*/}
+                                                {/*    name={`techStack[${item.id}]`}*/}
+                                                {/*    inputRef={register}*/}
+                                                {/*/>*/}
+                                                
+                                                {/*<Controller*/}
+                                                {/*    as={Checkbox}*/}
+                                                {/*    name={`techStack[${item.id}]`}*/}
+                                                {/*    control={control}*/}
+                                                {/*    defaultValue=""*/}
+                                                {/*    label={item.name}*/}
+                                                {/*    color="primary"*/}
+                                                {/*/>*/}
+                                                
+                                                {/*<Controller*/}
+                                                {/*    as={TextField}*/}
+                                                {/*    name={`selectedObjectPropertyValues[${index}].value`}*/}
+                                                {/*    control={control}*/}
+                                                {/*    defaultValue=""*/}
+                                                {/*    required*/}
+                                                {/*    margin="dense"*/}
+                                                {/*    id="standard-required"*/}
+                                                {/*    label={item.name}*/}
+                                                {/*    fullWidth={true}*/}
+                                                {/*/>*/}
+                                                {/*<input type="hidden"*/}
+                                                {/*       ref={register}*/}
+                                                {/*       name={`selectedObjectPropertyValues[${index}].objectPropertyId`}*/}
+                                                {/*       value={item.id}*/}
+                                                {/*/>*/}
+                                            </div>
+                                        )}
+                                      
                                     </FormGroup>
                                 </Typography>
                             </AccordionDetails>
