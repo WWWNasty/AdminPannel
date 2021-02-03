@@ -111,6 +111,27 @@ namespace Admin.Panel.Data.Repositories.Questionary
             }
         }
 
+        public async Task<List<QuestionaryObjectType>> GetAllActiveWithoutQuestionaryAsync()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    var query = @"SELECT DISTINCT t.*, c.CompanyName AS CompanyName FROM QuestionaryObjectTypes AS t 
+                                    LEFT JOIN Questionary as q on t.Id = q.ObjectTypeId
+                                    INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId 
+                                    WHERE t.IsUsed = 1 AND (q.ObjectTypeId is NULL OR q.IsUsed = 0)";
+                    var result = connection.Query<QuestionaryObjectType>(query).ToList();
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
         public async Task<List<QuestionaryObjectType>> GetAllActiveForUserAsync(int userId)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -269,7 +290,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 {
                     var query = @"SELECT * FROM QuestionaryObjectTypes WHERE CompanyId = @CompanyId AND IsUsed = 1";
                     var result =
-                         connection.Query<QuestionaryObjectType>(query,
+                        connection.Query<QuestionaryObjectType>(query,
                             new {@CompanyId = id});
                     return result.ToList();
                 }

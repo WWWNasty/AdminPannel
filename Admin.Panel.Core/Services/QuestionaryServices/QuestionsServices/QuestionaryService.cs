@@ -46,7 +46,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
         {
             QuestionaryDto obj = new QuestionaryDto();
             obj.ApplicationCompanies = await _companyRepository.GetAllActiveAsync();
-            obj.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllActiveAsync();
+            obj.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllActiveWithoutQuestionaryAsync();
             obj.SelectableAnswersLists = await _selectableAnswersListRepository.GetAllActiveAsync();
             obj.QuestionaryObjects = await _questionaryObjectRepository.GetAllActiveAsync();
             obj.ObjectProperties = await _objectPropertiesRepository.GetAllAsync();

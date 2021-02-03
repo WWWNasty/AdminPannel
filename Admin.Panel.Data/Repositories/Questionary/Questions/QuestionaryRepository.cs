@@ -193,8 +193,6 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                         await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
                          WHERE Id IN @ObjectsId",new{ObjectsId = selectableAnswersList.ObjectsIdToChangeType, selectableAnswersList.ObjectTypeId} , transaction);
 
-                       
-                        
                         QuestionaryDto result = cn.Query<QuestionaryDto>(@"SELECT * FROM Questionary WHERE Id=@Id",
                             new {@Id = objTypeId}, transaction).FirstOrDefault();
 
