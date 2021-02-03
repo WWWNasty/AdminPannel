@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Entities.Questionary.Questions;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
 using Dapper;
@@ -164,10 +165,36 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                                 SelectableAnswerId = option.SelectableAnswerId,
                                                 QuestionaryId = questionId
                                             }, transaction);
-                                }
+                                } 
                             }
                         }
 
+                        //changes objectType to objects with propValues
+                        List<QuestionaryObject> selectedObjects = cn.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects where Id IN @ObjectIds",
+                            new {ObjectIds = selectableAnswersList.ObjectsIdToChangeType}, transaction).ToList();
+
+                        foreach (var selectedObject in selectedObjects)
+                        {
+                            if (selectedObject.ObjectTypeId != selectableAnswersList.ObjectTypeId)
+                            {
+                                cn.Execute(
+                                    @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
+                                    new {QuestionaryObjectId = selectedObject.Id}, transaction);
+                            }
+                        }
+                        
+                        var objectsOfType = cn.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects where ObjectTypeId = @ObjectTypeId",
+                             new {selectableAnswersList.ObjectTypeId}, transaction).ToList();
+
+                        int[] objectsOfTypeIds = objectsOfType.Select(o => o.Id).ToArray();
+                        await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=0 
+                         WHERE Id IN @ObjectsId",new{ObjectsId = objectsOfTypeIds} , transaction);
+                        
+                        await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
+                         WHERE Id IN @ObjectsId",new{ObjectsId = selectableAnswersList.ObjectsIdToChangeType, selectableAnswersList.ObjectTypeId} , transaction);
+
+                       
+                        
                         QuestionaryDto result = cn.Query<QuestionaryDto>(@"SELECT * FROM Questionary WHERE Id=@Id",
                             new {@Id = objTypeId}, transaction).FirstOrDefault();
 
@@ -193,7 +220,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 using (var transaction = connection.BeginTransaction())
                 {
                     try
-                    {
+                     {
                         var query =
                             @"UPDATE Questionary SET Name=@Name,ObjectTypeId=@ObjectTypeId,CompanyId=@CompanyId,IsUsed=@Isused
                          WHERE Id=@Id";

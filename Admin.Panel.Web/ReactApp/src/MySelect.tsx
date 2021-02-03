@@ -11,32 +11,35 @@ const ReactHookFormSelect = ({
                                  children,
                                  ...props
                              }) => {
+    const {errors} = useFormContext();
     const labelId = `${name}-label`;
     return (
-        <FormControl {...props}>
+        <FormControl {...props} error={errors[name]?.type}>
             <InputLabel id={labelId}>{label}</InputLabel>
             <Controller
                 as={
-                    <Select labelId={labelId} label={label}>
+                    <Select renderValue={props.renderValue} multiple={props.multiple} labelId={labelId} label={label}>
                         {children}
                     </Select>
                 }
+                rules={ {required: props.required, minLength: props.minLength, validate: props.validate}} 
                 name={name}
                 control={control}
                 defaultValue={defaultValue}
             />
+            <FormHelperText>{errors[name]?.message}</FormHelperText>
         </FormControl>
     );
 };
 
 const MySelect = (props) => {
     const classes = useStyles();
-    const {control} = useFormContext();
+    const {control} = props.form ?? useFormContext();
     
     return (
         <FormControl className={`${classes.formControl} col-md-3 mr-3`}>
             <ReactHookFormSelect
-                required
+                required={props.required}
                 name={props.name}
                 label={props.nameSwlect}
                 defaultValue={props.selectedValue}

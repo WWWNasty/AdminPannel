@@ -1,18 +1,12 @@
 const ThirdStep = props => {
+  const form = useFormContext();
+  console.log(form);
   const {
     register,
     handleSubmit,
     control
-  } = useFormContext();
-
-  const onSubmit = data => {
-    console.log(data);
-  };
-
-  const form = useFormContext();
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {
-    onSubmit: handleSubmit(onSubmit)
-  }, /*#__PURE__*/React.createElement(Controller, {
+  } = form;
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Controller, {
     as: TextField,
     autoFocus: true,
     name: "name",
@@ -28,6 +22,6 @@ const ThirdStep = props => {
     selectableAnswersLists: props.selectableAnswersLists,
     questionaryInputFieldTypes: props.questionaryInputFieldTypes,
     selectableAnswers: props.selectableAnswers
-  })));
+  }));
 };
 //# sourceMappingURL=ThirdStep.js.map

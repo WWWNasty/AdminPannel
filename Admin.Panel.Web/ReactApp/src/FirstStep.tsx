@@ -15,8 +15,8 @@ const FirstStep = (props) => {
     const [openAlertRed, setOpenAlertRed] = React.useState(false);
     const form = useFormContext();
     //console.log(form);
-    //const { reset, register } = form;
-    const selectedCompany = form.watch('company');
+    const { handleSubmit } = form;
+    const selectedCompany = form.watch('companyId');
     const availableObjectTypes = props.selectOptionsTypes.filter(type => type.companyId == selectedCompany)
 
     const handleClose = () => {
@@ -26,10 +26,10 @@ const FirstStep = (props) => {
     return (
         <div>
             <form className={classes.root} autoComplete="off">
-                <MySelect required 
+                <MySelect required={ {message: 'Neobh', value: true} }
                           selectOptions={props.selectOptionsСompanies}
                           form={form}
-                          name="company"
+                          name="companyId"
                           // setSelectedValue={selectedValue => {
                           //     props.setSelectedValueTypes(null);
                           // }} 

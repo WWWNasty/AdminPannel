@@ -1,10 +1,8 @@
 function CardProp(props) {
-  const classes = useStyles();
-
-  const removeFriend = index => () => {
-    props.setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
-    props.setCounter(prevCounter => prevCounter - 1);
-  };
+  const classes = useStyles(); // const removeFriend = index => () => {
+  //     props.setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
+  //     props.setCounter(prevCounter => prevCounter - 1);
+  // };
 
   return /*#__PURE__*/React.createElement(Card, {
     className: `${classes.root} mt-3 mb-3 bg-light`
@@ -16,7 +14,7 @@ function CardProp(props) {
   }, "\u0441\u0432\u043E\u0439\u0441\u0442\u0432\u043E", /*#__PURE__*/React.createElement(IconButton, {
     "aria-label": "delete",
     className: `${classes.margin} ml-auto`,
-    onClick: removeFriend(props.index)
+    onClick: () => props.remove(props.index)
   }, /*#__PURE__*/React.createElement(Icon, null, "delete")))), /*#__PURE__*/React.createElement(Controller, {
     as: TextField,
     name: `objectProperties[${props.index}].name`,

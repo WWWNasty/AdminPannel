@@ -4,9 +4,7 @@ interface QuestionaryObjecTypes extends SelectOption {
     companyId: number;
 }
 
-const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selectedValue: any, setSelectedValue: any, selectName: string, form: any }) => {
-
-    console.log(props);
+const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selectedValue: any, selectName: string, form: any }) => {
 
     function getStyles(name, personName, theme) {
         return {
@@ -47,22 +45,27 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
         },
     };
     const classes = useStyles();
-    const handleChange = (event) => {
-        props.setSelectedValue(event.target.value);
-    };
     const {control} = useFormContext();
 
     return (
         <div>
             <FormControl className={`${classes.formControl} col-md-3`}>
                 <ReactHookFormSelect
-                    required
                     labelId="demo-mutiple-chip-label"
-                    id="demo-mutiple-chip"
+                    id="demo-mutiple-chip" 
                     multiple
-                    name="questionaryObjects"
+                    validate={ () => {
+                        const isValid = props.form.getValues('objectsIdToChangeType')?.length > 0;
+                        const type = 'oneOrMoreRequired';
+
+                        if(!isValid)
+                            props.form.setError('objectsIdToChangeType', {type, message: 'Viberite adin ili bolshe'});
+                        
+                        return isValid;
+                    }}
+                    name="objectsIdToChangeType"
                     label={props.selectName}
-                    defaultValue={props.selectedValue}
+                    defaultValue={[]}
                     className={classes.selectEmpty}
                     control={control}
                     input={<Input id="select-multiple-chip"/>}
@@ -80,7 +83,7 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
 
                     {props.selectOptions?.map(item => [
                         <ListSubheader>{item.name}</ListSubheader>,
-                        item.questionaryObjects.map((object) =>
+                        item.questionaryObjects?.map((object) =>
                             <MenuItem key={object.id} value={object.id}>
                                 <Checkbox />
                                 <ListItemText primary={object.name}/>
@@ -118,6 +121,7 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
                 {/*    ])}*/}
                 {/*    */}
                 {/*</Select>*/}
+                
             </FormControl>
         </div>
     );

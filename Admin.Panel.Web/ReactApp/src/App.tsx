@@ -61,7 +61,7 @@ const {
 
 const {DragDropContext, Draggable, Droppable} = ReactBeautifulDnd;
 const {useState} = React;
-const {useForm, Controller, useFormContext, FormProvider} = ReactHookForm;
+const {useForm, Controller, useFormContext, FormProvider, useFieldArray} = ReactHookForm;
 
 
 console.log(useFormContext);
@@ -128,7 +128,6 @@ function getStepContent(step: number, form: any) {
                     id: answer.id,
                     selectableAnswersListId: answer.selectableAnswersListId
                 }));
-                console.log("ответы" + answers);
 
                 setSelectableAnswers(answers);
             }
@@ -273,10 +272,17 @@ function HorizontalLabelPositionBelowStepper(props) {
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
     const form = useFormContext();
-    // const {register} = form;
+    const {handleSubmit} = form;
+
 
     const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        const onSuccess = data => {
+            form.clearErrors();
+
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
+        
+        handleSubmit(onSuccess) ();
     };
 
     const handleBack = () => {
@@ -315,10 +321,10 @@ function HorizontalLabelPositionBelowStepper(props) {
                                 Назад
                             </Button>
                             {activeStep === steps.length - 1 ?
-                                <Button variant="contained" color="primary" onClick={handleNext}>
+                                <Button type="submit" variant="contained" color="primary">
                                     Создать
                                 </Button> :
-                                <Button type="submit" variant="contained" color="primary" onClick={handleNext}>
+                                <Button variant="contained" color="primary" onClick={handleNext}>
                                     Вперед
                                 </Button>}
                         </div>
@@ -329,12 +335,22 @@ function HorizontalLabelPositionBelowStepper(props) {
     );
 }
 
-function App() {
-    const form = useForm({shouldUnregister: false});
+function App(props: {questionary?: any}) {
+    
+    console.log(props.questionary);
+    
+    const form = useForm({shouldUnregister: false, defaultValues: props.questionary});
     const {register, handleSubmit} = form;
     const onSubmit = data => {
+        //edit mode change endpoint
+        //if(props.questionary)
+            
+        
+        
         console.log(data);
-        const response = fetch("/api/ObjectTypeApi", {
+        data.questionaryQuestions.forEach(question => question.questionaryAnswerOptions.forEach( option => option.selectableAnswerId = Number(option.selectableAnswerId) ));
+        data.questionaryQuestions.forEach(question => question.sequenceOrder = Number(question.sequenceOrder));
+        const response = fetch("/api/QuestionaryApi", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             credentials: "include",
@@ -354,4 +370,4 @@ function App() {
     );
 }
 
-ReactDOM.render(<App/>, document.getElementById('reactRoot'));
+const renderReact = (questionary = undefined) => ReactDOM.render(<App questionary={questionary}/>, document.getElementById('reactRoot'));

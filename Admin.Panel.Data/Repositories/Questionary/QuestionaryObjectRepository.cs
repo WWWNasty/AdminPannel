@@ -206,14 +206,14 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                       WHERE Id=@Id";
 
                         connection.Execute(query, obj, transaction);
+                          
                         //дропаем все валью записи объекту
-
                         connection.Execute(
                             @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
                             new {QuestionaryObjectId = obj.Id}, transaction);
 
-                        //добавляем заново все валью записи
-                        if (obj.SelectedObjectPropertyValues != null)
+                        //добавляем заново все валью записи 
+                        if (obj.SelectedObjectPropertyValues != null && obj.SelectedObjectPropertyValues.Count != 0)
                         {
                             foreach (ObjectPropertyValues objectProperty in obj.SelectedObjectPropertyValues)
                             {

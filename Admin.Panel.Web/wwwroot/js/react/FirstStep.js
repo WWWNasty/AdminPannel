@@ -11,9 +11,11 @@ const FirstStep = props => {
   const [openAlertGreen, setOpenAlertGreen] = React.useState(false);
   const [openAlertRed, setOpenAlertRed] = React.useState(false);
   const form = useFormContext(); //console.log(form);
-  //const { reset, register } = form;
 
-  const selectedCompany = form.watch('company');
+  const {
+    handleSubmit
+  } = form;
+  const selectedCompany = form.watch('companyId');
   const availableObjectTypes = props.selectOptionsTypes.filter(type => type.companyId == selectedCompany);
 
   const handleClose = () => {
@@ -25,10 +27,13 @@ const FirstStep = props => {
     className: classes.root,
     autoComplete: "off"
   }, /*#__PURE__*/React.createElement(MySelect, {
-    required: true,
+    required: {
+      message: 'Neobh',
+      value: true
+    },
     selectOptions: props.selectOptionsСompanies,
     form: form,
-    name: "company" // setSelectedValue={selectedValue => {
+    name: "companyId" // setSelectedValue={selectedValue => {
     //     props.setSelectedValueTypes(null);
     // }} 
     ,

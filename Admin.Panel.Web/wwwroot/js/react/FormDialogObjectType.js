@@ -1,16 +1,15 @@
 function FormDialogObjectType(props) {
-  const [indexes, setIndexes] = React.useState([]);
-  const [counter, setCounter] = React.useState(0);
   const dialogForm = useForm();
   const {
     register,
     handleSubmit,
-    control
+    control,
+    reset
   } = dialogForm;
 
-  const onSubmit = data => {
+  const onSubmit = async data => {
     console.log(data);
-    const response = fetch("/api/ObjectTypeApi", {
+    const response = await fetch("/api/ObjectTypeApi", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -18,9 +17,9 @@ function FormDialogObjectType(props) {
       credentials: "include",
       body: JSON.stringify(data)
     });
-    props.setObjectTypes([data, ...props.selectOptionsTypes]);
+    const newObjectType = await response.json();
+    props.setObjectTypes([newObjectType, ...props.selectOptionsTypes]);
     setOpen(false);
-    setCounter(0);
 
     if (response) {
       props.setOpenAlertGreen(true);
@@ -37,13 +36,18 @@ function FormDialogObjectType(props) {
 
   const handleClose = () => {
     setOpen(false);
+    reset();
   };
 
-  const addFriend = () => {
-    setIndexes(prevIndexes => [...prevIndexes, counter]);
-    setCounter(prevCounter => prevCounter + 1);
-  };
-
+  const objectProperties = `objectProperties`;
+  const {
+    remove,
+    append,
+    fields
+  } = useFieldArray({
+    control: dialogForm.control,
+    name: objectProperties
+  });
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
     variant: "outlined",
     color: "primary",
@@ -79,18 +83,23 @@ function FormDialogObjectType(props) {
     id: "standard-required",
     label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
     fullWidth: true
-  }), /*#__PURE__*/React.createElement("div", null, indexes.map(index => {
+  }), /*#__PURE__*/React.createElement("div", null, fields.map((property, index) => {
     return /*#__PURE__*/React.createElement(CardProp, {
+      remove: () => remove(index),
+      key: property.key,
       index: index,
-      setIndexes: setIndexes,
-      setCounter: setCounter,
       form: dialogForm,
       registerForm: register
     });
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(IconButton, {
     color: "primary",
     "aria-label": "add",
-    onClick: addFriend
+    onClick: () => append({
+      key: Math.random(),
+      name: '',
+      isUsedInReport: false,
+      nameInReport: ''
+    })
   }, /*#__PURE__*/React.createElement(Icon, null, "add")))), /*#__PURE__*/React.createElement(DialogActions, null, /*#__PURE__*/React.createElement(Button, {
     onClick: handleClose,
     color: "primary"

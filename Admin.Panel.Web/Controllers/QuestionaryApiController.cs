@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Entities.Questionary.Questions;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
+using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.QuestionsRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Services.QuestionaryServiceInterfaces.QuestionsServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ namespace Admin.Panel.Web.Controllers
     [ApiController]
     public class QuestionaryApiController : Controller
     {
+        private readonly IQuestionaryRepository _questionaryRepository;
         private readonly IQuestionaryService _questionaryService;
         private readonly IQuestionaryObjectTypesRepository _objectTypesRepository;
         private readonly ILogger<QuestionaryApiController> _logger;
@@ -21,11 +23,13 @@ namespace Admin.Panel.Web.Controllers
         public QuestionaryApiController(
             IQuestionaryObjectTypesRepository objectTypesRepository, 
             ILogger<QuestionaryApiController> logger, 
-            IQuestionaryService questionaryService)
+            IQuestionaryService questionaryService, 
+            IQuestionaryRepository questionaryRepository)
         {
             _objectTypesRepository = objectTypesRepository;
             _logger = logger;
             _questionaryService = questionaryService;
+            _questionaryRepository = questionaryRepository;
         }
 
         [HttpGet]
@@ -39,13 +43,18 @@ namespace Admin.Panel.Web.Controllers
                 model = await _questionaryService.GetAllForQuestionaryCreate(model);
             }
             else
-            {
+            { 
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 model = await _questionaryService.GetAllForQuestionaryForUserCreate(model, userId);
             }
             return Ok(model);
         }
       
-        
+        [HttpPost]
+        [Authorize]
+        public async Task<QuestionaryDto> Post([FromBody] QuestionaryDto model)
+        {
+            return await _questionaryRepository.CreateAsync(model);
+        } 
     }
 }

@@ -1,6 +1,4 @@
 const MyMultipleSelect = props => {
-  console.log(props);
-
   function getStyles(name, personName, theme) {
     return {
       fontWeight: personName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium
@@ -36,24 +34,27 @@ const MyMultipleSelect = props => {
     }
   };
   const classes = useStyles();
-
-  const handleChange = event => {
-    props.setSelectedValue(event.target.value);
-  };
-
   const {
     control
   } = useFormContext();
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(FormControl, {
     className: `${classes.formControl} col-md-3`
   }, /*#__PURE__*/React.createElement(ReactHookFormSelect, {
-    required: true,
     labelId: "demo-mutiple-chip-label",
     id: "demo-mutiple-chip",
     multiple: true,
-    name: "questionaryObjects",
+    validate: () => {
+      const isValid = props.form.getValues('objectsIdToChangeType')?.length > 0;
+      const type = 'oneOrMoreRequired';
+      if (!isValid) props.form.setError('objectsIdToChangeType', {
+        type,
+        message: 'Viberite adin ili bolshe'
+      });
+      return isValid;
+    },
+    name: "objectsIdToChangeType",
     label: props.selectName,
-    defaultValue: props.selectedValue,
+    defaultValue: [],
     className: classes.selectEmpty,
     control: control,
     input: /*#__PURE__*/React.createElement(Input, {
@@ -67,7 +68,7 @@ const MyMultipleSelect = props => {
       className: classes.chip
     }))),
     MenuProps: MenuProps
-  }, props.selectOptions?.map(item => [/*#__PURE__*/React.createElement(ListSubheader, null, item.name), item.questionaryObjects.map(object => /*#__PURE__*/React.createElement(MenuItem, {
+  }, props.selectOptions?.map(item => [/*#__PURE__*/React.createElement(ListSubheader, null, item.name), item.questionaryObjects?.map(object => /*#__PURE__*/React.createElement(MenuItem, {
     key: object.id,
     value: object.id
   }, /*#__PURE__*/React.createElement(Checkbox, null), /*#__PURE__*/React.createElement(ListItemText, {

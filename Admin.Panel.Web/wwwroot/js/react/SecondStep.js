@@ -12,7 +12,6 @@ const SecondStep = props => {
     form: form,
     selectOptions: props.selectOptions,
     selectedValue: props.selectedValue,
-    setSelectedValue: props.setSelectedValue,
     selectName: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0431\u044A\u0435\u043A\u0442\u044B \u0434\u043B\u044F \u0430\u043D\u043A\u0435\u0442\u044B"
   }), /*#__PURE__*/React.createElement(FormDialogObject, {
     selectedObjectype: props.selectedObjectype,

@@ -37,7 +37,7 @@ namespace Admin.Panel.Core.Entities.Questionary
 
         public bool IsCodeUnique { get; set; } = true;
 
-        [Required(ErrorMessage = "Поле обязательно!")]
+        //[Required(ErrorMessage = "Поле обязательно!")]
         public List<ObjectPropertyValues> SelectedObjectPropertyValues { get; set; }
         
         [Display(Name = "Тип объекта")]

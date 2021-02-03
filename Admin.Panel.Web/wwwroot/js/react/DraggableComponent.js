@@ -1,17 +1,15 @@
 const DraggableComponent = props => {
-  const [items, setItems] = useState([]); //
-  // React.useEffect(() => {
-  //     setItems(getItems(1))
-  // },[])
-
   const form = useFormContext();
-  const [indexes, setIndexes] = React.useState([]);
-  const [counter, setCounter] = React.useState(0);
-
-  const addQuestion = () => {
-    setIndexes(prevIndexes => [...prevIndexes, counter]);
-    setCounter(prevCounter => prevCounter + 1);
-  };
+  const questionsFieldName = `questionaryQuestions`;
+  const {
+    remove,
+    append,
+    move,
+    fields
+  } = useFieldArray({
+    control: form.control,
+    name: questionsFieldName
+  });
 
   const onDragEnd = result => {
     // dropped outside the list
@@ -19,8 +17,7 @@ const DraggableComponent = props => {
       return;
     }
 
-    const reorderedItems = reorder(indexes, result.source.index, result.destination.index);
-    setItems(reorderedItems);
+    move(result.source.index, result.destination.index);
   };
 
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(DragDropContext, {
@@ -31,25 +28,30 @@ const DraggableComponent = props => {
     rootRef: provided.innerRef
   }, /*#__PURE__*/React.createElement(List, {
     style: getListStyle(snapshot.isDraggingOver)
-  }, indexes.map(index => /*#__PURE__*/React.createElement(Draggable, {
-    key: index,
+  }, fields.map((question, index) => /*#__PURE__*/React.createElement(Draggable, {
+    key: question.key,
     index: index,
-    draggableId: index.toString()
+    draggableId: question.key.toString()
   }, (provided, snapshot) => /*#__PURE__*/React.createElement(DraggableCard, {
+    question: question,
     form: form,
     selectableAnswersLists: props.selectableAnswersLists,
     questionaryInputFieldTypes: props.questionaryInputFieldTypes,
     selectableAnswers: props.selectableAnswers,
     provided: provided,
+    removeQuestion: () => remove(index),
     snapshot: snapshot,
-    item: {
-      id: index
-    },
-    index: index,
-    setIndexes: setIndexes,
-    setCounter: setCounter
+    index: index
   }))), provided.placeholder)))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(IconButton, {
-    onClick: addQuestion,
+    onClick: () => append({
+      key: Math.random(),
+      questionText: '',
+      canSkipQuestion: false,
+      selectableAnswersListId: null,
+      questionaryInputFieldTypeId: null,
+      defaultAnswerId: null,
+      questionaryAnswerOptions: []
+    }),
     color: "primary",
     "aria-label": "add",
     className: "mt-50 mb-50 ml-50"

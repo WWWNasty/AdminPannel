@@ -8,24 +8,11 @@ interface SelectableAnswers {
 }
 const DraggableCard = (props) =>{
     const form = useFormContext();
-    const [state, setState] = React.useState({
-        checked: true,
-        gilad: true,
-        jason: false,
-        antoine: false,
-    });
     const {register, control} = useFormContext();
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-    };
-    const removeFriend = index => () => {
-        props.setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
-        props.setCounter(prevCounter => prevCounter - 1);
-    };
     const useStyles = makeStyles((theme: any) =>
         createStyles({
             root: {
-                width: '80%',
+                width: '77%',
             },
             heading: {
                 fontSize: theme.typography.pxToRem(15),
@@ -34,12 +21,10 @@ const DraggableCard = (props) =>{
         }),
     );
     const classes = useStyles();
-    const { gilad, jason, antoine } = state;
     const selectedSelectableAnswersListId = form.watch(`questionaryQuestions[${props.index}].selectableAnswersListId`);
     const availableSelectableAnswers = props.selectableAnswers.filter(answer => answer.selectableAnswersListId == selectedSelectableAnswersListId);
-    console.log("ответы1" + availableSelectableAnswers);
     const availableQuestionaryInputFieldTypeses = props.questionaryInputFieldTypes.filter(input => input.selectableAnswersListId == selectedSelectableAnswersListId);
-    return(
+    return (
         <div className="mt-3 bg-light">
             <ListItem
                 ContainerComponent="li"
@@ -64,11 +49,25 @@ const DraggableCard = (props) =>{
                         <Controller
                             as={TextField}
                             name={`questionaryQuestions[${props.index}].questionText`}
-                            className="mr-3 col-md-6"
-                            defaultValue=""
+                            className="mr-3 col-md-9"
+                            defaultValue={props.question.questionText}
                             required
                             control={control}
                             label="Текст вопроса"
+                        />
+                        {/*TODO fix state*/}
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    className="ml-5"
+                                    name={`questionaryQuestions[${props.index}].canSkipQuestion`}
+                                    color="primary"
+                                    inputRef={register}
+                                    defaultValue={props.question.canSkipQuestion}
+                                />
+                            } 
+                            
+                            label="Обязательный вопрос"
                         />
                         <MySelect required
                                   name={`questionaryQuestions[${props.index}].selectableAnswersListId`}
@@ -80,27 +79,15 @@ const DraggableCard = (props) =>{
                                   selectOptions={availableQuestionaryInputFieldTypeses}
                                   nameSwlect="Тип ввода"
                         />
-                        <MySelect name={`questionaryQuestions[${props.index}].selectableAnswersListId`}
+                        <MySelect name={`questionaryQuestions[${props.index}].defaultAnswerId`}
                                   selectOptions={availableSelectableAnswers}
                                   nameSwlect="Ответ по умолчанию"
-                        />
+                        /> 
                         <input type="hidden"
                                ref={register}
                                name={`questionaryQuestions[${props.index}].sequenceOrder`}
                                value={props.index}
                         />
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    className="mr-3"
-                                    name={`questionaryQuestions[${props.index}].canSkipQuestion`}
-                                    color="primary"
-                                    inputRef={register}
-                                />
-                            }
-                            label="Обязательный вопрос"
-                        />
-                        
                     </div>
                     <div className={`${classes.root} mt-3`}>
                         <Accordion>
@@ -113,14 +100,10 @@ const DraggableCard = (props) =>{
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Typography>
-                                    Выберите ниже ответы которым необходим комментарий
+                                    Выберите ниже ответы, которым необходим комментарий
                                     <FormGroup>
                                         {availableSelectableAnswers?.map((item, index) =>
                                             <div>
-                                                {/*<FormControlLabel*/}
-                                                {/*    control={<Checkbox checked={gilad} onChange={handleChange} color="primary" name="gilad" />}*/}
-                                                {/*    label="Gilad Gray"*/}
-                                                {/*/>*/}
 
                                                 <FormControlLabel
                                                     control={
@@ -128,6 +111,7 @@ const DraggableCard = (props) =>{
                                                             name={`questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].isInvolvesComment`}
                                                             color="primary"
                                                             inputRef={register}
+                                                            defaultValue=""
                                                         />
                                                     }
                                                     label={item.name}
@@ -137,40 +121,6 @@ const DraggableCard = (props) =>{
                                                        name={`questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].selectableAnswerId`}
                                                        value={item.id}
                                                 />
-                                                {/*<FormControlLabel*/}
-                                                {/*    color="primary"*/}
-                                                {/*    value={item.id}*/}
-                                                {/*    control={<Checkbox />}*/}
-                                                {/*    label={item.name}*/}
-                                                {/*    name={`techStack[${item.id}]`}*/}
-                                                {/*    inputRef={register}*/}
-                                                {/*/>*/}
-                                                
-                                                {/*<Controller*/}
-                                                {/*    as={Checkbox}*/}
-                                                {/*    name={`techStack[${item.id}]`}*/}
-                                                {/*    control={control}*/}
-                                                {/*    defaultValue=""*/}
-                                                {/*    label={item.name}*/}
-                                                {/*    color="primary"*/}
-                                                {/*/>*/}
-                                                
-                                                {/*<Controller*/}
-                                                {/*    as={TextField}*/}
-                                                {/*    name={`selectedObjectPropertyValues[${index}].value`}*/}
-                                                {/*    control={control}*/}
-                                                {/*    defaultValue=""*/}
-                                                {/*    required*/}
-                                                {/*    margin="dense"*/}
-                                                {/*    id="standard-required"*/}
-                                                {/*    label={item.name}*/}
-                                                {/*    fullWidth={true}*/}
-                                                {/*/>*/}
-                                                {/*<input type="hidden"*/}
-                                                {/*       ref={register}*/}
-                                                {/*       name={`selectedObjectPropertyValues[${index}].objectPropertyId`}*/}
-                                                {/*       value={item.id}*/}
-                                                {/*/>*/}
                                             </div>
                                         )}
                                       
@@ -182,7 +132,7 @@ const DraggableCard = (props) =>{
                 </div>
               
                 <ListItemSecondaryAction>
-                    <IconButton onClick={removeFriend(props.index)}>
+                    <IconButton onClick={() => props.removeQuestion(props.index)}>
                         <Icon>delete</Icon>
                     </IconButton>
                 </ListItemSecondaryAction>

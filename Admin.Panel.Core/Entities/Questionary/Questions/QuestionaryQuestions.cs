@@ -13,7 +13,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         public string QuestionText { get; set; }
         
         [Required(ErrorMessage = "Выберите Тип ввода!")]
-        [Range(1, 99999, ErrorMessage = "Выберите Тип ввода!")]
+        [Range(1, int.MaxValue, ErrorMessage = "Выберите Тип ввода!")]
         public int QuestionaryInputFieldTypeId { get; set; }
         
         [Display(Name = "Вопрос обязательный")]

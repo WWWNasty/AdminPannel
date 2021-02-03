@@ -1,17 +1,17 @@
-function CardProp(props: {index: number, setIndexes: any, setCounter: any, form: any, registerForm: any}) {
+function CardProp(props: {index: number, form: any, registerForm: any, remove: any}) {
     const classes = useStyles();
 
-    const removeFriend = index => () => {
-        props.setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
-        props.setCounter(prevCounter => prevCounter - 1);
-    };
+    // const removeFriend = index => () => {
+    //     props.setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
+    //     props.setCounter(prevCounter => prevCounter - 1);
+    // };
     return (
         <Card className={`${classes.root} mt-3 mb-3 bg-light`}>
             <CardContent>
                 <Typography className={classes.pos} color="textSecondary">
                     <div className={'d-flex'}>
                         свойство
-                        <IconButton aria-label="delete" className={`${classes.margin} ml-auto`} onClick={removeFriend(props.index)}>
+                        <IconButton aria-label="delete" className={`${classes.margin} ml-auto`} onClick={() => props.remove(props.index)}>
                             <Icon>delete</Icon>
                         </IconButton>
                     </div>

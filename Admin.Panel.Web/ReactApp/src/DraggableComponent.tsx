@@ -1,31 +1,20 @@
 const DraggableComponent = (props) => {
-    const [items, setItems] = useState([]);
-    //
-    // React.useEffect(() => {
-    //     setItems(getItems(1))
-    // },[])
+
+
     const form = useFormContext();
-    const [indexes, setIndexes] = React.useState([]);
-    const [counter, setCounter] = React.useState(0);
 
-    const addQuestion = () => {
 
-        setIndexes(prevIndexes => [...prevIndexes, counter]);
-        setCounter(prevCounter => prevCounter + 1);
-    };
+    const questionsFieldName = `questionaryQuestions`;
+
+    const {remove, append, move, fields} = useFieldArray({control: form.control, name: questionsFieldName});
+
     const onDragEnd = (result) => {
         // dropped outside the list
         if (!result.destination) {
             return;
         }
 
-        const reorderedItems = reorder(
-            indexes,
-            result.source.index,
-            result.destination.index
-        );
-
-        setItems(reorderedItems);
+        move(result.source.index, result.destination.index);
     }
 
     return (
@@ -35,26 +24,23 @@ const DraggableComponent = (props) => {
                     {(provided, snapshot) => (
                         <RootRef rootRef={provided.innerRef}>
                             <List style={getListStyle(snapshot.isDraggingOver)}>
-                                {indexes.map(index =>
-                                    <Draggable key={index} index={index} draggableId={index.toString()}>
+                                {fields.map((question, index) =>
+                                    <Draggable key={question.key} index={index} draggableId={question.key.toString()}>
                                         {(provided, snapshot) =>
                                             <DraggableCard
+                                                question={question}
                                                 form={form}
                                                 selectableAnswersLists={props.selectableAnswersLists}
                                                 questionaryInputFieldTypes={props.questionaryInputFieldTypes}
                                                 selectableAnswers={props.selectableAnswers}
                                                 provided={provided}
+                                                removeQuestion={() => remove(index)}
                                                 snapshot={snapshot}
-                                                item={{id: index}}
-                                                index={index} setIndexes={setIndexes}
-                                                setCounter={setCounter}
+                                                index={index}
                                             />
                                         }
                                     </Draggable>)
-
                                 }
-
-
                                 {provided.placeholder}
                             </List>
                         </RootRef>
@@ -62,7 +48,20 @@ const DraggableComponent = (props) => {
                 </Droppable>
             </DragDropContext>
             <div>
-                <IconButton onClick={addQuestion} color="primary" aria-label="add" className="mt-50 mb-50 ml-50">
+                <IconButton 
+                    onClick={() => append({
+                        key: Math.random(),
+                        questionText: '',
+                        canSkipQuestion: false,
+                        selectableAnswersListId: null,
+                        questionaryInputFieldTypeId: null,
+                        defaultAnswerId: null,
+                        questionaryAnswerOptions: []
+                    })
+                } 
+                    color="primary" 
+                    aria-label="add" 
+                    className="mt-50 mb-50 ml-50">
                     <Icon>add</Icon>
                 </IconButton>
             </div>

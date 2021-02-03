@@ -1,20 +1,21 @@
 function FormDialogObjectType(props) {
-    const [indexes, setIndexes] = React.useState([]);
-    const [counter, setCounter] = React.useState(0);
     const dialogForm = useForm();
-    const {register, handleSubmit, control} = dialogForm;
+    const {register, handleSubmit, control, reset} = dialogForm;
 
-    const onSubmit = data => {
+    const onSubmit = async data => {
         console.log(data);
-        const response = fetch("/api/ObjectTypeApi", {
+        const response = await fetch("/api/ObjectTypeApi", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             credentials: "include",
             body: JSON.stringify(data)
         })
-        props.setObjectTypes([data, ...props.selectOptionsTypes]);
+        
+        const newObjectType = await response.json();
+        
+        props.setObjectTypes([newObjectType, ...props.selectOptionsTypes]);
         setOpen(false);
-        setCounter(0);
+        
         if (response) {
             props.setOpenAlertGreen(true);
         } else {
@@ -29,11 +30,11 @@ function FormDialogObjectType(props) {
 
     const handleClose = () => {
         setOpen(false);
+        reset();
     };
-    const addFriend = () => {
-        setIndexes(prevIndexes => [...prevIndexes, counter]);
-        setCounter(prevCounter => prevCounter + 1);
-    };
+    const objectProperties = `objectProperties`;
+
+    const {remove, append, fields} = useFieldArray({control: dialogForm.control, name: objectProperties});
 
     return (
         <div>
@@ -45,11 +46,16 @@ function FormDialogObjectType(props) {
                 <DialogTitle id="form-dialog-title">Новый тип объекта</DialogTitle>
                 <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                     <DialogContent>
-                        <div><MySelect autoFocus required name="companyId" selectOptions={props.selectOptions}
-                                       selectedValue={props.selectedValue}
-                                       form={dialogForm}
-                                       setSelectedValue={props.setSelectedValue}
-                                       nameSwlect="Выберите компанию"/>
+                        <div>
+                            <MySelect
+                                autoFocus
+                                required
+                                name="companyId" 
+                                selectOptions={props.selectOptions}
+                                selectedValue={props.selectedValue}
+                                form={dialogForm}
+                                setSelectedValue={props.setSelectedValue}
+                                nameSwlect="Выберите компанию"/>
                         </div>
                         <Controller
                             as={TextField}
@@ -62,17 +68,28 @@ function FormDialogObjectType(props) {
                             label="Название"
                             fullWidth={true}
                         />
-                        
+
                         <div>
-                            {indexes.map(index => {
+                            {fields.map((property, index) => {
                                 return (
-                                    <CardProp index={index} setIndexes={setIndexes} setCounter={setCounter} form={dialogForm} registerForm={register}/>
+                                    <CardProp
+                                        remove={() => remove(index)}
+                                        key={property.key}
+                                        index={index}
+                                        form={dialogForm}
+                                        registerForm={register}/>
                                 );
                             })}
                         </div>
 
                         <div>
-                            <IconButton color="primary" aria-label="add" onClick={addFriend}>
+                            <IconButton color="primary" aria-label="add" onClick={() => append({
+                                key: Math.random(),
+                                name: '',
+                                isUsedInReport: false,
+                                nameInReport: ''
+                            })
+                            }>
                                 <Icon>add</Icon>
                             </IconButton>
                         </div>

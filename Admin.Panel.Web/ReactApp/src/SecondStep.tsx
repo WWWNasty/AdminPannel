@@ -13,7 +13,6 @@ const SecondStep = (props) => {
                 form={form}
                 selectOptions={props.selectOptions}
                 selectedValue={props.selectedValue}
-                setSelectedValue={props.setSelectedValue}
                 selectName="Выберите объекты для анкеты"
             />
             <FormDialogObject
