@@ -109,11 +109,20 @@ namespace Admin.Panel.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "SuperAdministrator")]
+        [Authorize]
         public async Task<ActionResult> GetAll()
         {
-            var model = await _questionaryRepository.GetAllAsync();
-            return View(model);
+            if (User.IsInRole("SuperAdministrator"))
+            {
+                var model = await _questionaryRepository.GetAllAsync();
+                return View(model);
+            }
+            else
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var model = await _questionaryRepository.GetAllForUserAsync(userId);
+                return View(model);
+            }
         }
 
         [HttpGet]

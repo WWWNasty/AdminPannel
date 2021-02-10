@@ -315,7 +315,6 @@ function HorizontalLabelPositionBelowStepper(props) {
         //edit mode change endpoint
         console.log(data);
         data.questionaryQuestions.forEach(question => question.questionaryAnswerOptions.forEach(option => option.selectableAnswerId = Number(option.selectableAnswerId)));
-        data.questionaryQuestions.forEach(question => question.sequenceOrder = Number(question.sequenceOrder));
 
         const response = await fetch("/api/QuestionaryApi", {
             method: props.questionary ? "PUT" : "POST",
