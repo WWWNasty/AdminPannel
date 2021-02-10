@@ -14,7 +14,7 @@ const ThirdStep = props => {
     control: control,
     label: "Анкета активна"
   }), /*#__PURE__*/React.createElement(Controller, {
-    error: errors.name?.type,
+    error: errors?.name?.type,
     as: TextField,
     autoFocus: true,
     name: "name",
@@ -28,9 +28,13 @@ const ThirdStep = props => {
     ,
     rules: {
       required: true,
-      maxLength: 250,
+      maxLength: {
+        message: 'Максимально символов: 250',
+        value: 250
+      },
       validate: true
-    }
+    },
+    helperText: errors?.name?.message
   }), /*#__PURE__*/React.createElement(DraggableComponent, {
     form: form,
     selectableAnswersLists: props.selectableAnswersLists,

@@ -15,7 +15,7 @@ const ThirdStep = (props) => {
             }
           
             <Controller
-                error={errors.name?.type}
+                error={errors?.name?.type}
                 as={TextField}
                 autoFocus
                 name="name"
@@ -27,7 +27,8 @@ const ThirdStep = (props) => {
                 label="Название"
                 fullWidth={true}
                 //required={ {message: '', value: true} }
-                rules={{required: true, maxLength: 250, validate: true}}
+                rules={{required: true, maxLength: {message:'Максимально символов: 250', value:250}, validate: true}}
+                helperText={errors?.name?.message}
             />
             
             <DraggableComponent

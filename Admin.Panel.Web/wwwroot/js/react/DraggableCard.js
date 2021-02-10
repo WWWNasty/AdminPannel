@@ -57,7 +57,7 @@ const DraggableCard = props => {
     rules: {
       required: true,
       maxLength: {
-        message: '250',
+        message: 'Максимально символов: 250',
         value: 250
       },
       validate: true

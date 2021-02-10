@@ -20,11 +20,11 @@ const FormDialogObject = (props) => {
             body: JSON.stringify(data)
         })
 
-        
+
         if (response.ok) {
             const result = await response.json();
             props.setOpenAlertGreen(true);
-            
+
             debugger;
 
             props.selectedObjectype.questionaryObjects.push(result);
@@ -38,10 +38,6 @@ const FormDialogObject = (props) => {
             props.setOpenAlertRed(true);
         }
 
-        
-        //props.setObjectTypes([data, ...props.selectOptions]);
-
-        //return false;
     };
     const [open, setOpen] = React.useState(false);
 
@@ -77,7 +73,12 @@ const FormDialogObject = (props) => {
                             fullWidth={true}
                         />
 
-                        <FormControl {...props} error={errors.code?.type}>
+                        <FormControl
+                            {...props}
+                            error={errors?.code?.type}
+                            fullWidth={true}
+                            rules={{maxLength: {message:'Максимально символов: 20', value:20}, validate: true}}
+                        >
                             <Controller
                                 as={TextField}
                                 name="code"
@@ -87,7 +88,6 @@ const FormDialogObject = (props) => {
                                 margin="dense"
                                 id="standard-required"
                                 label="Код"
-                                fullWidth={true}
                             />
                             <FormHelperText>{errors.code?.message}</FormHelperText>
                         </FormControl>

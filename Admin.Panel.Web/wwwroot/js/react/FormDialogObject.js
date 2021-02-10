@@ -39,9 +39,7 @@ const FormDialogObject = props => {
       });
     } else {
       props.setOpenAlertRed(true);
-    } //props.setObjectTypes([data, ...props.selectOptions]);
-    //return false;
-
+    }
   };
 
   const [open, setOpen] = React.useState(false);
@@ -82,7 +80,15 @@ const FormDialogObject = props => {
     label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
     fullWidth: true
   }), /*#__PURE__*/React.createElement(FormControl, _extends({}, props, {
-    error: errors.code?.type
+    error: errors?.code?.type,
+    fullWidth: true,
+    rules: {
+      maxLength: {
+        message: 'Максимально символов: 20',
+        value: 20
+      },
+      validate: true
+    }
   }), /*#__PURE__*/React.createElement(Controller, {
     as: TextField,
     name: "code",
@@ -91,8 +97,7 @@ const FormDialogObject = props => {
     required: true,
     margin: "dense",
     id: "standard-required",
-    label: "\u041A\u043E\u0434",
-    fullWidth: true
+    label: "\u041A\u043E\u0434"
   }), /*#__PURE__*/React.createElement(FormHelperText, null, errors.code?.message)), /*#__PURE__*/React.createElement(Controller, {
     as: TextField,
     name: "description",

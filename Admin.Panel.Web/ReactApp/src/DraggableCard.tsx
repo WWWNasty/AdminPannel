@@ -63,7 +63,7 @@ const DraggableCard = (props) => {
                             id="standard-required"
                             control={control}
                             label="Текст вопроса"
-                            rules={{required: true, maxLength: {message:'250', value:250}, validate: true}}
+                            rules={{required: true, maxLength: {message:'Максимально символов: 250', value:250}, validate: true}}
                             helperText={Log(errors?.questionaryQuestions?.[props.index]?.questionText?.message)}
                         />
                         {/*TODO fix state*/}
