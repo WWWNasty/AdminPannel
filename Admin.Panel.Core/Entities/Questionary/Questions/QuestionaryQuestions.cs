@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -38,5 +39,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         
         // [Display(Name = "Ответ по умолчанию")]
         public int? DefaultAnswerId { get; set; }
+
+        public string Key => Guid.NewGuid().ToString();
     }
 }

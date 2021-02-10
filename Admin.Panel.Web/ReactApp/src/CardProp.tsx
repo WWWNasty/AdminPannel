@@ -10,7 +10,7 @@ function CardProp(props: {index: number, form: any, registerForm: any, remove: a
             <CardContent>
                 <Typography className={classes.pos} color="textSecondary">
                     <div className={'d-flex'}>
-                        свойство
+                        Cвойство
                         <IconButton aria-label="delete" className={`${classes.margin} ml-auto`} onClick={() => props.remove(props.index)}>
                             <Icon>delete</Icon>
                         </IconButton>

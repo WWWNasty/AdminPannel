@@ -14,11 +14,11 @@ const FirstStep = (props) => {
     const [openAlertGreen, setOpenAlertGreen] = React.useState(false);
     const [openAlertRed, setOpenAlertRed] = React.useState(false);
     const form = useFormContext();
-    //console.log(form);
     const { handleSubmit } = form;
     const selectedCompany = form.watch('companyId');
     const availableObjectTypes = props.selectOptionsTypes.filter(type => type.companyId == selectedCompany)
-
+    const onChange = () => form.setValue('objectTypeId', null);
+    
     const handleClose = () => {
         setOpenAlertGreen(false);
         setOpenAlertRed(false);
@@ -26,9 +26,10 @@ const FirstStep = (props) => {
     return (
         <div>
             <form className={classes.root} autoComplete="off">
-                <MySelect required={ {message: 'Neobh', value: true} }
+                <MySelect required={ {message: '', value: true} }
                           selectOptions={props.selectOptionsСompanies}
                           form={form}
+                          onChange={onChange}
                           name="companyId"
                           // setSelectedValue={selectedValue => {
                           //     props.setSelectedValueTypes(null);
@@ -55,7 +56,7 @@ const FirstStep = (props) => {
 
             <Snackbar open={openAlertGreen} autoHideDuration={6000} onClose={handleClose}>
                 <div className="alert alert-success" role="alert">
-                    This is a success alert with
+                    Тип объектов успешно создан!
                     <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -64,7 +65,7 @@ const FirstStep = (props) => {
 
             <Snackbar open={openAlertRed} autoHideDuration={6000} onClose={handleClose}>
                 <div className="alert alert-danger" role="alert">
-                    This is a danger alert with
+                    Произошла ошибка, тип объекта не создан!
                     <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

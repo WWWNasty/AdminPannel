@@ -90,7 +90,7 @@ function getSteps() {
     return ['Выбор типа объекта', 'Выбор объекта', 'Создание анкеты'];
 }
 
-function getStepContent(step: number, form: any) {
+function getStepContent(step: number, form: any, questionary: any) {
     const [objectTypes, setObjectTypes] = React.useState<SelectOption[]>([]);
     const [companies, setCompanies] = React.useState<SelectOption[]>([]);
     const [selectableAnswersLists, setSelectableAnswersLists] = React.useState<SelectOption[]>([]);
@@ -99,38 +99,52 @@ function getStepContent(step: number, form: any) {
 
     React.useEffect(() => {
         (async () => {
-            const response = await fetch("/api/QuestionaryApi", {
-                method: "Get",
-                headers: {"Accept": "application/json"},
-                credentials: "include"
-            });
 
-            if (response.ok === true) {
-                const selectOptions = await response.json();
+            const getSelectOptions = async () => {
+                if (questionary)
+                    return questionary;
 
-                let objTypes: SelectOption[] = selectOptions.questionaryObjectTypes;
-                setObjectTypes(objTypes);
+                const response = await fetch("/api/QuestionaryApi", {
+                    method: "Get",
+                    headers: {"Accept": "application/json"},
+                    credentials: "include"
+                });
 
-                let companies: SelectOption[] = selectOptions.applicationCompanies.map(company => ({
-                    id: company.companyId,
-                    name: company.companyName
-                }));
-                setCompanies(companies);
-
-                let answersList: SelectOption[] = selectOptions.selectableAnswersLists;
-                setSelectableAnswersLists(answersList);
-
-                let inputFieldTypes: QuestionaryInputFieldTypes[] = selectOptions.questionaryInputFieldTypes;
-                setQuestionaryInputFieldTypes(inputFieldTypes);
-
-                let answers: SelectableAnswers[] = selectOptions.selectableAnswers.map(answer => ({
-                    name: answer.answerText,
-                    id: answer.id,
-                    selectableAnswersListId: answer.selectableAnswersListId
-                }));
-
-                setSelectableAnswers(answers);
+                if (response.ok) {
+                    return await response.json();
+                }
             }
+
+            const selectOptions = await getSelectOptions();
+
+            if(!selectOptions){
+                //todo show a popup with error
+                return;
+            }
+            
+            let objTypes: SelectOption[] = selectOptions.questionaryObjectTypes;
+            setObjectTypes(objTypes);
+
+            let companies: SelectOption[] = selectOptions.applicationCompanies.map(company => ({
+                id: company.companyId,
+                name: company.companyName
+            }));
+            setCompanies(companies);
+
+            let answersList: SelectOption[] = selectOptions.selectableAnswersLists;
+            setSelectableAnswersLists(answersList);
+
+            let inputFieldTypes: QuestionaryInputFieldTypes[] = selectOptions.questionaryInputFieldTypes;
+            setQuestionaryInputFieldTypes(inputFieldTypes);
+
+            let answers: SelectableAnswers[] = selectOptions.selectableAnswers.map(answer => ({
+                name: answer.answerText,
+                id: answer.id,
+                selectableAnswersListId: answer.selectableAnswersListId
+            }));
+
+            setSelectableAnswers(answers);
+            
         })()
     }, []);
 
@@ -281,16 +295,39 @@ function HorizontalLabelPositionBelowStepper(props) {
 
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
-        
-        handleSubmit(onSuccess) ();
+        handleSubmit(onSuccess)();
     };
 
     const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        const onSuccess = data => {
+            form.clearErrors();
+
+            setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        }
+        handleSubmit(onSuccess)();
+        
     };
 
     const handleReset = () => {
         setActiveStep(0);
+    };
+    const onSubmit = async data => {
+        //edit mode change endpoint
+        console.log(data);
+        data.questionaryQuestions.forEach(question => question.questionaryAnswerOptions.forEach(option => option.selectableAnswerId = Number(option.selectableAnswerId)));
+        data.questionaryQuestions.forEach(question => question.sequenceOrder = Number(question.sequenceOrder));
+
+        const response = await fetch("/api/QuestionaryApi", {
+            method: props.questionary ? "PUT" : "POST",
+            headers: {"Content-Type": "application/json"},
+            credentials: "include",
+            body: JSON.stringify(data)
+        })
+
+        if (response.ok) {
+            window.location = props.getAllRoute;
+        }
+
     };
 
     return (
@@ -310,7 +347,8 @@ function HorizontalLabelPositionBelowStepper(props) {
                     </div>
                 ) : (
                     <div>
-                        <Typography className={classes.instructions}>{getStepContent(activeStep, form)}</Typography>
+                        <Typography
+                            className={classes.instructions}>{getStepContent(activeStep, form, props.questionary)}</Typography>
                         <div>
                             <Button
                                 disabled={activeStep === 0}
@@ -321,8 +359,8 @@ function HorizontalLabelPositionBelowStepper(props) {
                                 Назад
                             </Button>
                             {activeStep === steps.length - 1 ?
-                                <Button type="submit" variant="contained" color="primary">
-                                    Создать
+                                <Button onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
+                                    Сохранить
                                 </Button> :
                                 <Button variant="contained" color="primary" onClick={handleNext}>
                                     Вперед
@@ -335,39 +373,31 @@ function HorizontalLabelPositionBelowStepper(props) {
     );
 }
 
-function App(props: {questionary?: any}) {
-    
+function App(props: { questionary?: any, getAllRoute: string }) {
+
     console.log(props.questionary);
-    
+
     const form = useForm({shouldUnregister: false, defaultValues: props.questionary});
     const {register, handleSubmit} = form;
-    const onSubmit = data => {
-        //edit mode change endpoint
-        //if(props.questionary)
-            
-        
-        
-        console.log(data);
-        data.questionaryQuestions.forEach(question => question.questionaryAnswerOptions.forEach( option => option.selectableAnswerId = Number(option.selectableAnswerId) ));
-        data.questionaryQuestions.forEach(question => question.sequenceOrder = Number(question.sequenceOrder));
-        const response = fetch("/api/QuestionaryApi", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            credentials: "include",
-            body: JSON.stringify(data)
-        })
-    };
+
 
     return (
         <div>
-            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+            <form autoComplete="off">
                 <FormProvider {...form}>
-                    <HorizontalLabelPositionBelowStepper/>
+                    <HorizontalLabelPositionBelowStepper 
+                        questionary={props.questionary}
+                        getAllRoute={props.getAllRoute}
+                    />
                 </FormProvider>
             </form>
-            <CloseAlertDialog/>
+            <CloseAlertDialog getAllRoute={props.getAllRoute}/>
         </div>
     );
 }
-
-const renderReact = (questionary = undefined) => ReactDOM.render(<App questionary={questionary}/>, document.getElementById('reactRoot'));
+const Log = (a) => {
+    console.log(a);
+    return a;
+}
+const renderReact = (getAllRoute: string, questionary = undefined) => ReactDOM.render(<App getAllRoute={getAllRoute}
+                                                                                           questionary={questionary}/>, document.getElementById('reactRoot'));

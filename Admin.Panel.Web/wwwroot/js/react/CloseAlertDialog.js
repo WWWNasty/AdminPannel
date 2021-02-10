@@ -7,15 +7,19 @@ const SlideTransition = React.forwardRef(function Transition(props, ref) {
   }, props));
 });
 
-function CloseAlertDialog() {
+function CloseAlertDialog(props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = redirectToAll => {
     setOpen(false);
+
+    if (redirectToAll === true) {
+      window.location = props.getAllRoute;
+    }
   };
 
   return /*#__PURE__*/React.createElement("div", {
@@ -37,7 +41,7 @@ function CloseAlertDialog() {
     onClick: handleClose,
     color: "primary"
   }, "\u041D\u0435\u0442"), /*#__PURE__*/React.createElement(Button, {
-    onClick: handleClose,
+    onClick: () => handleClose(true),
     color: "primary"
   }, "\u0414\u0430"))));
 }

@@ -16,6 +16,7 @@ const SecondStep = (props) => {
                 selectName="Выберите объекты для анкеты"
             />
             <FormDialogObject
+                objectTypes={props.objectTypes}
                 selectedObjectype={props.selectedObjectype}
                 setOpenAlertRed={setOpenAlertRed}
                 setOpenAlertGreen={setOpenAlertGreen}
@@ -23,7 +24,7 @@ const SecondStep = (props) => {
 
             <Snackbar open={openAlertGreen} autoHideDuration={6000} onClose={handleClose}>
                 <div className="alert alert-success" role="alert">
-                    This is a success alert with
+                    Объект успешно создан!
                     <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -32,7 +33,7 @@ const SecondStep = (props) => {
 
             <Snackbar open={openAlertRed} autoHideDuration={6000} onClose={handleClose}>
                 <div className="alert alert-danger" role="alert">
-                    This is a danger alert with
+                    Произошла ошибка, объект не создан!
                     <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

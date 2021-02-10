@@ -11,7 +11,7 @@ function CardProp(props) {
     color: "textSecondary"
   }, /*#__PURE__*/React.createElement("div", {
     className: 'd-flex'
-  }, "\u0441\u0432\u043E\u0439\u0441\u0442\u0432\u043E", /*#__PURE__*/React.createElement(IconButton, {
+  }, "C\u0432\u043E\u0439\u0441\u0442\u0432\u043E", /*#__PURE__*/React.createElement(IconButton, {
     "aria-label": "delete",
     className: `${classes.margin} ml-auto`,
     onClick: () => props.remove(props.index)

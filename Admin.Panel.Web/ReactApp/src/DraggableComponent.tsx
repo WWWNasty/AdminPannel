@@ -6,7 +6,7 @@ const DraggableComponent = (props) => {
 
     const questionsFieldName = `questionaryQuestions`;
 
-    const {remove, append, move, fields} = useFieldArray({control: form.control, name: questionsFieldName});
+    const {remove, append, move, fields} = useFieldArray({control: form.control, name: questionsFieldName, keyName: 'key'});
 
     const onDragEnd = (result) => {
         // dropped outside the list
@@ -15,6 +15,8 @@ const DraggableComponent = (props) => {
         }
 
         move(result.source.index, result.destination.index);
+        
+        //form.setValue(`questionaryQuestions[${props.index}].sequenceOrder`, result.destination.index)
     }
 
     return (
@@ -25,7 +27,7 @@ const DraggableComponent = (props) => {
                         <RootRef rootRef={provided.innerRef}>
                             <List style={getListStyle(snapshot.isDraggingOver)}>
                                 {fields.map((question, index) =>
-                                    <Draggable key={question.key} index={index} draggableId={question.key.toString()}>
+                                    <Draggable key={question.key} index={index} draggableId={question.key?.toString()}>
                                         {(provided, snapshot) =>
                                             <DraggableCard
                                                 question={question}

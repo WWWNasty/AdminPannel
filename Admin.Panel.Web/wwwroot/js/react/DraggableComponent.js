@@ -8,7 +8,8 @@ const DraggableComponent = props => {
     fields
   } = useFieldArray({
     control: form.control,
-    name: questionsFieldName
+    name: questionsFieldName,
+    keyName: 'key'
   });
 
   const onDragEnd = result => {
@@ -17,7 +18,7 @@ const DraggableComponent = props => {
       return;
     }
 
-    move(result.source.index, result.destination.index);
+    move(result.source.index, result.destination.index); //form.setValue(`questionaryQuestions[${props.index}].sequenceOrder`, result.destination.index)
   };
 
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(DragDropContext, {
@@ -31,7 +32,7 @@ const DraggableComponent = props => {
   }, fields.map((question, index) => /*#__PURE__*/React.createElement(Draggable, {
     key: question.key,
     index: index,
-    draggableId: question.key.toString()
+    draggableId: question.key?.toString()
   }, (provided, snapshot) => /*#__PURE__*/React.createElement(DraggableCard, {
     question: question,
     form: form,

@@ -111,7 +111,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
             }
         }
 
-        public async Task<List<QuestionaryObjectType>> GetAllActiveWithoutQuestionaryAsync()
+        public async Task<List<QuestionaryObjectType>> GetAllActiveWithoutQuestionaryAsync(int objectTypeId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -123,6 +123,13 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                     INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId 
                                     WHERE t.IsUsed = 1 AND (q.ObjectTypeId is NULL OR q.IsUsed = 0)";
                     var result = connection.Query<QuestionaryObjectType>(query).ToList();
+
+                    if (objectTypeId != 0)
+                    {
+                        result.Add( connection.Query<QuestionaryObjectType>(@"SELECT t.*, c.CompanyName AS CompanyName  FROM QuestionaryObjectTypes AS t 
+                        INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId
+                        WHERE t.Id=@Id", new{Id = objectTypeId}).FirstOrDefault());
+                    }
                     return result;
                 }
                 catch (Exception ex)

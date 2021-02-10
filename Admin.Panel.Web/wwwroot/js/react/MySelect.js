@@ -13,15 +13,25 @@ const ReactHookFormSelect = ({
   } = useFormContext();
   const labelId = `${name}-label`;
   return /*#__PURE__*/React.createElement(FormControl, _extends({}, props, {
-    error: errors[name]?.type
+    error: props.error ?? errors[name]?.type
   }), /*#__PURE__*/React.createElement(InputLabel, {
     id: labelId
   }, label), /*#__PURE__*/React.createElement(Controller, {
-    as: /*#__PURE__*/React.createElement(Select, {
+    render: ({
+      onChange,
+      value,
+      name
+    }) => /*#__PURE__*/React.createElement(Select, {
       renderValue: props.renderValue,
       multiple: props.multiple,
       labelId: labelId,
-      label: label
+      value: value,
+      name: name,
+      label: label,
+      onChange: event => {
+        onChange(event);
+        props.onChange(event);
+      }
     }, children),
     rules: {
       required: props.required,
@@ -31,7 +41,7 @@ const ReactHookFormSelect = ({
     name: name,
     control: control,
     defaultValue: defaultValue
-  }), /*#__PURE__*/React.createElement(FormHelperText, null, errors[name]?.message));
+  }), /*#__PURE__*/React.createElement(FormHelperText, null, props.errorMessage ?? errors[name]?.message));
 };
 
 const MySelect = props => {
@@ -41,14 +51,15 @@ const MySelect = props => {
   } = props.form ?? useFormContext();
   return /*#__PURE__*/React.createElement(FormControl, {
     className: `${classes.formControl} col-md-3 mr-3`
-  }, /*#__PURE__*/React.createElement(ReactHookFormSelect, {
+  }, /*#__PURE__*/React.createElement(ReactHookFormSelect, _extends({}, props, {
     required: props.required,
     name: props.name,
     label: props.nameSwlect,
     defaultValue: props.selectedValue,
+    onChange: props.onChange,
     className: classes.selectEmpty,
     control: control
-  }, props.selectOptions?.map(item => /*#__PURE__*/React.createElement(MenuItem, {
+  }), props.selectOptions?.map(item => /*#__PURE__*/React.createElement(MenuItem, {
     value: item.id
   }, item.name)) ?? []));
 };

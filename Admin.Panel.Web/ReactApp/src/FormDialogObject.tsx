@@ -6,30 +6,42 @@ const FormDialogObject = (props) => {
     const dialogForm = useForm();
     const form = useFormContext();
     const selectedObjectTypeId = form.watch('objectTypeId');
+    const {register, handleSubmit, control, reset, errors, setError} = dialogForm;
 
-    const {register, handleSubmit, control} = dialogForm;
-
-    const onSubmit = data => {
+    const onSubmit = async data => {
         data.objectTypeId = selectedObjectTypeId;
-        
-        data.selectedObjectPropertyValues.forEach(prop => prop.objectPropertyId = Number(prop.objectPropertyId));
 
-        const response = fetch("/api/QuestionaryObjectApi", {
+        data.selectedObjectPropertyValues?.forEach(prop => prop.objectPropertyId = Number(prop.objectPropertyId));
+
+        const response = await fetch("/api/QuestionaryObjectApi", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             credentials: "include",
             body: JSON.stringify(data)
         })
+
         
-        props.setObjectTypes([data, ...props.selectOptions]);
-        setOpen(false);
-        if (response) {
+        if (response.ok) {
+            const result = await response.json();
             props.setOpenAlertGreen(true);
+            
+            debugger;
+
+            props.selectedObjectype.questionaryObjects.push(result);
+
+            setOpen(false);
+        } else if (response.status == 400) {
+            const type = 'oneOrMoreRequired';
+
+            setError('code', {type, message: 'Введите уникальный код!'});
         } else {
             props.setOpenAlertRed(true);
         }
+
         
-        return false;
+        //props.setObjectTypes([data, ...props.selectOptions]);
+
+        //return false;
     };
     const [open, setOpen] = React.useState(false);
 
@@ -39,6 +51,7 @@ const FormDialogObject = (props) => {
 
     const handleClose = () => {
         setOpen(false);
+        reset();
     };
 
     return (
@@ -49,7 +62,7 @@ const FormDialogObject = (props) => {
             <Dialog fullWidth={true} maxWidth={'lg'} open={open} onClose={handleClose}
                     aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Новый объект</DialogTitle>
-                <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+                <form autoComplete="off">
                     <DialogContent>
                         <Controller
                             as={TextField}
@@ -63,17 +76,21 @@ const FormDialogObject = (props) => {
                             label="Название"
                             fullWidth={true}
                         />
-                        <Controller
-                            as={TextField}
-                            name="code"
-                            control={control}
-                            defaultValue=""
-                            required
-                            margin="dense"
-                            id="standard-required"
-                            label="Код"
-                            fullWidth={true}
-                        />
+
+                        <FormControl {...props} error={errors.code?.type}>
+                            <Controller
+                                as={TextField}
+                                name="code"
+                                control={control}
+                                defaultValue=""
+                                required
+                                margin="dense"
+                                id="standard-required"
+                                label="Код"
+                                fullWidth={true}
+                            />
+                            <FormHelperText>{errors.code?.message}</FormHelperText>
+                        </FormControl>
                         <Controller
                             as={TextField}
                             name="description"
@@ -88,7 +105,7 @@ const FormDialogObject = (props) => {
                             rows={4}
                         />
 
-                         {props.selectedObjectype.objectProperties?.map((item, index) =>
+                        {props.selectedObjectype.objectProperties?.map((item, index) =>
                             <div>
                                 <Controller
                                     as={TextField}
@@ -101,20 +118,20 @@ const FormDialogObject = (props) => {
                                     label={item.name}
                                     fullWidth={true}
                                 />
-                                <input type="hidden" 
-                                       ref={register} 
+                                <input type="hidden"
+                                       ref={register}
                                        name={`selectedObjectPropertyValues[${index}].objectPropertyId`}
                                        value={item.id}
                                 />
                             </div>
                         )}
-                        
+
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose} color="primary">
                             Отмена
                         </Button>
-                        <Button type="submit" color="primary">
+                        <Button onClick={handleSubmit(onSubmit)} color="primary">
                             Добавить
                         </Button>
                     </DialogActions>

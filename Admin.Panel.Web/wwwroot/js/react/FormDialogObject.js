@@ -1,3 +1,5 @@
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 const FormDialogObject = props => {
   const dialogForm = useForm();
   const form = useFormContext();
@@ -5,13 +7,16 @@ const FormDialogObject = props => {
   const {
     register,
     handleSubmit,
-    control
+    control,
+    reset,
+    errors,
+    setError
   } = dialogForm;
 
-  const onSubmit = data => {
+  const onSubmit = async data => {
     data.objectTypeId = selectedObjectTypeId;
-    data.selectedObjectPropertyValues.forEach(prop => prop.objectPropertyId = Number(prop.objectPropertyId));
-    const response = fetch("/api/QuestionaryObjectApi", {
+    data.selectedObjectPropertyValues?.forEach(prop => prop.objectPropertyId = Number(prop.objectPropertyId));
+    const response = await fetch("/api/QuestionaryObjectApi", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -19,16 +24,24 @@ const FormDialogObject = props => {
       credentials: "include",
       body: JSON.stringify(data)
     });
-    props.setObjectTypes([data, ...props.selectOptions]);
-    setOpen(false);
 
-    if (response) {
+    if (response.ok) {
+      const result = await response.json();
       props.setOpenAlertGreen(true);
+      debugger;
+      props.selectedObjectype.questionaryObjects.push(result);
+      setOpen(false);
+    } else if (response.status == 400) {
+      const type = 'oneOrMoreRequired';
+      setError('code', {
+        type,
+        message: 'Введите уникальный код!'
+      });
     } else {
       props.setOpenAlertRed(true);
-    }
+    } //props.setObjectTypes([data, ...props.selectOptions]);
+    //return false;
 
-    return false;
   };
 
   const [open, setOpen] = React.useState(false);
@@ -39,6 +52,7 @@ const FormDialogObject = props => {
 
   const handleClose = () => {
     setOpen(false);
+    reset();
   };
 
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
@@ -55,7 +69,6 @@ const FormDialogObject = props => {
   }, /*#__PURE__*/React.createElement(DialogTitle, {
     id: "form-dialog-title"
   }, "\u041D\u043E\u0432\u044B\u0439 \u043E\u0431\u044A\u0435\u043A\u0442"), /*#__PURE__*/React.createElement("form", {
-    onSubmit: handleSubmit(onSubmit),
     autoComplete: "off"
   }, /*#__PURE__*/React.createElement(DialogContent, null, /*#__PURE__*/React.createElement(Controller, {
     as: TextField,
@@ -68,6 +81,8 @@ const FormDialogObject = props => {
     id: "standard-required",
     label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
     fullWidth: true
+  }), /*#__PURE__*/React.createElement(FormControl, _extends({}, props, {
+    error: errors.code?.type
   }), /*#__PURE__*/React.createElement(Controller, {
     as: TextField,
     name: "code",
@@ -78,7 +93,7 @@ const FormDialogObject = props => {
     id: "standard-required",
     label: "\u041A\u043E\u0434",
     fullWidth: true
-  }), /*#__PURE__*/React.createElement(Controller, {
+  }), /*#__PURE__*/React.createElement(FormHelperText, null, errors.code?.message)), /*#__PURE__*/React.createElement(Controller, {
     as: TextField,
     name: "description",
     control: control,
@@ -109,7 +124,7 @@ const FormDialogObject = props => {
     onClick: handleClose,
     color: "primary"
   }, "\u041E\u0442\u043C\u0435\u043D\u0430"), /*#__PURE__*/React.createElement(Button, {
-    type: "submit",
+    onClick: handleSubmit(onSubmit),
     color: "primary"
   }, "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C")))));
 };

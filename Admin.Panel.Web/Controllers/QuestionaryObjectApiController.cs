@@ -1,6 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
+using Admin.Panel.Data.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +21,16 @@ namespace Admin.Panel.Web.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<QuestionaryObject> Post([FromBody] QuestionaryObject questionaryObject)
+        public async Task<IActionResult> Post([FromBody] QuestionaryObject questionaryObject)
         {
-            return await _questionaryObjectRepository.CreateAsync(questionaryObject);
+            try
+            {
+                return Ok(await _questionaryObjectRepository.CreateAsync(questionaryObject));
+            }
+            catch (CodeObjectNotUniqueException e)
+            {
+                return BadRequest("Введите уникальный код!");
+            }
         }
     }
 }

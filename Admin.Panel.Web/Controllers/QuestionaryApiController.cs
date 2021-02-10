@@ -56,5 +56,12 @@ namespace Admin.Panel.Web.Controllers
         {
             return await _questionaryRepository.CreateAsync(model);
         } 
+        
+        [HttpPut]
+        [Authorize]
+        public async Task<QuestionaryDto> Put([FromBody] QuestionaryDto model)
+        {
+            return await _questionaryRepository.UpdateAsync(model);
+        }
     }
 }

@@ -137,11 +137,16 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 
                         if (selectableAnswersList.QuestionaryQuestions.Count != 0)
                         {
+                            foreach (var i in Enumerable.Range(0, selectableAnswersList.QuestionaryQuestions.Count))
+                            {
+                                selectableAnswersList.QuestionaryQuestions[i].SequenceOrder = i;
+                            }
+                            
                             foreach (var question in selectableAnswersList.QuestionaryQuestions)
                             {
                                 var questionId = cn.ExecuteScalar<int>(
-                                    @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectableAnswersListId,SequenceOrder,IsUsed)
-		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,1);
+                                    @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectableAnswersListId,SequenceOrder,IsUsed,DefaultAnswerId)
+		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,1,@DefaultAnswerId);
                                                         SELECT QuestionaryId = @@IDENTITY",
                                     new QuestionaryQuestions
                                     {
@@ -150,7 +155,9 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                         QuestionaryInputFieldTypeId = question.QuestionaryInputFieldTypeId,
                                         CanSkipQuestion = !question.CanSkipQuestion,
                                         SelectableAnswersListId = question.SelectableAnswersListId,
-                                        SequenceOrder = question.SequenceOrder
+                                        SequenceOrder = question.SequenceOrder,
+                                        DefaultAnswerId = question.DefaultAnswerId
+
                                     }, transaction);
                                 
                                 foreach (var option in question.QuestionaryAnswerOptions)
@@ -227,16 +234,17 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 
                         List<QuestionaryQuestions> newQuestions = new List<QuestionaryQuestions>();
                         List<QuestionaryQuestions> oldQuestions = new List<QuestionaryQuestions>();
-
-                        foreach (QuestionaryQuestions question in questionary.QuestionaryQuestions)
+                        
+                        foreach (int i in Enumerable.Range(0, questionary.QuestionaryQuestions.Count))
                         {
-                            if (question.Id != 0)
+                            questionary.QuestionaryQuestions[i].SequenceOrder = i;
+                            if (questionary.QuestionaryQuestions[i].Id != 0)
                             {
-                                oldQuestions.Add(question);
+                                oldQuestions.Add(questionary.QuestionaryQuestions[i]);
                             }
                             else
                             {
-                                newQuestions.Add(question);
+                                newQuestions.Add(questionary.QuestionaryQuestions[i]);
                             }
                         }
 
@@ -325,6 +333,30 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             }
                         }
 
+                        //changes objectType to objects with propValues
+                        List<QuestionaryObject> selectedObjects = connection.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects where Id IN @ObjectIds",
+                            new {ObjectIds = questionary.ObjectsIdToChangeType}, transaction).ToList();
+
+                        foreach (var selectedObject in selectedObjects)
+                        {
+                            if (selectedObject.ObjectTypeId != questionary.ObjectTypeId)
+                            {
+                                connection.Execute(
+                                    @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
+                                    new {QuestionaryObjectId = selectedObject.Id}, transaction);
+                            }
+                        }
+                        
+                        var objectsOfType = connection.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects where ObjectTypeId = @ObjectTypeId",
+                            new {questionary.ObjectTypeId}, transaction).ToList();
+
+                        int[] objectsOfTypeIds = objectsOfType.Select(o => o.Id).ToArray();
+                        await connection.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=0 
+                         WHERE Id IN @ObjectsId",new{ObjectsId = objectsOfTypeIds} , transaction);
+                        
+                        await connection.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
+                         WHERE Id IN @ObjectsId",new{ObjectsId = questionary.ObjectsIdToChangeType, questionary.ObjectTypeId} , transaction);
+                        
                         transaction.Commit();
                         _logger.LogInformation("Анкета с Id :{0} успешно отредактирована в бд.", questionary.Id);
                         return questionary;

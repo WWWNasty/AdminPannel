@@ -18,10 +18,12 @@ function FormDialogObjectType(props) {
       body: JSON.stringify(data)
     });
     const newObjectType = await response.json();
+    console.log(newObjectType);
+    debugger;
     props.setObjectTypes([newObjectType, ...props.selectOptionsTypes]);
     setOpen(false);
 
-    if (response) {
+    if (response.ok) {
       props.setOpenAlertGreen(true);
     } else {
       props.setOpenAlertRed(true);

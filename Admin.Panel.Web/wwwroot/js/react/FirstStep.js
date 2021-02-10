@@ -10,13 +10,14 @@ const FirstStep = props => {
   const classes = useStyles();
   const [openAlertGreen, setOpenAlertGreen] = React.useState(false);
   const [openAlertRed, setOpenAlertRed] = React.useState(false);
-  const form = useFormContext(); //console.log(form);
-
+  const form = useFormContext();
   const {
     handleSubmit
   } = form;
   const selectedCompany = form.watch('companyId');
   const availableObjectTypes = props.selectOptionsTypes.filter(type => type.companyId == selectedCompany);
+
+  const onChange = () => form.setValue('objectTypeId', null);
 
   const handleClose = () => {
     setOpenAlertGreen(false);
@@ -28,11 +29,12 @@ const FirstStep = props => {
     autoComplete: "off"
   }, /*#__PURE__*/React.createElement(MySelect, {
     required: {
-      message: 'Neobh',
+      message: '',
       value: true
     },
     selectOptions: props.selectOptionsСompanies,
     form: form,
+    onChange: onChange,
     name: "companyId" // setSelectedValue={selectedValue => {
     //     props.setSelectedValueTypes(null);
     // }} 
@@ -58,7 +60,7 @@ const FirstStep = props => {
   }, /*#__PURE__*/React.createElement("div", {
     className: "alert alert-success",
     role: "alert"
-  }, "This is a success alert with", /*#__PURE__*/React.createElement("button", {
+  }, "\u0422\u0438\u043F \u043E\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0437\u0434\u0430\u043D!", /*#__PURE__*/React.createElement("button", {
     type: "button",
     className: "close",
     "data-dismiss": "alert",
@@ -72,7 +74,7 @@ const FirstStep = props => {
   }, /*#__PURE__*/React.createElement("div", {
     className: "alert alert-danger",
     role: "alert"
-  }, "This is a danger alert with", /*#__PURE__*/React.createElement("button", {
+  }, "\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430, \u0442\u0438\u043F \u043E\u0431\u044A\u0435\u043A\u0442\u0430 \u043D\u0435 \u0441\u043E\u0437\u0434\u0430\u043D!", /*#__PURE__*/React.createElement("button", {
     type: "button",
     className: "close",
     "data-dismiss": "alert",

@@ -26,6 +26,7 @@
 <script src="~/lib/yup-umd.js"></script>
 
 <script src="~/js/react/MySelect.js"></script>
+<script src="~/js/react/FormSwitch.js"></script>
 <script src="~/js/react/MyMultipleSelect.js"></script>
 <script src="~/js/react/CardProp.js"></script>
 <script src="~/js/react/DraggableCard.js"></script>
@@ -39,12 +40,14 @@
 <script src="~/js/react/App.js"></script>
 
 <script type="text/javascript">
+    const getAllRoute = @Html.Raw(Json.Serialize(Url.Action("GetAll")));
+
     @if (Model?.Id != 0)
     {
-        @:renderReact(@Html.Raw(Json.Serialize(Model)));
+        @:renderReact(getAllRoute, @Html.Raw(Json.Serialize(Model)));
     }
     else
     {
-        @:renderReact();
+        @:renderReact(getAllRoute);
     }
 </script>

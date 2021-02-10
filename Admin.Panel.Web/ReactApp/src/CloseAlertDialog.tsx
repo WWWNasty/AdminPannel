@@ -5,15 +5,19 @@ const SlideTransition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function CloseAlertDialog() {
+function CloseAlertDialog(props: {getAllRoute:string}) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleClose = redirectToAll => {
         setOpen(false);
+        
+        if(redirectToAll === true){
+            window.location = props.getAllRoute as any;
+        }
     };
 
     return (
@@ -34,7 +38,7 @@ function CloseAlertDialog() {
                     <Button onClick={handleClose} color="primary">
                         Нет
                     </Button>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={() => handleClose(true)} color="primary">
                         Да
                     </Button>
                 </DialogActions>
