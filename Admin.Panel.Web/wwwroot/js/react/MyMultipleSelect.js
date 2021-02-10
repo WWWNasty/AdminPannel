@@ -48,7 +48,7 @@ const MyMultipleSelect = props => {
       const type = 'oneOrMoreRequired';
       if (!isValid) props.form.setError('objectsIdToChangeType', {
         type,
-        message: 'Viberite adin ili bolshe'
+        message: 'Выберите объекты для анкеты!'
       });
       return isValid;
     },

@@ -83,6 +83,7 @@ const FormDialogObject = props => {
     error: errors?.code?.type,
     fullWidth: true,
     rules: {
+      required: true,
       maxLength: {
         message: 'Максимально символов: 20',
         value: 20

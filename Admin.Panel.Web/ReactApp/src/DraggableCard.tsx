@@ -75,14 +75,14 @@ const DraggableCard = (props) => {
                             required={{message: '', value: true}}
                         />
 
-                        <MySelect required={ {message: 'Выберите ответы', value: true} }
+                        <MySelect required={ {message: '', value: true} }
                                   onChange={onChange}
                                   error={Log(errors?.questionaryQuestions?.[props.index]?.selectableAnswersListId?.type)}
                                   name={`questionaryQuestions[${props.index}].selectableAnswersListId`}
                                   selectOptions={props.selectableAnswersLists}
                                   nameSwlect="Варианты ответа"
                         />
-                        <MySelect required={ {message: 'выберите варианты ввода', value: true} }
+                        <MySelect required={ {message: '', value: true} }
                                   errorMessage={Log(errors?.questionaryQuestions?.[props.index]?.questionaryInputFieldTypeId?.message)}
                                   error={errors?.questionaryQuestions?.[props.index]?.questionaryInputFieldTypeId?.type}
                                   name={`questionaryQuestions[${props.index}].questionaryInputFieldTypeId`}

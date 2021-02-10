@@ -73,7 +73,7 @@ const DraggableCard = props => {
     }
   }), /*#__PURE__*/React.createElement(MySelect, {
     required: {
-      message: 'Выберите ответы',
+      message: '',
       value: true
     },
     onChange: onChange,
@@ -83,7 +83,7 @@ const DraggableCard = props => {
     nameSwlect: "\u0412\u0430\u0440\u0438\u0430\u043D\u0442\u044B \u043E\u0442\u0432\u0435\u0442\u0430"
   }), /*#__PURE__*/React.createElement(MySelect, {
     required: {
-      message: 'выберите варианты ввода',
+      message: '',
       value: true
     },
     errorMessage: Log(errors?.questionaryQuestions?.[props.index]?.questionaryInputFieldTypeId?.message),

@@ -24,8 +24,7 @@ const ThirdStep = props => {
     margin: "dense",
     id: "standard-required",
     label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
-    fullWidth: true //required={ {message: '', value: true} }
-    ,
+    fullWidth: true,
     rules: {
       required: true,
       maxLength: {

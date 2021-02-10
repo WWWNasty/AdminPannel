@@ -59,7 +59,7 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
                         const type = 'oneOrMoreRequired';
 
                         if(!isValid)
-                            props.form.setError('objectsIdToChangeType', {type, message: 'Viberite adin ili bolshe'});
+                            props.form.setError('objectsIdToChangeType', {type, message: 'Выберите объекты для анкеты!'});
                         
                         return isValid;
                     }}

@@ -77,7 +77,7 @@ const FormDialogObject = (props) => {
                             {...props}
                             error={errors?.code?.type}
                             fullWidth={true}
-                            rules={{maxLength: {message:'Максимально символов: 20', value:20}, validate: true}}
+                            rules={{required: true, maxLength: {message:'Максимально символов: 20', value:20}, validate: true}}
                         >
                             <Controller
                                 as={TextField}
