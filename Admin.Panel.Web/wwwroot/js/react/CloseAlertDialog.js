@@ -23,8 +23,9 @@ function CloseAlertDialog(props) {
   };
 
   return /*#__PURE__*/React.createElement("div", {
-    className: "mt-3"
+    className: "d-flex justify-content-around"
   }, /*#__PURE__*/React.createElement(Button, {
+    className: "d-flex justify-content-end",
     variant: "outlined",
     color: "secondary",
     onClick: handleClickOpen

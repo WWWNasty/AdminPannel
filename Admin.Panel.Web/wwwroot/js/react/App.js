@@ -341,13 +341,15 @@ function HorizontalLabelPositionBelowStepper(props) {
   }, getStepContent(activeStep, form, props.questionary)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
     disabled: activeStep === 0,
     onClick: handleBack,
-    className: classes.backButton,
+    className: `${classes.backButton}`,
     variant: "contained"
   }, "\u041D\u0430\u0437\u0430\u0434"), activeStep === steps.length - 1 ? /*#__PURE__*/React.createElement(Button, {
+    className: "ml-50",
     onClick: handleSubmit(onSubmit),
     variant: "contained",
     color: "primary"
   }, "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C") : /*#__PURE__*/React.createElement(Button, {
+    className: "ml-50",
     variant: "contained",
     color: "primary",
     onClick: handleNext

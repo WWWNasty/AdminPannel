@@ -352,16 +352,16 @@ function HorizontalLabelPositionBelowStepper(props) {
                             <Button
                                 disabled={activeStep === 0}
                                 onClick={handleBack}
-                                className={classes.backButton}
+                                className={`${classes.backButton}`}
                                 variant="contained"
                             >
                                 Назад
                             </Button>
                             {activeStep === steps.length - 1 ?
-                                <Button onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
+                                <Button className="ml-50" onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
                                     Сохранить
                                 </Button> :
-                                <Button variant="contained" color="primary" onClick={handleNext}>
+                                <Button className="ml-50" variant="contained" color="primary" onClick={handleNext}>
                                     Вперед
                                 </Button>}
                         </div>
@@ -390,7 +390,9 @@ function App(props: { questionary?: any, getAllRoute: string }) {
                     />
                 </FormProvider>
             </form>
-            <CloseAlertDialog getAllRoute={props.getAllRoute}/>
+            <CloseAlertDialog
+                getAllRoute={props.getAllRoute}
+            />
         </div>
     );
 }
