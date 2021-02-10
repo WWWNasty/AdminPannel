@@ -139,6 +139,37 @@ namespace Admin.Panel.Data.Repositories.Questionary
             }
         }
 
+        public async Task<List<QuestionaryObjectType>> GetAllActiveWithoutQuestionaryForUserAsync(int userId, int objectTypeId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                try
+                {
+                    int[] companiesId = connection
+                        .Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @Id",
+                            new {@Id = userId}).ToArray();
+                    
+                    var query = @"SELECT DISTINCT t.*, c.CompanyName AS CompanyName FROM QuestionaryObjectTypes AS t 
+                                    LEFT JOIN Questionary as q on t.Id = q.ObjectTypeId
+                                    INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId 
+                                    WHERE t.IsUsed = 1 AND (q.ObjectTypeId is NULL OR q.IsUsed = 0) AND t.CompanyId IN @CompanyId";
+                    var result = connection.Query<QuestionaryObjectType>(query, new {CompanyId = companiesId}).ToList();
+
+                    if (objectTypeId != 0)
+                    {
+                        result.Add( connection.Query<QuestionaryObjectType>(@"SELECT t.*, c.CompanyName AS CompanyName  FROM QuestionaryObjectTypes AS t 
+                        INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId
+                        WHERE t.Id=@Id", new{Id = objectTypeId}).FirstOrDefault());
+                    }
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }        }
+
         public async Task<List<QuestionaryObjectType>> GetAllActiveForUserAsync(int userId)
         {
             using (var connection = new SqlConnection(_connectionString))

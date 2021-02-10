@@ -55,11 +55,11 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             return obj;
         }
 
-        private async Task<QuestionaryDto> GetAllForQuestionaryUser(string idUser)
+        private async Task<QuestionaryDto> GetAllForQuestionaryUser(string idUser, int objectTypeId)
         {
             QuestionaryDto obj = new QuestionaryDto();
             obj.ApplicationCompanies = await _companyRepository.GetAllActiveForUserAsync(idUser);
-            obj.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllActiveForUserAsync(Convert.ToInt32(idUser));
+            obj.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllActiveWithoutQuestionaryForUserAsync(Convert.ToInt32(idUser), objectTypeId);
             obj.SelectableAnswersLists = await _selectableAnswersListRepository.GetAllActiveAsync();
             obj.QuestionaryObjects = await _questionaryObjectRepository.GetAllActiveForUserAsync(Convert.ToInt32(idUser));
             obj.ObjectProperties = await _objectPropertiesRepository.GetAllAsync();
@@ -122,9 +122,9 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
 
         public async Task<QuestionaryDto> GetAllForQuestionaryForUserUpdate(QuestionaryDto model, string idUser)
         {
-            var allForObj = await GetAllForQuestionaryUser(idUser);
+            var allForObj = await GetAllForQuestionaryUser(idUser, model.ObjectTypeId);
             model.ApplicationCompanies = allForObj.ApplicationCompanies;
-            model.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes.Where(t => t.CompanyId == model.CompanyId).ToList();
+            model.QuestionaryObjectTypes = allForObj.QuestionaryObjectTypes;
             //получить все объекты и пропсы для типов объектов в репозитории
             foreach (var objectType in model.QuestionaryObjectTypes)
             {
@@ -157,7 +157,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
 
         public async Task<QuestionaryDto> GetAllForQuestionaryForUserCreate(QuestionaryDto model, string idUser)
         {
-            var obj = await GetAllForQuestionaryUser(idUser);
+            var obj = await GetAllForQuestionaryUser(idUser, model.ObjectTypeId);
             model.ApplicationCompanies = obj.ApplicationCompanies;
             model.QuestionaryObjectTypes = obj.QuestionaryObjectTypes;
             foreach (var objectType in model.QuestionaryObjectTypes)
