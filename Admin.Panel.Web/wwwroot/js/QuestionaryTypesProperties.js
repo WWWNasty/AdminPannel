@@ -1,7 +1,6 @@
 let countAnsw = 1;
 $('.add').click(function () {
 
-    debugger;
     const template = document.getElementById('option-template');
     const newNode = template.cloneNode(true);
 
@@ -27,7 +26,6 @@ function addDeleteButtonHandler() {
 }
 
 function deleteVotingOption() {
-    debugger;
     if (countAnsw > 0) {
         let del = $('.answer-option').last().remove();
         countAnsw--;

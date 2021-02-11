@@ -13,11 +13,11 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         [Display(Name = "Список ответов активен")]
         public bool IsUsed { get; set; }
         
-        [Required(ErrorMessage = "Не указаны значения!")]
+        //[Required(ErrorMessage = "Не указаны значения!")]
         [MaxLength(30)]
         public List<SelectableAnswers> SelectableAnswers { get; set; }
 
-        [Required(ErrorMessage = "Выбрать допустимые контроллы!")]
+       // [Required(ErrorMessage = "Выбрать допустимые контроллы!")]
         public List<int> InputFieldTypesesId { get; set; }
 
         [Display(Name = "Список вариантов контроллов для ввода ответа")]

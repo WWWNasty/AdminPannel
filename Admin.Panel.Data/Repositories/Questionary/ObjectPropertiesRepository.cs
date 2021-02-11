@@ -48,7 +48,8 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
                 try
                 {
-                    var query = "SELECT * FROM ObjectProperties";
+                    var query = @" SELECT p.*, po.QuestionaryObjectTypeId as QuestionaryObjectTypeId FROM ObjectProperties as p
+                    INNER JOIN ObjectPropertyToObjectTypes as po ON po.ObjectPropertyId = p.Id";
                     var result = connection.Query<ObjectProperty>(query).ToList();
                     return result;
                 }

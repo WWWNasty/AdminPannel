@@ -1,0 +1,53 @@
+@using Newtonsoft.Json
+@model Admin.Panel.Core.Entities.Questionary.Questions.QuestionaryDto;
+
+<div id="reactRoot"></div>
+
+@* <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.13.0/Sortable.min.js"></script> *@
+@* <script src="~/js/query-sortable.js"></script> *@
+@* <script src="~/js/QuestionaryQuestions.js"></script> *@
+@* <script src="~/js/AnswersGetAll.js"></script> *@
+
+<environment include="Development">
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/@@material-ui/core@4.11.2/umd/material-ui.development.js"></script>
+    <script crossorigin src="https://www.unpkg.com/react-hook-form@6.14.1/dist/index.umd.development.js"></script>
+</environment>
+
+<environment exclude="Development">
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@@material-ui/core@4.11.2/umd/material-ui.production.min.js"></script>
+    <script crossorigin src="https://www.unpkg.com/browse/react-hook-form@6.14.1/dist/index.umd.production.min.js"></script>
+</environment>
+
+<script src="https://unpkg.com/react-beautiful-dnd@13.0.0/dist/react-beautiful-dnd.js"></script>
+<script src="~/lib/yup-umd.js"></script>
+
+<script src="~/js/react/MySelect.js"></script>
+<script src="~/js/react/FormSwitch.js"></script>
+<script src="~/js/react/MyMultipleSelect.js"></script>
+<script src="~/js/react/CardProp.js"></script>
+<script src="~/js/react/DraggableCard.js"></script>
+<script src="~/js/react/DraggableComponent.js"></script>
+<script src="~/js/react/FormDialogObjectType.js"></script>
+<script src="~/js/react/FormDialogObject.js"></script>
+<script src="~/js/react/FirstStep.js"></script>
+<script src="~/js/react/SecondStep.js"></script>
+<script src="~/js/react/ThirdStep.js"></script>
+<script src="~/js/react/CloseAlertDialog.js"></script>
+<script src="~/js/react/App.js"></script>
+
+<script type="text/javascript">
+    const getAllRoute = @Html.Raw(Json.Serialize(Url.Action("GetAll")));
+
+    @if (Model?.Id != 0)
+    {
+        @:renderReact(getAllRoute, @Html.Raw(Json.Serialize(Model)));
+    }
+    else
+    {
+        @:renderReact(getAllRoute);
+    }
+</script>

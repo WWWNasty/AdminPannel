@@ -6,7 +6,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
     public class QuestionaryDto: BaseEntity
     {
         [Required(ErrorMessage = "Поле Название - обязательно!")]
-        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 2)]
+        [StringLength(250, ErrorMessage = "Длина {0} должна быть не менее {2} символов.", MinimumLength = 1)]
         [Display(Name = "Название Анкеты")]
         public string Name { get; set; }
         
@@ -42,6 +42,11 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         
         [Display(Name = "Ответ по умолчанию")]
         public List<SelectableAnswers> SelectableAnswers { get; set; }
+        public List<QuestionaryObject> QuestionaryObjects { get; set; }
+        public List<ObjectProperty> ObjectProperties { get; set; }
+
+        public int[] ObjectsIdToChangeType { get; set; }
+        //public List<SelectableAnswers> SelectableAnswerse { get; set; }
         public int IndexCurrentQuestion { get; set; }
         public bool IfQuestionaryCurrentInCompany { get; set; }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -13,7 +14,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         public string QuestionText { get; set; }
         
         [Required(ErrorMessage = "Выберите Тип ввода!")]
-        [Range(1, 99999, ErrorMessage = "Выберите Тип ввода!")]
+        [Range(1, int.MaxValue, ErrorMessage = "Выберите Тип ввода!")]
         public int QuestionaryInputFieldTypeId { get; set; }
         
         [Display(Name = "Вопрос обязательный")]
@@ -38,5 +39,7 @@ namespace Admin.Panel.Core.Entities.Questionary.Questions
         
         // [Display(Name = "Ответ по умолчанию")]
         public int? DefaultAnswerId { get; set; }
+
+        public string Key => Guid.NewGuid().ToString();
     }
 }

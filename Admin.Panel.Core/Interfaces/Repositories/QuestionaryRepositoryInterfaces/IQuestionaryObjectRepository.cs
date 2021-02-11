@@ -15,5 +15,7 @@ namespace Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfac
         Task<QuestionaryObject> UpdateAsync(QuestionaryObject obj);
         Task<List<ObjectPropertyValues>> GetPropertiesForUpdate(int idTypeObj);
         Task<bool> IsCodeUnique(QuestionaryObject model);
+        Task<bool> IsCodeUniqueObjectInQuestionary(int idObject, string code);
+
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.Questionary;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
+using Admin.Panel.Data.Exceptions;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -105,9 +106,10 @@ namespace Admin.Panel.Data.Repositories.Questionary
                         .Query<int>(@"SELECT o.Id FROM QuestionaryObjectTypes o WHERE CompanyId IN @CompaniesId",
                             new {@CompaniesId = companiesId}).ToArray();
                     var result = connection
-                        .Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects WHERE ObjectTypeId IN @ObjectTypeId",
+                        .Query<QuestionaryObject>(
+                            @"SELECT * FROM QuestionaryObjects WHERE ObjectTypeId IN @ObjectTypeId",
                             new {@ObjectTypeId = objectTypeId}).ToList();
-                    
+
                     return result;
                 }
                 catch (Exception ex)
@@ -127,10 +129,13 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     int[] companiesId = connection
                         .Query<int>(@"SELECT c.CompanyId FROM ApplicationUserCompany c WHERE UserID = @Id",
                             new {@Id = userId}).ToArray();
+                    int[] objectTypeId = connection
+                        .Query<int>(@"SELECT o.Id FROM QuestionaryObjectTypes o WHERE CompanyId IN @CompaniesId",
+                            new {@CompaniesId = companiesId}).ToArray();
                     var result = connection
                         .Query<QuestionaryObject>(
-                            @"SELECT * FROM QuestionaryObjects WHERE IsUsed = 1 AND CompanyId IN @CompanyId",
-                            new {@CompanyId = companiesId}).ToList();
+                            @"SELECT * FROM QuestionaryObjects WHERE IsUsed = 1 AND ObjectTypeId IN @ObjectTypeId",
+                            new {@ObjectTypeId = objectTypeId}).ToList();
 
                     return result;
                 }
@@ -143,6 +148,11 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
         public async Task<QuestionaryObject> CreateAsync(QuestionaryObject obj)
         {
+            var isCodeUnique = await IsCodeUniqueObjectInQuestionary(obj.Id, obj.Code);
+            if (!isCodeUnique)
+            {
+                throw new CodeObjectNotUniqueException();
+            }
             using (var cn = new SqlConnection(_connectionString))
             {
                 await cn.OpenAsync();
@@ -191,6 +201,12 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
         public async Task<QuestionaryObject> UpdateAsync(QuestionaryObject obj)
         {
+            var isCodeUnique = await IsCodeUniqueObjectInQuestionary(obj.Id, obj.Code);
+            if (!isCodeUnique)
+            {
+                throw new CodeObjectNotUniqueException();
+            }
+            
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -203,14 +219,14 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                       WHERE Id=@Id";
 
                         connection.Execute(query, obj, transaction);
-                        //дропаем все валью записи объекту
 
+                        //дропаем все валью записи объекту
                         connection.Execute(
                             @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
                             new {QuestionaryObjectId = obj.Id}, transaction);
 
-                        //добавляем заново все валью записи
-                        if (obj.SelectedObjectPropertyValues != null)
+                        //добавляем заново все валью записи 
+                        if (obj.SelectedObjectPropertyValues != null && obj.SelectedObjectPropertyValues.Count != 0)
                         {
                             foreach (ObjectPropertyValues objectProperty in obj.SelectedObjectPropertyValues)
                             {
@@ -264,6 +280,16 @@ namespace Admin.Panel.Data.Repositories.Questionary
 
         public async Task<bool> IsCodeUnique(QuestionaryObject model)
         {
+            return await IsCodeObjectUnique(model.Id, model.Code);
+        }
+
+        public async Task<bool> IsCodeUniqueObjectInQuestionary(int idObject, string code)
+        {
+            return await IsCodeObjectUnique(idObject, code);
+        }
+
+        private async Task<bool> IsCodeObjectUnique(int idObject, string code)
+        {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -271,15 +297,15 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 {
                     var obj = connection.Query<QuestionaryObject>(
                         @"SELECT * FROM QuestionaryObjects Where Code =@Code",
-                        new {@Code = model.Code}).ToList();
-                    if (model.Id == 0)
+                        new {@Code = code}).ToList();
+                    if (idObject == 0)
                     {
                         return obj.Count == 0;
                     }
 
                     var objs = connection.Query<QuestionaryObject>(
                         @"SELECT * FROM QuestionaryObjects Where Code =@Code AND Id <> @Id",
-                        new {@Code = model.Code, @Id = model.Id}).ToList();
+                        new {@Code = code, @Id = idObject}).ToList();
                     return objs.Count == 0;
                 }
                 catch (Exception ex)

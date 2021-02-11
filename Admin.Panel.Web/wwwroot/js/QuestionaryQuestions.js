@@ -27,8 +27,7 @@ $('.addPick').click(function () {
     })
     
     newNode.classList.add ('voting-option');
-    debugger;
-
+    
     //откуда берем data-id
     let votingOptionSets = $('#simpleList').find(".voting-option-set").toArray();
     //куда записываем индекс
@@ -70,7 +69,6 @@ $(document).ready(async () => {
 })
 
 function firstSequenceOrder(){
-    debugger;
     const container = $('#simpleList');
     let inputContainer = $(container).find(".aa-container");
     let input = $(inputContainer).find("#init-sequence-order")

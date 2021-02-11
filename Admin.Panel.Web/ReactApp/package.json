@@ -1,0 +1,27 @@
+{
+  "name": "clientapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/babel src --out-dir ../wwwroot/js/react --extensions \".ts,.tsx\" -s",
+    "watch": "./node_modules/.bin/babel src --out-dir ../wwwroot/js/react --extensions \".ts,.tsx\" -s -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "@babel/preset-typescript": "^7.12.7",
+    "@types/react": "^16.14.2",
+    "@types/react-dom": "^16.9.10",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1"
+  }
+}

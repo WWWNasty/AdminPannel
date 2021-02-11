@@ -9,6 +9,7 @@ namespace Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfac
     {
         public Task<SelectableAnswersLists> GetAsync(int id);
         public Task <List<SelectableAnswers>> GetSelectableAnswersAsync(int id);
+        public Task <List<SelectableAnswers>> GetAllAnswers();
         public Task<List<SelectableAnswersLists>> GetAllAsync();
         public Task<List<SelectableAnswersLists>> GetAllActiveAsync();
         //public Task<List<ApplicationCompany>> GetAllActiveForUserAsync(string userId);
