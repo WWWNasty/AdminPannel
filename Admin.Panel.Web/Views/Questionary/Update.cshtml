@@ -10,46 +10,6 @@
 <div class="justify-content-center">
     <h4>Редактирование анкеты "@Model.Name"</h4>
 </div>
-    <partial name="_ReactStepper"></partial>
-
-                <div>
-                    <input type="hidden" asp-for="QuestionaryQuestions[0].SequenceOrder" class="sequence-order"/>
-                </div>
-
-                <div class="form-group col-md-12">
-
-                    <div class="col">
-                        <div class="row">
-                            <label asp-for="SelectableAnswersLists">Варианты ответа</label>
-                        </div>
-
-                        <div class="row">
-                            <select class="new-selectpicker input-answers" asp-for="QuestionaryQuestions[0].SelectableAnswersListId"
-                                    asp-items="Model.SelectableAnswersLists.Select(o => new SelectListItem(o.Name, o.Id.ToString()))" required>
-                                <option selected disabled="disabled"></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group option-container input-field-type col">
-
-                </div>
-
-                <div class="option-container">
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </div>
 
-@section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    <script src="~/js/query-sortable.js"></script>
-    <script src="~/js/QuestionaryQuestions.js"></script>
-    <script src="~/js/AnswersGetAll.js"></script>
-
-}
+<partial name="_ReactStepper"></partial>
