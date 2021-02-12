@@ -226,7 +226,8 @@ namespace Admin.Panel.Web.Controllers
                     ApplicationCompaniesId = model.SelectedCompaniesId,
                     Email = model.Email.Trim(),
                     EmailConfirmed = true,
-                    RoleId = model.RoleId
+                    RoleId = model.RoleId,
+                    Description = model.Description
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -277,7 +278,8 @@ namespace Admin.Panel.Web.Controllers
                     ApplicationCompaniesId = model.SelectedCompaniesId,
                     Email = model.Email.Trim(),
                     EmailConfirmed = true,
-                    RoleId = model.RoleId
+                    RoleId = model.RoleId,
+                    Description = model.Description
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);

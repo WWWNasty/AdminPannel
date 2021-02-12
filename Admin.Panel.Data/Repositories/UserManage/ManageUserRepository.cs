@@ -71,7 +71,8 @@ namespace Admin.Panel.Data.Repositories.UserManage
                     {
                         var users = cn.Query<GetAllUsersDto>(@"SELECT u.* FROM ApplicationUser u
                                                                                         INNER JOIN ApplicationUserCompany ac ON ac.UserId = u.Id
-                                                                                        WHERE CompanyId = @CompanyId", new{@CompanyId = companyId}).ToArray();
+                                                                                        INNER JOIN ApplicationRole r ON u.RoleId = r.Id
+                                                                                        WHERE CompanyId = @CompanyId AND r.Name <> 'SuperAdministrator' ", new{@CompanyId = companyId}).ToArray();
                         foreach (var usr in users)
                         {
                             result.Add(usr);
@@ -110,7 +111,10 @@ namespace Admin.Panel.Data.Repositories.UserManage
                     Inner Join ApplicationRole r on r.Id = u.RoleId
                     WHERE u.Id = @Id";
                     var result = cn.Query<UpdateUserViewModel>(query, new { @Id = userId }).SingleOrDefault();
-                    
+                    List<int> companiesId =
+                        cn.Query<int>(@"Select c.CompanyId From ApplicationUserCompany c Where c.UserId = @UserId",
+                            new {UserId = userId}).ToList();
+                    result.SelectedCompaniesId = companiesId;
                     return result;
                 }
                 catch (Exception ex)
@@ -144,21 +148,42 @@ namespace Admin.Panel.Data.Repositories.UserManage
             }
         }
 
-        //делает isused false пользователю
         public async Task<int> UpdateUser(UpdateUserViewModel user)
         {
             using (var cn = new SqlConnection(_connectionString))
             {
                 await cn.OpenAsync();
-                try
+                using (var transaction = cn.BeginTransaction())
                 {
-                    await cn.ExecuteAsync(@"UPDATE ApplicationUser SET IsUsed=@IsUsed WHERE Id=@Id", user);
-                    _logger.LogInformation("Пользователь с Id: {0} успешно отредактирован в бд.", user.Id);
-                    return user.Id;
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                    try
+                    {
+                        await cn.ExecuteAsync(
+                            @"UPDATE ApplicationUser SET NickName=@NickName,IsUsed=@IsUsed,Description=@Description,RoleId=@RoleId WHERE Id=@Id",
+                            new{
+                            Id = user.Id,
+                            NickName = user.Nickname,
+                            IsUsed = user.IsUsed,
+                            Description = user.Description,
+                            RoleId = user.RoleId
+                            }, transaction);
+                        cn.Execute(
+                            @"DELETE FROM ApplicationUserCompany WHERE UserId = @UserId",
+                            new {UserId = user.Id}, transaction);
+                        foreach (var idCompany in user.SelectedCompaniesId)
+                        {
+                            cn.Execute(
+                                @"INSERT INTO  ApplicationUserCompany(UserId,CompanyId)
+                                              VALUES (@UserId,@CompanyId)",
+                                new {UserId = user.Id, CompanyId = idCompany}, transaction);
+                        }
+                        transaction.Commit();
+                        _logger.LogInformation("Пользователь с Id: {0} успешно отредактирован в бд.", user.Id);
+                        return user.Id;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                    }
                 }
             }
         }

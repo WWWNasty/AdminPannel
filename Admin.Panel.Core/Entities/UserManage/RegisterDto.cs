@@ -32,6 +32,9 @@ namespace Admin.Panel.Core.Entities.UserManage
         
         [Required(ErrorMessage = "Поле Роль - обязательно!")]
         public int RoleId { get; set; }
+
+        [StringLength(500, ErrorMessage = "Длина должна быть не более {0} символов.")]
+        public string Description { get; set; }
         
         [Display(Name = "Роль")]
         public List<ApplicationRole> RolesList { get; set; }

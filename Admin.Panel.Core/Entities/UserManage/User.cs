@@ -15,6 +15,8 @@ namespace Admin.Panel.Core.Entities.UserManage
         public List<int> ApplicationCompaniesId { get; set; }
         public int RoleId { get; set; }
 
+        public string Description { get; set; }
+
         public List<string> RolesList { get; set; }
 
     }

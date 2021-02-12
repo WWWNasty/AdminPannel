@@ -46,8 +46,8 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 try
                 {
                     var query =
-                        @"INSERT INTO ApplicationUser(UserName,PasswordHash,Nickname,CreatedDate,SecurityStamp,IsConfirmed,ConfirmationToken,IsUsed,RoleId,NormalizedUserName,NormalizedEmail,Email,EmailConfirmed) 
-                            VALUES(@UserName,@PasswordHash,@Nickname,@CreatedDate,@SecurityStamp,@IsConfirmed,@ConfirmationToken,1,@RoleId,@NormalizedUserName,@NormalizedEmail,@Email,@EmailConfirmed);
+                        @"INSERT INTO ApplicationUser(UserName,PasswordHash,Nickname,CreatedDate,SecurityStamp,IsConfirmed,ConfirmationToken,IsUsed,RoleId,NormalizedUserName,NormalizedEmail,Email,EmailConfirmed,Description) 
+                            VALUES(@UserName,@PasswordHash,@Nickname,@CreatedDate,@SecurityStamp,@IsConfirmed,@ConfirmationToken,1,@RoleId,@NormalizedUserName,@NormalizedEmail,@Email,@EmailConfirmed,@Description);
                             SELECT UserId = @@IDENTITY";
                     var value = cn.ExecuteScalar<int>(query, user);
 

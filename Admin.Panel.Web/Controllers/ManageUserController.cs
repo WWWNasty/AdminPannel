@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.UserManage;
 using Admin.Panel.Core.Interfaces.Repositories.UserManageRepositoryInterfaces;
+using Admin.Panel.Core.Interfaces.Services.UserManageServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
@@ -15,17 +16,20 @@ namespace Admin.Panel.Web.Controllers
     {
        
         private readonly IManageUserRepository _manageUserRepository;
+        private readonly IManageUserService _manageUserService;
         private readonly IMapper _mapper;
         private readonly ILogger<ManageUserController> _logger;
 
         public ManageUserController(
             IManageUserRepository manageUserRepository,
             IMapper mapper,
-            ILogger<ManageUserController> logger)
+            ILogger<ManageUserController> logger, 
+            IRoleRepository roleRepository, IManageUserService manageUserService)
         {
             _manageUserRepository = manageUserRepository;
             _mapper = mapper;
             _logger = logger;
+            _manageUserService = manageUserService;
         }
 
         [HttpGet]
@@ -50,7 +54,9 @@ namespace Admin.Panel.Web.Controllers
         public async Task<IActionResult> UpdateUser(int userId)
         {
             UpdateUserViewModel model = await _manageUserRepository.GetUser(userId);
-            //return View(_mapper.Map<UpdateUserViewModel>(user));
+            var allForUpdateUser = await _manageUserService.GetCompaniesAndRoles();
+            model.RolesList = allForUpdateUser.RolesList;
+            model.ApplicationCompanies = allForUpdateUser.ApplicationCompanies;
             return View(model);
         }
 
@@ -66,6 +72,9 @@ namespace Admin.Panel.Web.Controllers
                 if (isLastAdmin && model.Role == "SuperAdministrator" && model.IsUsed == false)
                 {
                     model = await _manageUserRepository.GetUser(model.Id);
+                    var allForUpdate = await _manageUserService.GetCompaniesAndRoles();
+                    model.RolesList = allForUpdate.RolesList;
+                    model.ApplicationCompanies = allForUpdate.ApplicationCompanies;
                     model.IsAdminLastActive = true;
                     return View(model);
                 }
@@ -76,6 +85,9 @@ namespace Admin.Panel.Web.Controllers
             }
 
             model = await _manageUserRepository.GetUser(model.Id);
+            var allForUpdateUser = await _manageUserService.GetCompaniesAndRoles();
+            model.RolesList = allForUpdateUser.RolesList;
+            model.ApplicationCompanies = allForUpdateUser.ApplicationCompanies;
             return View(model);
         }
 
@@ -84,6 +96,10 @@ namespace Admin.Panel.Web.Controllers
         public async Task<IActionResult> UpdateUserForUser(int userId)
         {
             var model = await _manageUserRepository.GetUser(userId);
+            var userCurrentId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var allForUpdateUser = await _manageUserService.GetCompaniesAndRolesForUser(userCurrentId.ToString());
+            model.RolesList = allForUpdateUser.RolesList;
+            model.ApplicationCompanies = allForUpdateUser.ApplicationCompanies;            
             return View("UpdateUser", model);
         }
 
@@ -98,7 +114,10 @@ namespace Admin.Panel.Web.Controllers
                 if (isLastAdmin && model.Role == "SuperAdministrator" && model.IsUsed == false)
                 {
                     model = await _manageUserRepository.GetUser(model.Id);
-                    model.IsAdminLastActive = true;
+                    var usertId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                    var allForUpdat = await _manageUserService.GetCompaniesAndRolesForUser(usertId.ToString());
+                    model.RolesList = allForUpdat.RolesList;
+                    model.ApplicationCompanies = allForUpdat.ApplicationCompanies;                      model.IsAdminLastActive = true;
                     return RedirectToAction("GetAllUsersForUser", model);
                 }
 
@@ -112,7 +131,10 @@ namespace Admin.Panel.Web.Controllers
             }
 
             model = await _manageUserRepository.GetUser(model.Id);
-            return View("UpdateUser", model);
+            var userCurrentId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var allForUpdateUser = await _manageUserService.GetCompaniesAndRolesForUser(userCurrentId.ToString());
+            model.RolesList = allForUpdateUser.RolesList;
+            model.ApplicationCompanies = allForUpdateUser.ApplicationCompanies;              return View("UpdateUser", model);
         }
     }
 }

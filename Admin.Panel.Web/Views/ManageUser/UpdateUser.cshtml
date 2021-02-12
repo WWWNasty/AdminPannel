@@ -4,15 +4,15 @@
     @{
         ViewData["Title"] = "Редактирование";
     }
-    
+
     <div class="form-group mt-5">
         <div class="col-md-10">
-            <h4>@ViewBag.Title</h4> 
+            <h4>@ViewBag.Title</h4>
         </div>
     </div>
-    
+
     <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
-       
+
         @if (Model.IsAdminLastActive == true)
         {
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -25,7 +25,6 @@
         <div asp-validation-summary="All" class="text-danger"></div>
         <input type="hidden" name="Id" value="@Model.Id"/>
         <input type="hidden" name="Role" value="@Model.Role"/>
-        
         <div class="form-group">
             <div class="col-md-10">
                 Email: @Model.Email
@@ -33,35 +32,58 @@
         </div>
         <div class="form-group">
             <div class="col-md-10">
-                Nickname: @Model.Nickname
+                <label asp-for="Nickname"></label>
+                <input asp-for="Nickname" class="form-control"/>
+                <span asp-validation-for="Nickname" class="text-danger"></span>
             </div>
         </div>
+        <div class="col">
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <label asp-for="RolesList"></label>
+                        <select class="selectpicker" asp-for="RoleId"
+                                asp-items="Model.RolesList.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.RoleId == property.Id))" required>
+                        </select>
+                        <span asp-validation-for="RoleId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <label asp-for="ApplicationCompanies"></label>
+                        <select class="selectpicker" asp-for="SelectedCompaniesId"
+                                asp-items="Model.ApplicationCompanies.Select(p => new SelectListItem(p.CompanyName, p.CompanyId.ToString()))"
+                                multiple>
+                        </select>
+                        <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-md-10">
-                UserName: @Model.UserName
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-10">
-                Роль: @Model.Role
-            </div>
-        </div>
-        
         <div class="form-group form-check">
             <div class="col-md-10">
-                <input type="checkbox" class="form-check-input" asp-for="IsUsed" class="form-control" />
+                <input type="checkbox" class="form-check-input" asp-for="IsUsed" class="form-control"/>
                 <label class="form-check-label" asp-for="IsUsed">Активен</label>
                 <span asp-validation-for="IsUsed" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group col-md-10 mt-5">
-            <button type="button" class="btn btn-outline-primary" id="back-button" >Отмена</button>
+            <button type="button" class="btn btn-outline-primary" id="back-button">Отмена</button>
             <button type="submit" class="btn btn-primary ml-2">Сохранить</button>
         </div>
     </form>
 
 </div>
-
 
 
 @section Scripts {

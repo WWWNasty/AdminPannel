@@ -3,15 +3,15 @@
     @{
         ViewBag.Title = "Создание нового пользователя";
     }
-    
+
     <div class="form-group mt-5">
         <div class="col-md-10">
             <h4>@ViewBag.Title</h4>
         </div>
     </div>
-    
+
     <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
-    
+
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group">
             <div class="col-md-10">
@@ -64,6 +64,13 @@
                         asp-items="Model.ApplicationCompanies.Select(p => new SelectListItem(p.CompanyName, p.CompanyId.ToString()))"
                         multiple>
                 </select>
+                <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
             </div>
         </div>
