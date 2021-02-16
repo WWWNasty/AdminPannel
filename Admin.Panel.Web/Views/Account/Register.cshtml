@@ -41,7 +41,9 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="col">
+            <div class="row">
+<div class="form-group">
             <div class="col-md-10">
                 @{
                     List<SelectListItem> lst = new List<SelectListItem>();
@@ -57,16 +59,22 @@
                 <span asp-validation-for="RoleId" class="text-danger"></span>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-10">
-                <label asp-for="ApplicationCompanies"></label>
-                <select class="selectpicker" asp-for="SelectedCompaniesId"
-                        asp-items="Model.ApplicationCompanies.Select(p => new SelectListItem(p.CompanyName, p.CompanyId.ToString()))"
-                        multiple>
-                </select>
-                <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <label asp-for="ApplicationCompanies"></label>
+                        <select class="selectpicker" asp-for="SelectedCompaniesId"
+                                asp-items="Model.ApplicationCompanies.Select(p => new SelectListItem(p.CompanyName, p.CompanyId.ToString()))"
+                                multiple>
+                        </select>
+                        <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        
         <div class="form-group">
             <div class="col-md-10">
                 <label asp-for="Description"></label>
