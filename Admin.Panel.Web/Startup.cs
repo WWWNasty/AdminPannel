@@ -1,3 +1,7 @@
+using System.Globalization;
+using System.Linq;
+using System.Security.Policy;
+using System.Threading.Tasks;
 using Admin.Panel.Core.Entities.UserManage;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces;
 using Admin.Panel.Core.Interfaces.Repositories.QuestionaryRepositoryInterfaces.Completed;
@@ -25,7 +29,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Admin.Panel.Data.Repositories.Questionary.Questions;
 using Admin.Panel.Data.Repositories.UserManage;
+using Admin.Panel.Web.Extensions;
 using Admin.Panel.Web.Logging;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 
@@ -65,7 +71,9 @@ namespace Admin.Panel.Web
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddTransient<IRoleStore<ApplicationRole>, RoleRepository>();
             services.AddSingleton<UserNameEnricher>();
+            services.AddScoped<CustomClaimsCookieSignInHelper<User>>();
             services.AddIdentity<User, ApplicationRole>()
+                
                 //.AddDapperStores(options => {
                 //    options.AddRolesTable<ExtendedRolesTable, ExtendedIdentityRole>();
                 //});
@@ -109,6 +117,7 @@ namespace Admin.Panel.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseMiddleware<RedirectToPasswordResetMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -118,6 +127,27 @@ namespace Admin.Panel.Web
                 endpoints.MapRazorPages();
             });
             
+        }
+    }
+
+    public class RedirectToPasswordResetMiddleware
+    {
+        private readonly RequestDelegate _next;
+
+        public RedirectToPasswordResetMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        public async Task InvokeAsync(HttpContext context)
+        {
+            if (context.User.Claims.FirstOrDefault(c => c.Type == "needs_reset_password")?.Value == true.ToString() && context.Request.Path != "/Account/ChangePassword" && context.Request.Path != "/Account/Logout")
+            {
+                context.Response.Redirect("/Account/ChangePassword");
+                return;
+            }
+            // Call the next delegate/middleware in the pipeline
+            await _next(context);
         }
     }
 }

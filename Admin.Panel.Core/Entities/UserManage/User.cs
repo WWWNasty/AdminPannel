@@ -17,6 +17,8 @@ namespace Admin.Panel.Core.Entities.UserManage
 
         public string Description { get; set; }
 
+        public bool NeedsResetPassword { get; set; }
+
         public List<string> RolesList { get; set; }
 
     }

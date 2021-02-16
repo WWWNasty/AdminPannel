@@ -6,7 +6,7 @@ namespace Admin.Panel.Core.Entities.UserManage
     {
         [Required(ErrorMessage = "Поле Предидущий пароль - обязательно!")]
         [DataType(DataType.Password)]
-        [Display(Name = "Предидущий пароль")]
+        [Display(Name = "Предыдущий пароль")]
         public string OldPassword { get; set; }
 
         [Required(ErrorMessage = "Поле Новый пароль - обязательно!")]
@@ -21,5 +21,6 @@ namespace Admin.Panel.Core.Entities.UserManage
         public string ConfirmPassword { get; set; }
 
         public string StatusMessage { get; set; }
+
     }
 }

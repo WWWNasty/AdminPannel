@@ -46,8 +46,8 @@ namespace Admin.Panel.Data.Repositories.UserManage
                 try
                 {
                     var query =
-                        @"INSERT INTO ApplicationUser(UserName,PasswordHash,Nickname,CreatedDate,SecurityStamp,IsConfirmed,ConfirmationToken,IsUsed,RoleId,NormalizedUserName,NormalizedEmail,Email,EmailConfirmed,Description) 
-                            VALUES(@UserName,@PasswordHash,@Nickname,@CreatedDate,@SecurityStamp,@IsConfirmed,@ConfirmationToken,1,@RoleId,@NormalizedUserName,@NormalizedEmail,@Email,@EmailConfirmed,@Description);
+                        @"INSERT INTO ApplicationUser(UserName,PasswordHash,Nickname,CreatedDate,SecurityStamp,IsConfirmed,ConfirmationToken,IsUsed,RoleId,NormalizedUserName,NormalizedEmail,Email,EmailConfirmed,Description,NeedsResetPassword) 
+                            VALUES(@UserName,@PasswordHash,@Nickname,@CreatedDate,@SecurityStamp,@IsConfirmed,@ConfirmationToken,1,@RoleId,@NormalizedUserName,@NormalizedEmail,@Email,@EmailConfirmed,@Description,1);
                             SELECT UserId = @@IDENTITY";
                     var value = cn.ExecuteScalar<int>(query, user);
 
@@ -366,7 +366,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
         }
 
         public Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
-        {
+        { 
             throw new NotImplementedException();
         }
 
@@ -380,7 +380,7 @@ namespace Admin.Panel.Data.Repositories.UserManage
                     await cn.ExecuteAsync(
                         @"UPDATE ApplicationUser SET UserName=@UserName,PasswordHash=@PasswordHash,NickName=@NickName,SecurityStamp=@SecurityStamp,IsConfirmed=@IsConfirmed,
                     NormalizedUserName=@NormalizedUserName,NormalizedEmail=@NormalizedEmail,Email=@Email,
-                    EmailConfirmed=@EmailConfirmed,IsUsed=@IsUsed WHERE Id=@Id", user);
+                    EmailConfirmed=@EmailConfirmed,IsUsed=@IsUsed, NeedsResetPassword=0 WHERE Id=@Id", user);
                     _logger.LogInformation("Пользователь с Id: {0} успешно отредактирован в бд.", user.Id);
                     return IdentityResult.Success;
                 }

@@ -30,6 +30,7 @@ namespace Admin.Panel.Web.Controllers
         private readonly IUserRepository _userRepository;
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly CustomClaimsCookieSignInHelper<User> _customClaimsCookieSignInHelper;
 
         public AccountController(
             UserManager<User> userManager,
@@ -37,7 +38,8 @@ namespace Admin.Panel.Web.Controllers
             SignInManager<User> signInManager,
             IEmailSender emailSender,
             IManageUserService manageUserService,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            CustomClaimsCookieSignInHelper<User> customClaimsCookieSignInHelper)
 
         {
             _userManager = userManager;
@@ -46,6 +48,7 @@ namespace Admin.Panel.Web.Controllers
             _emailSender = emailSender;
             _manageUserService = manageUserService;
             _logger = logger;
+            _customClaimsCookieSignInHelper = customClaimsCookieSignInHelper;
         }
 
         [TempData] public string ErrorMessage { get; set; }
@@ -76,20 +79,27 @@ namespace Admin.Panel.Web.Controllers
                 {
                     // This doesn't count login failures towards account lockout
                     // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                    var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password,
-                        isPersistent: false,
-                        lockoutOnFailure: false);
+                    // var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password,
+                    //     isPersistent: false,
+                    //     lockoutOnFailure: false);
+                    User user = await _userRepository.FindByEmailAsync(model.Email, CancellationToken.None);
 
-                    //if (result.IsLockedOut)
-                    //{
-                    //    return RedirectToAction(nameof(Lockout));
-                    //}
-
-                    if (result.Succeeded)
+                    if (user.Id != 0)
                     {
-                        var userId = _userRepository.GetIdByName(model.Email);
-                        var userRole = _userRepository.IsUserInRoleAsync(userId);
-                        _logger.LogInformation("Пользователь {0} с Id {1} был успешно авторизован.", userId,
+                        var customClaims = new[]
+                        {
+                            new Claim("needs_reset_password", user.NeedsResetPassword.ToString())
+                        };
+                        await _customClaimsCookieSignInHelper.SignInUserAsync(user, model.RememberMe, customClaims);
+                        //if (result.IsLockedOut)
+                        //{
+                        //    return RedirectToAction(nameof(Lockout));
+                        //}
+
+
+                        //var userId = _userRepository.GetIdByName(model.Email);
+                        var userRole = _userRepository.IsUserInRoleAsync(user.Id);
+                        _logger.LogInformation("Пользователь {0} с Id {1} был успешно авторизован.", user.Id,
                             model.Email);
                         if (userRole == "SuperAdministrator")
                         {
@@ -341,8 +351,16 @@ namespace Admin.Panel.Web.Controllers
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
-                await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                    $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                try
+                {
+                    await _emailSender.SendEmailAsync(model.Email, "Reset Password",
+                        $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogInformation($"Ссылка на восстановление паролдя не была отпрпавлена на почту {0}. Error: {e}", model.Email);
+                }
+                
                 _logger.LogInformation("Ссылка на восстановление паролдя была отпрпавлена на почту {0}.", model.Email);
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
@@ -474,12 +492,26 @@ namespace Admin.Panel.Web.Controllers
                 AddErrors(changePasswordResult);
                 return View(model);
             }
+            
+            if(changePasswordResult.Succeeded){
+                var email = User.FindFirstValue(ClaimTypes.Name);
+                try
+                {
+                    await _emailSender.SendEmailAsync(email, "Reset Password",
+                        $"Ваш пароль был изменен, если вы этого не делали, пожалуйста обратитесь в службу технической поддержки!");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogInformation($"Пароль не был измнен пользователю с Id: {_userManager.GetUserId(User)}. Error:{e}");
+                }
+               
+            }
 
             _logger.LogInformation($"Пароль был успешно измнен пользователю с Id: {_userManager.GetUserId(User)}.");
             await _signInManager.SignInAsync(user, isPersistent: false);
             StatusMessage = "Your password has been changed.";
 
-            return RedirectToAction(nameof(ChangePassword));
+             return RedirectToAction(nameof(ChangePassword));
         }
 
         [HttpGet]
