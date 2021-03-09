@@ -10,79 +10,70 @@
         </div>
     </div>
 
-    <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
+    <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true" class="needs-validation" novalidate>
 
-        <div asp-validation-summary="All" class="text-danger"></div>
+        @* <div asp-validation-summary="All" class="text-danger"></div> *@
         <div class="form-group">
             <div class="col-md-10">
                 <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control"/>
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <input asp-for="Email" class="form-control" required/>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-10">
                 <label asp-for="Nickname"></label>
-                <input asp-for="Nickname" class="form-control"/>
-                <span asp-validation-for="Nickname" class="text-danger"></span>
+                <input asp-for="Nickname" class="form-control" required/>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-10">
                 <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control"/>
+                <input asp-for="Password" class="form-control" required/>
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-10">
                 <label asp-for="ConfirmPassword"></label>
-                <input asp-for="ConfirmPassword" class="form-control"/>
+                <input asp-for="ConfirmPassword" class="form-control" required/>
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
         </div>
         <div class="col">
             <div class="row">
-<div class="form-group">
-            <div class="col-md-10">
-                @{
-                    List<SelectListItem> lst = new List<SelectListItem>();
-                    for (int i = Model.RolesList.Count - 1; i >= 0; i--)
-                    {
-                        lst.Add(new SelectListItem {Text = Model.RolesList[i].Name, Value = Model.RolesList[i].Id.ToString()});
-                    }
-                }
-                <label asp-for="RolesList"></label>
-                <select asp-for="RoleId" asp-items="lst" class="selectpicker">
-                    <option selected="selected" disabled="disabled">Ничего не выбрано</option>
-                </select>
-                <span asp-validation-for="RoleId" class="text-danger"></span>
-            </div>
-        </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <label asp-for="RolesList"></label>
+                        <select class="selectpicker" asp-for="RoleId" required
+                                asp-items="Model.RolesList.Select(p => new SelectListItem(p.Name, p.Id.ToString()))">
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="form-group">
                     <div class="col-md-10">
                         <label asp-for="ApplicationCompanies"></label>
-                        <select class="selectpicker" asp-for="SelectedCompaniesId"
+                        <select class="selectpicker" asp-for="SelectedCompaniesId" required
                                 asp-items="Model.ApplicationCompanies.Select(p => new SelectListItem(p.CompanyName, p.CompanyId.ToString()))"
                                 multiple>
                         </select>
-                        <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
                     </div>
                 </div>
             </div>
         </div>
-        
-        
+
+
         <div class="form-group">
             <div class="col-md-10">
                 <label asp-for="Description"></label>
                 <textarea asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
             </div>
         </div>
-        <button type="submit" class="btn btn-default">Создать</button>
+        <div class="form-group col-md-10 mt-5">
+            <button type="button" class="btn btn-outline-primary" id="back-button">Отмена</button>
+            <button type="submit" class="btn btn-primary ml-2">Создать</button>
+        </div>
     </form>
 
 </div>

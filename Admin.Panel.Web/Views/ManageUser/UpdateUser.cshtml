@@ -11,9 +11,9 @@
         </div>
     </div>
 
-    <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true">
+    <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="true" class="needs-validation" novalidate>
 
-        @if (Model.IsAdminLastActive == true)
+        @if (Model.IsAdminLastActive )
         {
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <strong>Единственного активного пользователя Администратора в системе нельзя заблокировать!</strong>
@@ -22,7 +22,7 @@
                 </button>
             </div>
         }
-        <div asp-validation-summary="All" class="text-danger"></div>
+        @* <div asp-validation-summary="All" class="text-danger"></div> *@
         <input type="hidden" name="Id" value="@Model.Id"/>
         <input type="hidden" name="Role" value="@Model.Role"/>
         <div class="form-group">
@@ -33,8 +33,7 @@
         <div class="form-group">
             <div class="col-md-10">
                 <label asp-for="Nickname"></label>
-                <input asp-for="Nickname" class="form-control"/>
-                <span asp-validation-for="Nickname" class="text-danger"></span>
+                <input asp-for="Nickname" class="form-control" required/>
             </div>
         </div>
         <div class="col">
@@ -42,10 +41,9 @@
                 <div class="form-group">
                     <div class="col-md-10">
                         <label asp-for="RolesList"></label>
-                        <select class="selectpicker" asp-for="RoleId"
+                        <select class="selectpicker" asp-for="RoleId" required
                                 asp-items="Model.RolesList.Select(property => new SelectListItem(property.Name, property.Id.ToString(), Model.RoleId == property.Id))" required>
                         </select>
-                        <span asp-validation-for="RoleId" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -53,11 +51,10 @@
                 <div class="form-group">
                     <div class="col-md-10">
                         <label asp-for="ApplicationCompanies"></label>
-                        <select class="selectpicker" asp-for="SelectedCompaniesId"
+                        <select class="selectpicker" asp-for="SelectedCompaniesId" required
                                 asp-items="Model.ApplicationCompanies.Select(p => new SelectListItem(p.CompanyName, p.CompanyId.ToString()))"
                                 multiple>
                         </select>
-                        <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -67,14 +64,12 @@
             <div class="col-md-10">
                 <label asp-for="Description"></label>
                 <textarea asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="SelectedCompaniesId" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group form-check">
             <div class="col-md-10">
                 <input type="checkbox" class="form-check-input" asp-for="IsUsed" class="form-control"/>
                 <label class="form-check-label" asp-for="IsUsed">Активен</label>
-                <span asp-validation-for="IsUsed" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group col-md-10 mt-5">

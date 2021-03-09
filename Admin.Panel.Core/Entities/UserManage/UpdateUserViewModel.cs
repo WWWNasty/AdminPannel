@@ -11,6 +11,7 @@ namespace Admin.Panel.Core.Entities.UserManage
         
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "Поле обязательно!")]
         public string Nickname { get; set; }
         
         public string Role { get; set; }
