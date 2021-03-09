@@ -316,7 +316,12 @@ function HorizontalLabelPositionBelowStepper(props) {
         console.log(data);
         data.questionaryQuestions.forEach(question => question.questionaryAnswerOptions.forEach(option => option.selectableAnswerId = Number(option.selectableAnswerId)));
 
-        const response = await fetch("/api/QuestionaryApi", {
+        const getAllRoute: string = props.getAllRoute;
+
+        const allRouteParts = getAllRoute.split('/');
+        const basePath = allRouteParts.slice(0, allRouteParts.length - 2).join('/').trim();
+        
+        const response = await fetch(basePath + "/api/QuestionaryApi", {
             method: props.questionary ? "PUT" : "POST",
             headers: {"Content-Type": "application/json"},
             credentials: "include",
