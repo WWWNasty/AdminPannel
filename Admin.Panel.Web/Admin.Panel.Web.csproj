@@ -50,6 +50,30 @@
     <None Remove="Logs\Log-20201030.txt" />
     <None Remove="Logs\Log-20201102.txt" />
     <None Remove="Logs\Log-20201103.txt" />
+    <None Remove="ReactApp\src\ThirdStep.js" />
+    <None Remove="ReactApp\src\SecondStep.js.map" />
+    <None Remove="ReactApp\src\SecondStep.js" />
+    <None Remove="ReactApp\src\MySelect.js.map" />
+    <None Remove="ReactApp\src\MySelect.js" />
+    <None Remove="ReactApp\src\MyMultipleSelect.js.map" />
+    <None Remove="ReactApp\src\MyMultipleSelect.js" />
+    <None Remove="ReactApp\src\FormSwitch.js" />
+    <None Remove="ReactApp\src\FormDialogObjectType.js.map" />
+    <None Remove="ReactApp\src\FormDialogObjectType.js" />
+    <None Remove="ReactApp\src\FormDialogObject.js.map" />
+    <None Remove="ReactApp\src\FormDialogObject.js" />
+    <None Remove="ReactApp\src\FirstStep.js.map" />
+    <None Remove="ReactApp\src\FirstStep.js" />
+    <None Remove="ReactApp\src\DraggableComponent.js.map" />
+    <None Remove="ReactApp\src\DraggableComponent.js" />
+    <None Remove="ReactApp\src\DraggableCard.js.map" />
+    <None Remove="ReactApp\src\DraggableCard.js" />
+    <None Remove="ReactApp\src\CloseAlertDialog.js.map" />
+    <None Remove="ReactApp\src\CloseAlertDialog.js" />
+    <None Remove="ReactApp\src\CardProp.js.map" />
+    <None Remove="ReactApp\src\CardProp.js" />
+    <None Remove="ReactApp\src\App.js.map" />
+    <None Remove="ReactApp\src\App.js" />
   </ItemGroup>
 
 </Project>

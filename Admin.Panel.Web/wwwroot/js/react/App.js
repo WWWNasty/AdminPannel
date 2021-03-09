@@ -92,7 +92,7 @@ function getSteps() {
   return ['Выбор типа объекта', 'Выбор объекта', 'Создание анкеты'];
 }
 
-function getStepContent(step, form, questionary) {
+function getStepContent(step, form, questionary, getAllRoute) {
   const [objectTypes, setObjectTypes] = React.useState([]);
   const [companies, setCompanies] = React.useState([]);
   const [selectableAnswersLists, setSelectableAnswersLists] = React.useState([]);
@@ -102,7 +102,8 @@ function getStepContent(step, form, questionary) {
     (async () => {
       const getSelectOptions = async () => {
         if (questionary) return questionary;
-        const response = await fetch("/api/QuestionaryApi", {
+        const basePath = getBasePath(getAllRoute);
+        const response = await fetch(basePath + "/api/QuestionaryApi", {
           method: "Get",
           headers: {
             "Accept": "application/json"
@@ -273,7 +274,13 @@ function getStepContent(step, form, questionary) {
 //         </div>
 //     );
 // }
-//альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
+
+
+function getBasePath(getAllRoute) {
+  const allRouteParts = getAllRoute.split('/');
+  const basePath = allRouteParts.slice(0, allRouteParts.length - 2).join('/').trim();
+  return basePath;
+} //альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
 
 
 function HorizontalLabelPositionBelowStepper(props) {
@@ -311,9 +318,7 @@ function HorizontalLabelPositionBelowStepper(props) {
     //edit mode change endpoint
     console.log(data);
     data.questionaryQuestions.forEach(question => question.questionaryAnswerOptions.forEach(option => option.selectableAnswerId = Number(option.selectableAnswerId)));
-    const getAllRoute = props.getAllRoute;
-    const allRouteParts = getAllRoute.split('/');
-    const basePath = allRouteParts.slice(0, allRouteParts.length - 2).join('/').trim();
+    const basePath = getBasePath(props.getAllRoute);
     const response = await fetch(basePath + "/api/QuestionaryApi", {
       method: props.questionary ? "PUT" : "POST",
       headers: {
@@ -341,7 +346,7 @@ function HorizontalLabelPositionBelowStepper(props) {
     onClick: handleReset
   }, "Reset")) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Typography, {
     className: classes.instructions
-  }, getStepContent(activeStep, form, props.questionary)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
+  }, getStepContent(activeStep, form, props.questionary, props.getAllRoute)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
     disabled: activeStep === 0,
     onClick: handleBack,
     className: `${classes.backButton}`,

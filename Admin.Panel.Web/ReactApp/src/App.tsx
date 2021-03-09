@@ -90,7 +90,7 @@ function getSteps() {
     return ['Выбор типа объекта', 'Выбор объекта', 'Создание анкеты'];
 }
 
-function getStepContent(step: number, form: any, questionary: any) {
+function getStepContent(step: number, form: any, questionary: any, getAllRoute: string) {
     const [objectTypes, setObjectTypes] = React.useState<SelectOption[]>([]);
     const [companies, setCompanies] = React.useState<SelectOption[]>([]);
     const [selectableAnswersLists, setSelectableAnswersLists] = React.useState<SelectOption[]>([]);
@@ -103,8 +103,10 @@ function getStepContent(step: number, form: any, questionary: any) {
             const getSelectOptions = async () => {
                 if (questionary)
                     return questionary;
-
-                const response = await fetch("/api/QuestionaryApi", {
+                
+                const basePath = getBasePath(getAllRoute);
+                
+                const response = await fetch(basePath + "/api/QuestionaryApi", {
                     method: "Get",
                     headers: {"Accept": "application/json"},
                     credentials: "include"
@@ -280,6 +282,12 @@ function getStepContent(step: number, form: any, questionary: any) {
 //     );
 // }
 
+function getBasePath(getAllRoute: string) {
+    const allRouteParts = getAllRoute.split('/');
+    const basePath = allRouteParts.slice(0, allRouteParts.length - 2).join('/').trim();
+    return basePath;
+}
+
 //альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
 function HorizontalLabelPositionBelowStepper(props) {
     const classes = useStyles();
@@ -316,11 +324,8 @@ function HorizontalLabelPositionBelowStepper(props) {
         console.log(data);
         data.questionaryQuestions.forEach(question => question.questionaryAnswerOptions.forEach(option => option.selectableAnswerId = Number(option.selectableAnswerId)));
 
-        const getAllRoute: string = props.getAllRoute;
+        const basePath = getBasePath(props.getAllRoute);
 
-        const allRouteParts = getAllRoute.split('/');
-        const basePath = allRouteParts.slice(0, allRouteParts.length - 2).join('/').trim();
-        
         const response = await fetch(basePath + "/api/QuestionaryApi", {
             method: props.questionary ? "PUT" : "POST",
             headers: {"Content-Type": "application/json"},
@@ -352,7 +357,7 @@ function HorizontalLabelPositionBelowStepper(props) {
                 ) : (
                     <div>
                         <Typography
-                            className={classes.instructions}>{getStepContent(activeStep, form, props.questionary)}</Typography>
+                            className={classes.instructions}>{getStepContent(activeStep, form, props.questionary, props.getAllRoute)}</Typography>
                         <div>
                             <Button
                                 disabled={activeStep === 0}
