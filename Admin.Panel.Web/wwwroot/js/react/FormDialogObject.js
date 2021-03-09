@@ -1,5 +1,3 @@
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
 const FormDialogObject = props => {
   const dialogForm = useForm();
   const form = useFormContext();
@@ -79,27 +77,28 @@ const FormDialogObject = props => {
     id: "standard-required",
     label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
     fullWidth: true
-  }), /*#__PURE__*/React.createElement(FormControl, _extends({}, props, {
-    error: errors?.code?.type,
-    fullWidth: true,
-    rules: {
-      required: true,
-      maxLength: {
-        message: 'Максимально символов: 20',
-        value: 20
-      },
-      validate: true
-    }
   }), /*#__PURE__*/React.createElement(Controller, {
+    error: errors?.code?.type,
     as: TextField,
+    autoFocus: true,
     name: "code",
     control: control,
     defaultValue: "",
     required: true,
     margin: "dense",
     id: "standard-required",
-    label: "\u041A\u043E\u0434"
-  }), /*#__PURE__*/React.createElement(FormHelperText, null, errors.code?.message)), /*#__PURE__*/React.createElement(Controller, {
+    label: "\u041A\u043E\u0434",
+    fullWidth: true,
+    rules: {
+      required: true,
+      maxLength: {
+        message: 'Максимально символов: 20',
+        value: 250
+      },
+      validate: true
+    },
+    helperText: errors?.code?.message
+  }), /*#__PURE__*/React.createElement(Controller, {
     as: TextField,
     name: "description",
     control: control,

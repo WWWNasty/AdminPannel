@@ -74,7 +74,6 @@ const DraggableCard = (props) => {
                             label={"Обязательный вопрос"}
                             required={{message: '', value: true}}
                         />
-
                         <MySelect required={ {message: '', value: true} }
                                   onChange={onChange}
                                   error={Log(errors?.questionaryQuestions?.[props.index]?.selectableAnswersListId?.type)}

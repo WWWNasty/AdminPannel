@@ -20,19 +20,14 @@ const FormDialogObject = (props) => {
             body: JSON.stringify(data)
         })
 
-
         if (response.ok) {
             const result = await response.json();
             props.setOpenAlertGreen(true);
-
             debugger;
-
             props.selectedObjectype.questionaryObjects.push(result);
-
             setOpen(false);
         } else if (response.status == 400) {
             const type = 'oneOrMoreRequired';
-
             setError('code', {type, message: 'Введите уникальный код!'});
         } else {
             props.setOpenAlertRed(true);
@@ -73,24 +68,40 @@ const FormDialogObject = (props) => {
                             fullWidth={true}
                         />
 
-                        <FormControl
-                            {...props}
+                        <Controller
                             error={errors?.code?.type}
+                            as={TextField}
+                            autoFocus
+                            name="code"
+                            control={control}
+                            defaultValue=""
+                            required
+                            margin="dense"
+                            id="standard-required"
+                            label="Код"
                             fullWidth={true}
-                            rules={{required: true, maxLength: {message:'Максимально символов: 20', value:20}, validate: true}}
-                        >
-                            <Controller
-                                as={TextField}
-                                name="code"
-                                control={control}
-                                defaultValue=""
-                                required
-                                margin="dense"
-                                id="standard-required"
-                                label="Код"
-                            />
-                            <FormHelperText>{errors.code?.message}</FormHelperText>
-                        </FormControl>
+                            rules={{required: true, maxLength: {message:'Максимально символов: 20', value:250}, validate: true}}
+                            helperText={errors?.code?.message}
+                        />
+                        
+                        {/*<FormControl*/}
+                        {/*    {...props}*/}
+                        {/*    error={errors?.code?.type}*/}
+                        {/*    fullWidth={true}*/}
+                        {/*    rules={{required: true, maxLength: {message:'Максимально символов: 20', value:20}, validate: true}}*/}
+                        {/*>*/}
+                        {/*    <Controller*/}
+                        {/*        as={TextField}*/}
+                        {/*        name="code"*/}
+                        {/*        control={control}*/}
+                        {/*        defaultValue=""*/}
+                        {/*        required*/}
+                        {/*        margin="dense"*/}
+                        {/*        id="standard-required"*/}
+                        {/*        label="Код"*/}
+                        {/*    />*/}
+                        {/*    <FormHelperText>{errors.code?.message}</FormHelperText>*/}
+                        {/*</FormControl>*/}
                         <Controller
                             as={TextField}
                             name="description"

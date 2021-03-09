@@ -1,10 +1,6 @@
 function CardProp(props: {index: number, form: any, registerForm: any, remove: any}) {
     const classes = useStyles();
-
-    // const removeFriend = index => () => {
-    //     props.setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
-    //     props.setCounter(prevCounter => prevCounter - 1);
-    // };
+    
     return (
         <Card className={`${classes.root} mt-3 mb-3 bg-light`}>
             <CardContent>
@@ -32,7 +28,6 @@ function CardProp(props: {index: number, form: any, registerForm: any, remove: a
                     defaultValue=""
                     required
                     control={props.form.control}
-                    margin="dense"
                     label="Название в отчете"
                 />  
                 

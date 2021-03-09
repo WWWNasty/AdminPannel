@@ -1,9 +1,5 @@
 function CardProp(props) {
-  const classes = useStyles(); // const removeFriend = index => () => {
-  //     props.setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
-  //     props.setCounter(prevCounter => prevCounter - 1);
-  // };
-
+  const classes = useStyles();
   return /*#__PURE__*/React.createElement(Card, {
     className: `${classes.root} mt-3 mb-3 bg-light`
   }, /*#__PURE__*/React.createElement(CardContent, null, /*#__PURE__*/React.createElement(Typography, {
@@ -30,7 +26,6 @@ function CardProp(props) {
     defaultValue: "",
     required: true,
     control: props.form.control,
-    margin: "dense",
     label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0432 \u043E\u0442\u0447\u0435\u0442\u0435"
   }), /*#__PURE__*/React.createElement(FormControlLabel, {
     control: /*#__PURE__*/React.createElement(Switch, {
