@@ -75,7 +75,7 @@ const FormDialogObject = props => {
     required: true,
     margin: "dense",
     id: "standard-required",
-    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
+    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043E\u0431\u044A\u0435\u043A\u0442\u0430",
     fullWidth: true
   }), /*#__PURE__*/React.createElement(Controller, {
     error: errors?.code?.type,
@@ -110,7 +110,9 @@ const FormDialogObject = props => {
     fullWidth: true,
     multiline: true,
     rows: 4
-  }), props.selectedObjectype.objectProperties?.map((item, index) => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Controller, {
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "mt-3"
+  }, "\u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430 \u0442\u0438\u043F\u0430 \u043E\u0431\u044A\u0435\u043A\u0442\u0430: "), props.selectedObjectype.objectProperties?.map((item, index) => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Controller, {
     as: TextField,
     name: `selectedObjectPropertyValues[${index}].value`,
     control: control,

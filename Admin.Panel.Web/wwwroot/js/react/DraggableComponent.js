@@ -56,7 +56,9 @@ const DraggableComponent = props => {
     color: "primary",
     "aria-label": "add",
     className: "mt-50 mb-50 ml-50"
-  }, /*#__PURE__*/React.createElement(Icon, null, "add"))));
+  }, /*#__PURE__*/React.createElement(Icon, null, "add"), " ", /*#__PURE__*/React.createElement("h6", {
+    className: "mt-2"
+  }, "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432\u043E\u043F\u0440\u043E\u0441"))));
 }; // fake data generator
 
 

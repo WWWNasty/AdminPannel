@@ -19,7 +19,7 @@ function CardProp(props: {index: number, form: any, registerForm: any, remove: a
                     defaultValue=""
                     required
                     control={props.form.control}
-                    label="Название"
+                    label="Название свойства"
                 />
                 <Controller
                     as={TextField}
@@ -28,7 +28,7 @@ function CardProp(props: {index: number, form: any, registerForm: any, remove: a
                     defaultValue=""
                     required
                     control={props.form.control}
-                    label="Название в отчете"
+                    label="Название свойства в отчете"
                 />  
                 
                 <FormControlLabel

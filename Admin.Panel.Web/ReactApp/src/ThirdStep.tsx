@@ -24,7 +24,7 @@ const ThirdStep = (props) => {
                 required
                 margin="dense"
                 id="standard-required"
-                label="Название"
+                label="Название анкеты"
                 fullWidth={true}
                 rules={{required: true, maxLength: {message:'Максимально символов: 250', value:250}, validate: true}}
                 helperText={errors?.name?.message}

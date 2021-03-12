@@ -67,7 +67,7 @@ function FormDialogObjectType(props) {
                             required
                             margin="dense"
                             id="standard-required"
-                            label="Название"
+                            label="Название типа объекта"
                             fullWidth={true}
                         />
 
@@ -92,7 +92,7 @@ function FormDialogObjectType(props) {
                                 nameInReport: ''
                             })
                             }>
-                                <Icon>add</Icon>
+                                <Icon>add</Icon> <h6 className="mt-2">Добавить свойство</h6>
                             </IconButton>
                         </div>
                     </DialogContent>

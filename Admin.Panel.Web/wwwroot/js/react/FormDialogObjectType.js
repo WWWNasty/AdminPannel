@@ -83,7 +83,7 @@ function FormDialogObjectType(props) {
     required: true,
     margin: "dense",
     id: "standard-required",
-    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
+    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0442\u0438\u043F\u0430 \u043E\u0431\u044A\u0435\u043A\u0442\u0430",
     fullWidth: true
   }), /*#__PURE__*/React.createElement("div", null, fields.map((property, index) => {
     return /*#__PURE__*/React.createElement(CardProp, {
@@ -102,7 +102,9 @@ function FormDialogObjectType(props) {
       isUsedInReport: false,
       nameInReport: ''
     })
-  }, /*#__PURE__*/React.createElement(Icon, null, "add")))), /*#__PURE__*/React.createElement(DialogActions, null, /*#__PURE__*/React.createElement(Button, {
+  }, /*#__PURE__*/React.createElement(Icon, null, "add"), " ", /*#__PURE__*/React.createElement("h6", {
+    className: "mt-2"
+  }, "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u043E")))), /*#__PURE__*/React.createElement(DialogActions, null, /*#__PURE__*/React.createElement(Button, {
     onClick: handleClose,
     color: "primary"
   }, "\u041E\u0442\u043C\u0435\u043D\u0430"), /*#__PURE__*/React.createElement(Button, {

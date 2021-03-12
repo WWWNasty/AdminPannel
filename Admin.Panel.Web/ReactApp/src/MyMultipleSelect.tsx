@@ -74,18 +74,18 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
                             {props.selectOptions
                                 .flatMap(option => option.questionaryObjects)
                                 .filter(option => selected.indexOf(option.id) > -1)
-                                .map((option) =>
+                                .map((option) => 
                                     <Chip key={option.id} label={option.name} className={classes.chip}/>
                                 )}
                         </div>
                     )}
                     MenuProps={MenuProps}>
 
-                    {props.selectOptions?.map(item => [
-                        <ListSubheader>{item.name}</ListSubheader>,
+                    {props.selectOptions?.map(item => [ item.questionaryObjects.length?
+                        <ListSubheader>{item.name}</ListSubheader> : null,
                         item.questionaryObjects?.map((object) =>
                             <MenuItem key={object.id} value={object.id}>
-                                <Checkbox />
+                                <Checkbox color="primary"/>
                                 <ListItemText primary={object.name}/>
                             </MenuItem>)
                     ])}                

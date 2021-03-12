@@ -64,7 +64,7 @@ const FormDialogObject = (props) => {
                             required
                             margin="dense"
                             id="standard-required"
-                            label="Название"
+                            label="Название объекта"
                             fullWidth={true}
                         />
 
@@ -116,6 +116,7 @@ const FormDialogObject = (props) => {
                             rows={4}
                         />
 
+                        <div className="mt-3">Заполните свойства типа объекта: </div>
                         {props.selectedObjectype.objectProperties?.map((item, index) =>
                             <div>
                                 <Controller

@@ -18,7 +18,7 @@ function CardProp(props) {
     defaultValue: "",
     required: true,
     control: props.form.control,
-    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435"
+    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430"
   }), /*#__PURE__*/React.createElement(Controller, {
     as: TextField,
     name: `objectProperties[${props.index}].nameInReport`,
@@ -26,7 +26,7 @@ function CardProp(props) {
     defaultValue: "",
     required: true,
     control: props.form.control,
-    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0432 \u043E\u0442\u0447\u0435\u0442\u0435"
+    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430 \u0432 \u043E\u0442\u0447\u0435\u0442\u0435"
   }), /*#__PURE__*/React.createElement(FormControlLabel, {
     control: /*#__PURE__*/React.createElement(Switch, {
       className: "mr-3",

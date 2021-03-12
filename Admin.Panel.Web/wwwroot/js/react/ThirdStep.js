@@ -23,7 +23,7 @@ const ThirdStep = props => {
     required: true,
     margin: "dense",
     id: "standard-required",
-    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
+    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0430\u043D\u043A\u0435\u0442\u044B",
     fullWidth: true,
     rules: {
       required: true,

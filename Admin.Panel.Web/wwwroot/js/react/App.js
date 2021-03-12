@@ -171,102 +171,98 @@ function getStepContent(step, form, questionary, getAllRoute) {
     default:
       return 'Unknown step';
   }
-} // function HorizontalNonLinearStepper() {
+}
+
+function getBasePath(getAllRoute) {
+  const allRouteParts = getAllRoute.split('/');
+  const basePath = allRouteParts.slice(0, allRouteParts.length - 2).join('/').trim();
+  return basePath;
+} //альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
+// function HorizontalLabelPositionBelowStepper(props) {
 //     const classes = useStyles();
-//     const [activeStep, setActiveStep] = useState(0);
-//     const [completed, setCompleted] = useState({});
+//     const [activeStep, setActiveStep] = React.useState(0);
 //     const steps = getSteps();
+//     const form = useFormContext();
+//     const {handleSubmit} = form;
 //
-//     const totalSteps = () => {
-//         return steps.length;
-//     };
-//
-//     const completedSteps = () => {
-//         return Object.keys(completed).length;
-//     };
-//
-//     const isLastStep = () => {
-//         return activeStep === totalSteps() - 1;
-//     };
-//
-//     const allStepsCompleted = () => {
-//         return completedSteps() === totalSteps();
-//     };
 //
 //     const handleNext = () => {
-//         const newActiveStep =
-//             isLastStep() && !allStepsCompleted()
-//                 ? // It's the last step, but not all steps have been completed,
-//                   // find the first step that has been completed
-//                 steps.findIndex((step, i) => !(i in completed))
-//                 : activeStep + 1;
-//         setActiveStep(newActiveStep);
+//         const onSuccess = data => {
+//             form.clearErrors();
+//
+//             setActiveStep((prevActiveStep) => prevActiveStep + 1);
+//         }
+//         handleSubmit(onSuccess)();
 //     };
 //
 //     const handleBack = () => {
-//         setActiveStep((prevActiveStep) => prevActiveStep - 1);
-//     };
+//         const onSuccess = data => {
+//             form.clearErrors();
 //
-//     const handleStep = (step) => () => {
-//         setActiveStep(step);
-//     };
+//             setActiveStep((prevActiveStep) => prevActiveStep - 1);
+//         }
+//         handleSubmit(onSuccess)();
 //
-//     const handleComplete = () => {
-//         const newCompleted = completed;
-//         newCompleted[activeStep] = true;
-//         setCompleted(newCompleted);
-//         handleNext();
 //     };
 //
 //     const handleReset = () => {
 //         setActiveStep(0);
-//         setCompleted({});
+//     };
+//     const onSubmit = async data => {
+//         //edit mode change endpoint
+//         console.log(data);
+//         data.questionaryQuestions.forEach(question => question.questionaryAnswerOptions.forEach(option => option.selectableAnswerId = Number(option.selectableAnswerId)));
+//
+//         const basePath = getBasePath(props.getAllRoute);
+//
+//         const response = await fetch(basePath + "/api/QuestionaryApi", {
+//             method: props.questionary ? "PUT" : "POST",
+//             headers: {"Content-Type": "application/json"},
+//             credentials: "include",
+//             body: JSON.stringify(data)
+//         })
+//
+//         if (response.ok) {
+//             window.location = props.getAllRoute;
+//         }
+//
 //     };
 //
 //     return (
 //         <div className={classes.root}>
-//             <Stepper nonLinear activeStep={activeStep}>
-//                 {steps.map((label, index) => (
+//             <Stepper activeStep={activeStep} alternativeLabel>
+//                 {steps.map((label) => (
 //                     <Step key={label}>
-//                         <StepButton onClick={handleStep(index)} completed={completed[index]}>
-//                             {label}
-//                         </StepButton>
+//                         <StepLabel>{label}</StepLabel>
 //                     </Step>
 //                 ))}
 //             </Stepper>
 //             <div>
-//                 {allStepsCompleted() ? (
+//                 {activeStep === steps.length ? (
 //                     <div>
-//                         <Typography className={classes.instructions}>
-//                             All steps completed - you&apos;re finished
-//                         </Typography>
+//                         <Typography className={classes.instructions}>All steps completed</Typography>
 //                         <Button onClick={handleReset}>Reset</Button>
 //                     </div>
 //                 ) : (
 //                     <div>
-//                         <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+//                         <Typography
+//                             className={classes.instructions}>{getStepContent(activeStep, form, props.questionary, props.getAllRoute)}</Typography>
 //                         <div>
-//                             <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button} variant="contained">
+//                             <Button
+//                                 disabled={activeStep === 0}
+//                                 onClick={handleBack}
+//                                 className={`${classes.backButton}`}
+//                                 variant="contained"
+//                             >
 //                                 Назад
 //                             </Button>
-//                             <Button
-//                                 variant="contained"
-//                                 color="primary"
-//                                 onClick={handleNext}
-//                                 className={classes.button}
-//                             >
-//                                 Вперед
-//                             </Button>
-//                             {activeStep !== steps.length &&
-//                             (completed[activeStep] ? (
-//                                 <Typography variant="caption" className={classes.completed}>
-//                                     Шаг {activeStep + 1} уже выполнен
-//                                 </Typography>
-//                             ) : (
-//                                 <Button variant="contained" color="primary" onClick={handleComplete}>
-//                                     {completedSteps() === totalSteps() - 1 ? 'Завершить' : 'Выполнить шаг'}
-//                                 </Button>
-//                             ))}
+//                             {activeStep === steps.length - 1 ?
+//                                 <Button className="ml-50" onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
+//                                     Сохранить
+//                                 </Button> :
+//                                 <Button className="ml-50" variant="contained" color="primary" onClick={handleNext}>
+//                                     Вперед
+//                                 </Button>}
 //                         </div>
 //                     </div>
 //                 )}
@@ -274,16 +270,10 @@ function getStepContent(step, form, questionary, getAllRoute) {
 //         </div>
 //     );
 // }
+//альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
 
 
-function getBasePath(getAllRoute) {
-  const allRouteParts = getAllRoute.split('/');
-  const basePath = allRouteParts.slice(0, allRouteParts.length - 2).join('/').trim();
-  return basePath;
-} //альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
-
-
-function HorizontalLabelPositionBelowStepper(props) {
+function HorizontalNonLinearStepperWithError(props) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -292,7 +282,21 @@ function HorizontalLabelPositionBelowStepper(props) {
     handleSubmit
   } = form;
 
+  const isStepFailed = step => {
+    return step === 1;
+  };
+
   const handleNext = () => {
+    let newSkipped = skipped;
+
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(skipped.values());
+      newSkipped.delete(activeStep);
+    }
+
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setSkipped(newSkipped);
+
     const onSuccess = data => {
       form.clearErrors();
       setActiveStep(prevActiveStep => prevActiveStep + 1);

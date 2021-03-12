@@ -68,10 +68,12 @@ const MyMultipleSelect = props => {
       className: classes.chip
     }))),
     MenuProps: MenuProps
-  }, props.selectOptions?.map(item => [/*#__PURE__*/React.createElement(ListSubheader, null, item.name), item.questionaryObjects?.map(object => /*#__PURE__*/React.createElement(MenuItem, {
+  }, props.selectOptions?.map(item => [item.questionaryObjects.length ? /*#__PURE__*/React.createElement(ListSubheader, null, item.name) : null, item.questionaryObjects?.map(object => /*#__PURE__*/React.createElement(MenuItem, {
     key: object.id,
     value: object.id
-  }, /*#__PURE__*/React.createElement(Checkbox, null), /*#__PURE__*/React.createElement(ListItemText, {
+  }, /*#__PURE__*/React.createElement(Checkbox, {
+    color: "primary"
+  }), /*#__PURE__*/React.createElement(ListItemText, {
     primary: object.name
   })))]))));
 };

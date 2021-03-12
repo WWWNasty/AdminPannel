@@ -64,7 +64,7 @@ const DraggableComponent = (props) => {
                     color="primary" 
                     aria-label="add" 
                     className="mt-50 mb-50 ml-50">
-                    <Icon>add</Icon>
+                    <Icon>add</Icon> <h6 className="mt-2">Добавить вопрос</h6>
                 </IconButton>
             </div>
         </div>
