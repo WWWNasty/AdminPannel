@@ -185,120 +185,15 @@ function getBasePath(getAllRoute: string) {
 }
 
 //альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
-// function HorizontalLabelPositionBelowStepper(props) {
-//     const classes = useStyles();
-//     const [activeStep, setActiveStep] = React.useState(0);
-//     const steps = getSteps();
-//     const form = useFormContext();
-//     const {handleSubmit} = form;
-//
-//
-//     const handleNext = () => {
-//         const onSuccess = data => {
-//             form.clearErrors();
-//
-//             setActiveStep((prevActiveStep) => prevActiveStep + 1);
-//         }
-//         handleSubmit(onSuccess)();
-//     };
-//
-//     const handleBack = () => {
-//         const onSuccess = data => {
-//             form.clearErrors();
-//
-//             setActiveStep((prevActiveStep) => prevActiveStep - 1);
-//         }
-//         handleSubmit(onSuccess)();
-//
-//     };
-//
-//     const handleReset = () => {
-//         setActiveStep(0);
-//     };
-//     const onSubmit = async data => {
-//         //edit mode change endpoint
-//         console.log(data);
-//         data.questionaryQuestions.forEach(question => question.questionaryAnswerOptions.forEach(option => option.selectableAnswerId = Number(option.selectableAnswerId)));
-//
-//         const basePath = getBasePath(props.getAllRoute);
-//
-//         const response = await fetch(basePath + "/api/QuestionaryApi", {
-//             method: props.questionary ? "PUT" : "POST",
-//             headers: {"Content-Type": "application/json"},
-//             credentials: "include",
-//             body: JSON.stringify(data)
-//         })
-//
-//         if (response.ok) {
-//             window.location = props.getAllRoute;
-//         }
-//
-//     };
-//
-//     return (
-//         <div className={classes.root}>
-//             <Stepper activeStep={activeStep} alternativeLabel>
-//                 {steps.map((label) => (
-//                     <Step key={label}>
-//                         <StepLabel>{label}</StepLabel>
-//                     </Step>
-//                 ))}
-//             </Stepper>
-//             <div>
-//                 {activeStep === steps.length ? (
-//                     <div>
-//                         <Typography className={classes.instructions}>All steps completed</Typography>
-//                         <Button onClick={handleReset}>Reset</Button>
-//                     </div>
-//                 ) : (
-//                     <div>
-//                         <Typography
-//                             className={classes.instructions}>{getStepContent(activeStep, form, props.questionary, props.getAllRoute)}</Typography>
-//                         <div>
-//                             <Button
-//                                 disabled={activeStep === 0}
-//                                 onClick={handleBack}
-//                                 className={`${classes.backButton}`}
-//                                 variant="contained"
-//                             >
-//                                 Назад
-//                             </Button>
-//                             {activeStep === steps.length - 1 ?
-//                                 <Button className="ml-50" onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
-//                                     Сохранить
-//                                 </Button> :
-//                                 <Button className="ml-50" variant="contained" color="primary" onClick={handleNext}>
-//                                     Вперед
-//                                 </Button>}
-//                         </div>
-//                     </div>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// }
-
-//альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
-function HorizontalNonLinearStepperWithError(props) {
+function HorizontalLabelPositionBelowStepper(props) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
     const form = useFormContext();
     const {handleSubmit} = form;
 
-    const isStepFailed = (step: number) => {
-        return step === 1;
-    };
 
     const handleNext = () => {
-        let newSkipped = skipped;
-        if (isStepSkipped(activeStep)) {
-            newSkipped = new Set(skipped.values());
-            newSkipped.delete(activeStep);
-        }
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        setSkipped(newSkipped);
-         
         const onSuccess = data => {
             form.clearErrors();
 
@@ -314,7 +209,7 @@ function HorizontalNonLinearStepperWithError(props) {
             setActiveStep((prevActiveStep) => prevActiveStep - 1);
         }
         handleSubmit(onSuccess)();
-        
+
     };
 
     const handleReset = () => {
@@ -382,6 +277,103 @@ function HorizontalNonLinearStepperWithError(props) {
         </div>
     );
 }
+
+//альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
+// function HorizontalNonLinearStepperWithError(props) {
+//     const classes = useStyles();
+//     const [activeStep, setActiveStep] = React.useState(0);
+//     const steps = getSteps();
+//     const form = useFormContext();
+//     const {handleSubmit} = form;
+//
+//     const isStepFailed = (step: number) => {
+//         return step === 1;
+//     };
+//
+//     const handleNext = () => {
+//         const onSuccess = data => {
+//             form.clearErrors();
+//
+//             setActiveStep((prevActiveStep) => prevActiveStep + 1);
+//         }
+//         handleSubmit(onSuccess)();
+//     };
+//
+//     const handleBack = () => {
+//         const onSuccess = data => {
+//             form.clearErrors();
+//
+//             setActiveStep((prevActiveStep) => prevActiveStep - 1);
+//         }
+//         handleSubmit(onSuccess)();
+//        
+//     };
+//
+//     const handleReset = () => {
+//         setActiveStep(0);
+//     };
+//     const onSubmit = async data => {
+//         //edit mode change endpoint
+//         console.log(data);
+//         data.questionaryQuestions.forEach(question => question.questionaryAnswerOptions.forEach(option => option.selectableAnswerId = Number(option.selectableAnswerId)));
+//
+//         const basePath = getBasePath(props.getAllRoute);
+//
+//         const response = await fetch(basePath + "/api/QuestionaryApi", {
+//             method: props.questionary ? "PUT" : "POST",
+//             headers: {"Content-Type": "application/json"},
+//             credentials: "include",
+//             body: JSON.stringify(data)
+//         })
+//
+//         if (response.ok) {
+//             window.location = props.getAllRoute;
+//         }
+//
+//     };
+//
+//     return (
+//         <div className={classes.root}>
+//             <Stepper activeStep={activeStep} alternativeLabel>
+//                 {steps.map((label) => (
+//                     <Step key={label}>
+//                         <StepLabel>{label}</StepLabel>
+//                     </Step>
+//                 ))}
+//             </Stepper>
+//             <div>
+//                 {activeStep === steps.length ? (
+//                     <div>
+//                         <Typography className={classes.instructions}>All steps completed</Typography>
+//                         <Button onClick={handleReset}>Reset</Button>
+//                     </div>
+//                 ) : (
+//                     <div>
+//                         <Typography
+//                             className={classes.instructions}>{getStepContent(activeStep, form, props.questionary, props.getAllRoute)}</Typography>
+//                         <div>
+//                             <Button
+//                                 disabled={activeStep === 0}
+//                                 onClick={handleBack}
+//                                 className={`${classes.backButton}`}
+//                                 variant="contained"
+//                             >
+//                                 Назад
+//                             </Button>
+//                             {activeStep === steps.length - 1 ?
+//                                 <Button className="ml-50" onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
+//                                     Сохранить
+//                                 </Button> :
+//                                 <Button className="ml-50" variant="contained" color="primary" onClick={handleNext}>
+//                                     Вперед
+//                                 </Button>}
+//                         </div>
+//                     </div>
+//                 )}
+//             </div>
+//         </div>
+//     );
+// }
 
 function App(props: { questionary?: any, getAllRoute: string }) {
 
