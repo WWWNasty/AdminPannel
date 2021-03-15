@@ -92,56 +92,66 @@ function getSteps() {
   return ['Выбор типа объекта', 'Выбор объекта', 'Создание анкеты'];
 }
 
-function getStepContent(step, form, questionary, getAllRoute) {
-  const [objectTypes, setObjectTypes] = React.useState([]);
-  const [companies, setCompanies] = React.useState([]);
-  const [selectableAnswersLists, setSelectableAnswersLists] = React.useState([]);
-  const [questionaryInputFieldTypes, setQuestionaryInputFieldTypes] = React.useState([]);
-  const [selectableAnswers, setSelectableAnswers] = React.useState([]);
-  React.useEffect(() => {
-    (async () => {
-      const getSelectOptions = async () => {
-        if (questionary) return questionary;
-        const basePath = getBasePath(getAllRoute);
-        const response = await fetch(basePath + "/api/QuestionaryApi", {
-          method: "Get",
-          headers: {
-            "Accept": "application/json"
-          },
-          credentials: "include"
-        });
-
-        if (response.ok) {
-          return await response.json();
-        }
-      };
-
-      const selectOptions = await getSelectOptions();
-
-      if (!selectOptions) {
-        //todo show a popup with error
-        return;
-      }
-
-      let objTypes = selectOptions.questionaryObjectTypes;
-      setObjectTypes(objTypes);
-      let companies = selectOptions.applicationCompanies.map(company => ({
-        id: company.companyId,
-        name: company.companyName
-      }));
-      setCompanies(companies);
-      let answersList = selectOptions.selectableAnswersLists;
-      setSelectableAnswersLists(answersList);
-      let inputFieldTypes = selectOptions.questionaryInputFieldTypes;
-      setQuestionaryInputFieldTypes(inputFieldTypes);
-      let answers = selectOptions.selectableAnswers.map(answer => ({
-        name: answer.answerText,
-        id: answer.id,
-        selectableAnswersListId: answer.selectableAnswersListId
-      }));
-      setSelectableAnswers(answers);
-    })();
-  }, []);
+function getStepContent(step, form, questionary, getAllRoute, objectTypes, setObjectTypes, companies, selectableAnswersLists, questionaryInputFieldTypes, selectableAnswers) {
+  // const [objectTypes, setObjectTypes] = React.useState<SelectOption[]>([]);
+  // const [companies, setCompanies] = React.useState<SelectOption[]>([]);
+  // const [selectableAnswersLists, setSelectableAnswersLists] = React.useState<SelectOption[]>([]);
+  // const [questionaryInputFieldTypes, setQuestionaryInputFieldTypes] = React.useState<QuestionaryInputFieldTypes[]>([]);
+  // const [selectableAnswers, setSelectableAnswers] = React.useState<SelectOption[]>([]);
+  //
+  // React.useEffect(() => {
+  //     (async () => {
+  //
+  //         const getSelectOptions = async () => {
+  //             if (questionary)
+  //                 return questionary;
+  //            
+  //             const basePath = getBasePath(getAllRoute);
+  //            
+  //             const response = await fetch(basePath + "/api/QuestionaryApi", {
+  //                 method: "Get",
+  //                 headers: {"Accept": "application/json"},
+  //                 credentials: "include"
+  //             });
+  //
+  //             if (response.ok) {
+  //                 return await response.json();
+  //             }
+  //         }
+  //
+  //         const selectOptions = await getSelectOptions();
+  //
+  //         if(!selectOptions){
+  //             //todo show a popup with error
+  //             return;
+  //         }
+  //        
+  //         let objTypes: SelectOption[] = selectOptions.questionaryObjectTypes;
+  //         setObjectTypes(objTypes);
+  //
+  //         let companies: SelectOption[] = selectOptions.applicationCompanies.map(company => ({
+  //             id: company.companyId,
+  //             name: company.companyName
+  //         }));
+  //         setCompanies(companies);
+  //
+  //         let answersList: SelectOption[] = selectOptions.selectableAnswersLists;
+  //         setSelectableAnswersLists(answersList);
+  //
+  //         let inputFieldTypes: QuestionaryInputFieldTypes[] = selectOptions.questionaryInputFieldTypes;
+  //         setQuestionaryInputFieldTypes(inputFieldTypes);
+  //
+  //         let answers: SelectableAnswers[] = selectOptions.selectableAnswers.map(answer => ({
+  //             name: answer.answerText,
+  //             id: answer.id,
+  //             selectableAnswersListId: answer.selectableAnswersListId
+  //         }));
+  //
+  //         setSelectableAnswers(answers);
+  //         console.log("3333",selectOptions);
+  //
+  //     })()
+  // }, []);
   const selectedObjectTypeId = form.watch('objectTypeId');
   const selectedObjectype = objectTypes.find(ot => ot.id == selectedObjectTypeId);
 
@@ -177,103 +187,9 @@ function getBasePath(getAllRoute) {
   const allRouteParts = getAllRoute.split('/');
   const basePath = allRouteParts.slice(0, allRouteParts.length - 2).join('/').trim();
   return basePath;
-} //альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
-// function HorizontalLabelPositionBelowStepper(props) {
-//     const classes = useStyles();
-//     const [activeStep, setActiveStep] = React.useState(0);
-//     const steps = getSteps();
-//     const form = useFormContext();
-//     const {handleSubmit} = form;
-//
-//
-//     const handleNext = () => {
-//         const onSuccess = data => {
-//             form.clearErrors();
-//
-//             setActiveStep((prevActiveStep) => prevActiveStep + 1);
-//         }
-//         handleSubmit(onSuccess)();
-//     };
-//
-//     const handleBack = () => {
-//         const onSuccess = data => {
-//             form.clearErrors();
-//
-//             setActiveStep((prevActiveStep) => prevActiveStep - 1);
-//         }
-//         handleSubmit(onSuccess)();
-//
-//     };
-//
-//     const handleReset = () => {
-//         setActiveStep(0);
-//     };
-//     const onSubmit = async data => {
-//         //edit mode change endpoint
-//         console.log(data);
-//         data.questionaryQuestions.forEach(question => question.questionaryAnswerOptions.forEach(option => option.selectableAnswerId = Number(option.selectableAnswerId)));
-//
-//         const basePath = getBasePath(props.getAllRoute);
-//
-//         const response = await fetch(basePath + "/api/QuestionaryApi", {
-//             method: props.questionary ? "PUT" : "POST",
-//             headers: {"Content-Type": "application/json"},
-//             credentials: "include",
-//             body: JSON.stringify(data)
-//         })
-//
-//         if (response.ok) {
-//             window.location = props.getAllRoute;
-//         }
-//
-//     };
-//
-//     return (
-//         <div className={classes.root}>
-//             <Stepper activeStep={activeStep} alternativeLabel>
-//                 {steps.map((label) => (
-//                     <Step key={label}>
-//                         <StepLabel>{label}</StepLabel>
-//                     </Step>
-//                 ))}
-//             </Stepper>
-//             <div>
-//                 {activeStep === steps.length ? (
-//                     <div>
-//                         <Typography className={classes.instructions}>All steps completed</Typography>
-//                         <Button onClick={handleReset}>Reset</Button>
-//                     </div>
-//                 ) : (
-//                     <div>
-//                         <Typography
-//                             className={classes.instructions}>{getStepContent(activeStep, form, props.questionary, props.getAllRoute)}</Typography>
-//                         <div>
-//                             <Button
-//                                 disabled={activeStep === 0}
-//                                 onClick={handleBack}
-//                                 className={`${classes.backButton}`}
-//                                 variant="contained"
-//                             >
-//                                 Назад
-//                             </Button>
-//                             {activeStep === steps.length - 1 ?
-//                                 <Button className="ml-50" onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
-//                                     Сохранить
-//                                 </Button> :
-//                                 <Button className="ml-50" variant="contained" color="primary" onClick={handleNext}>
-//                                     Вперед
-//                                 </Button>}
-//                         </div>
-//                     </div>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// }
-//альтернативный степер без возможности свободного перехода по вкладкам с работой валидации
+}
 
-
-function HorizontalNonLinearStepperWithError(props) {
+function HorizontalLabelPositionBelowStepper(props) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -282,21 +198,7 @@ function HorizontalNonLinearStepperWithError(props) {
     handleSubmit
   } = form;
 
-  const isStepFailed = step => {
-    return step === 1;
-  };
-
   const handleNext = () => {
-    let newSkipped = skipped;
-
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(skipped.values());
-      newSkipped.delete(activeStep);
-    }
-
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
-    setSkipped(newSkipped);
-
     const onSuccess = data => {
       form.clearErrors();
       setActiveStep(prevActiveStep => prevActiveStep + 1);
@@ -337,9 +239,19 @@ function HorizontalNonLinearStepperWithError(props) {
     }
   };
 
+  const companyId = form.watch('companyId'); //const applicationCompanies = form.watch('applicationCompanies');
+
+  const company = props.companies?.find(company => company.id.toString() == companyId);
+  console.log("company00000", company);
+  console.log("company00000", props.companies);
+  const objectTypeId = form.watch('objectTypeId'); //const questionaryObjectTypes = form.watch('questionaryObjectTypes');
+
+  const objectType = props.objectTypes?.find(o => o.id == objectTypeId); //console.log(objectType?.name);
+
+  const objectsIdToChangeType = form.watch('objectsIdToChangeType');
   return /*#__PURE__*/React.createElement("div", {
     className: classes.root
-  }, /*#__PURE__*/React.createElement(Stepper, {
+  }, /*#__PURE__*/React.createElement("div", null, "\u041A\u043E\u043C\u043F\u0430\u043D\u0438\u044F: ", company?.name), /*#__PURE__*/React.createElement("div", null, " \u0422\u0438\u043F \u043E\u0431\u044A\u0435\u043A\u0442\u0430: ", objectType?.name), /*#__PURE__*/React.createElement("div", null, " \u0412\u044B\u0431\u0440\u0430\u043D\u043E \u043E\u0431\u044A\u0435\u043A\u0442\u043E\u0432: ", objectsIdToChangeType?.length), /*#__PURE__*/React.createElement(Stepper, {
     activeStep: activeStep,
     alternativeLabel: true
   }, steps.map(label => /*#__PURE__*/React.createElement(Step, {
@@ -350,7 +262,7 @@ function HorizontalNonLinearStepperWithError(props) {
     onClick: handleReset
   }, "Reset")) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Typography, {
     className: classes.instructions
-  }, getStepContent(activeStep, form, props.questionary, props.getAllRoute)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
+  }, getStepContent(activeStep, form, props.questionary, props.getAllRoute, props.objectTypes, props.setObjectTypes, props.companies, props.selectableAnswersLists, props.questionaryInputFieldTypes, props.selectableAnswers)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
     disabled: activeStep === 0,
     onClick: handleBack,
     className: `${classes.backButton}`,
@@ -369,7 +281,6 @@ function HorizontalNonLinearStepperWithError(props) {
 }
 
 function App(props) {
-  console.log(props.questionary);
   const form = useForm({
     shouldUnregister: false,
     defaultValues: props.questionary
@@ -378,11 +289,71 @@ function App(props) {
     register,
     handleSubmit
   } = form;
+  const [objectTypes, setObjectTypes] = React.useState([]);
+  const [companies, setCompanies] = React.useState([]);
+  const [selectableAnswersLists, setSelectableAnswersLists] = React.useState([]);
+  const [questionaryInputFieldTypes, setQuestionaryInputFieldTypes] = React.useState([]);
+  const [selectableAnswers, setSelectableAnswers] = React.useState([]);
+  const [companyId, setCompanyId] = React.useState(0);
+  React.useEffect(() => {
+    (async () => {
+      const getSelectOptions = async () => {
+        if (props.questionary) return props.questionary;
+        const basePath = getBasePath(props.getAllRoute);
+        const response = await fetch(basePath + "/api/QuestionaryApi", {
+          method: "Get",
+          headers: {
+            "Accept": "application/json"
+          },
+          credentials: "include"
+        });
+
+        if (response.ok) {
+          return await response.json();
+        }
+      };
+
+      const selectOptions = await getSelectOptions();
+
+      if (!selectOptions) {
+        //todo show a popup with error
+        return;
+      }
+
+      let companyId = form.watch('companyId');
+      setCompanyId(companyId);
+      let objTypes = selectOptions.questionaryObjectTypes;
+      setObjectTypes(objTypes);
+      let companies = selectOptions.applicationCompanies.map(company => ({
+        id: company.companyId,
+        name: company.companyName
+      }));
+      setCompanies(companies);
+      let answersList = selectOptions.selectableAnswersLists;
+      setSelectableAnswersLists(answersList);
+      let inputFieldTypes = selectOptions.questionaryInputFieldTypes;
+      setQuestionaryInputFieldTypes(inputFieldTypes);
+      let answers = selectOptions.selectableAnswers.map(answer => ({
+        name: answer.answerText,
+        id: answer.id,
+        selectableAnswersListId: answer.selectableAnswersListId
+      }));
+      setSelectableAnswers(answers);
+      console.log("3333", selectOptions);
+    })();
+  }, []);
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {
     autoComplete: "off"
   }, /*#__PURE__*/React.createElement(FormProvider, form, /*#__PURE__*/React.createElement(HorizontalLabelPositionBelowStepper, {
     questionary: props.questionary,
-    getAllRoute: props.getAllRoute
+    getAllRoute: props.getAllRoute,
+    objectTypes: objectTypes,
+    setObjectTypes: setObjectTypes,
+    companies: companies,
+    selectableAnswersLists: selectableAnswersLists,
+    questionaryInputFieldTypes: questionaryInputFieldTypes,
+    selectableAnswers: selectableAnswers,
+    companyId: companyId
   }))), /*#__PURE__*/React.createElement(CloseAlertDialog, {
     getAllRoute: props.getAllRoute
   }));
