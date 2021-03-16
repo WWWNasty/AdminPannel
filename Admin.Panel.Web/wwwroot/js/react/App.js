@@ -50,7 +50,8 @@ const {
   Slide,
   StepLabel,
   Collapse,
-  Snackbar
+  Snackbar,
+  Tooltip
 } = MaterialUI;
 const {
   DragDropContext,
@@ -239,19 +240,55 @@ function HorizontalLabelPositionBelowStepper(props) {
     }
   };
 
-  const companyId = form.watch('companyId'); //const applicationCompanies = form.watch('applicationCompanies');
-
+  const companyId = form.watch('companyId');
   const company = props.companies?.find(company => company.id.toString() == companyId);
-  console.log("company00000", company);
-  console.log("company00000", props.companies);
-  const objectTypeId = form.watch('objectTypeId'); //const questionaryObjectTypes = form.watch('questionaryObjectTypes');
-
-  const objectType = props.objectTypes?.find(o => o.id == objectTypeId); //console.log(objectType?.name);
-
+  const objectTypeId = form.watch('objectTypeId');
+  const objectType = props.objectTypes?.find(o => o.id == objectTypeId);
   const objectsIdToChangeType = form.watch('objectsIdToChangeType');
   return /*#__PURE__*/React.createElement("div", {
     className: classes.root
-  }, /*#__PURE__*/React.createElement("div", null, "\u041A\u043E\u043C\u043F\u0430\u043D\u0438\u044F: ", company?.name), /*#__PURE__*/React.createElement("div", null, " \u0422\u0438\u043F \u043E\u0431\u044A\u0435\u043A\u0442\u0430: ", objectType?.name), /*#__PURE__*/React.createElement("div", null, " \u0412\u044B\u0431\u0440\u0430\u043D\u043E \u043E\u0431\u044A\u0435\u043A\u0442\u043E\u0432: ", objectsIdToChangeType?.length), /*#__PURE__*/React.createElement(Stepper, {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "d-flex justify-content-center"
+  }, company?.name && /*#__PURE__*/React.createElement("div", {
+    className: "d-flex justify-content-start col-3 text-truncate mr-1 "
+  }, /*#__PURE__*/React.createElement("h6", {
+    style: {
+      color: '#3f51b5'
+    }
+  }, "\u041A\u043E\u043C\u043F\u0430\u043D\u0438\u044F: "), "\xA0", /*#__PURE__*/React.createElement(Tooltip, {
+    title: company?.name,
+    placement: "bottom-start"
+  }, /*#__PURE__*/React.createElement("h6", {
+    className: "font-weight-light",
+    style: {
+      color: '#3f51b5'
+    }
+  }, " ", company?.name))), objectType?.name && /*#__PURE__*/React.createElement("div", {
+    className: "d-flex justify-content-start col-3 text-truncate mr-1"
+  }, /*#__PURE__*/React.createElement("h6", {
+    style: {
+      color: '#3f51b5'
+    }
+  }, "\u0422\u0438\u043F \u043E\u0431\u044A\u0435\u043A\u0442\u0430: "), "\xA0", /*#__PURE__*/React.createElement(Tooltip, {
+    title: objectType?.name,
+    placement: "bottom-start"
+  }, /*#__PURE__*/React.createElement("h6", {
+    className: "font-weight-light",
+    style: {
+      color: '#3f51b5'
+    }
+  }, " ", objectType?.name))), objectsIdToChangeType?.length ? /*#__PURE__*/React.createElement("div", {
+    className: "d-flex justify-content-start col-2 text-truncate"
+  }, /*#__PURE__*/React.createElement("h6", {
+    style: {
+      color: '#3f51b5'
+    }
+  }, "\u0412\u044B\u0431\u0440\u0430\u043D\u043E \u043E\u0431\u044A\u0435\u043A\u0442\u043E\u0432: "), "\xA0", /*#__PURE__*/React.createElement("h6", {
+    className: "font-weight-light",
+    style: {
+      color: '#3f51b5'
+    }
+  }, " ", objectsIdToChangeType?.length)) : null), /*#__PURE__*/React.createElement(Stepper, {
     activeStep: activeStep,
     alternativeLabel: true
   }, steps.map(label => /*#__PURE__*/React.createElement(Step, {
@@ -339,7 +376,6 @@ function App(props) {
         selectableAnswersListId: answer.selectableAnswersListId
       }));
       setSelectableAnswers(answers);
-      console.log("3333", selectOptions);
     })();
   }, []);
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {

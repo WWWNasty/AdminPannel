@@ -56,7 +56,8 @@ const {
     Slide,
     StepLabel,
     Collapse,
-    Snackbar
+    Snackbar,
+    Tooltip
 } = MaterialUI;
 
 const {DragDropContext, Draggable, Droppable} = ReactBeautifulDnd;
@@ -90,13 +91,13 @@ function getSteps() {
     return ['Выбор типа объекта', 'Выбор объекта', 'Создание анкеты'];
 }
 
-function getStepContent(step: number, 
-                        form: any, 
-                        questionary: any, 
-                        getAllRoute: string, 
-                        objectTypes, 
-                        setObjectTypes, 
-                        companies, 
+function getStepContent(step: number,
+                        form: any,
+                        questionary: any,
+                        getAllRoute: string,
+                        objectTypes,
+                        setObjectTypes,
+                        companies,
                         selectableAnswersLists,
                         questionaryInputFieldTypes,
                         selectableAnswers) {
@@ -218,7 +219,7 @@ function HorizontalLabelPositionBelowStepper(props) {
             setActiveStep((prevActiveStep) => prevActiveStep - 1);
         }
         handleSubmit(onSuccess)();
-        
+
     };
 
     const handleReset = () => {
@@ -244,23 +245,36 @@ function HorizontalLabelPositionBelowStepper(props) {
 
     };
     const companyId = form.watch('companyId');
-    //const applicationCompanies = form.watch('applicationCompanies');
-    const company: {id: number, name: string} = props.companies?.find(company => company.id.toString() == companyId);
-    console.log("company00000", company);
-    console.log("company00000", props.companies);
+    const company: { id: number, name: string } = props.companies?.find(company => company.id.toString() == companyId);
 
     const objectTypeId = form.watch('objectTypeId');
-    //const questionaryObjectTypes = form.watch('questionaryObjectTypes');
     const objectType = props.objectTypes?.find(o => o.id == objectTypeId);
-    //console.log(objectType?.name);
 
     const objectsIdToChangeType = form.watch('objectsIdToChangeType');
+
     return (
         <div className={classes.root}>
-            <div>Компания: {company?.name}</div>
-            <div> Тип объекта: {objectType?.name}</div>
-            <div> Выбрано объектов: {objectsIdToChangeType?.length}</div>
-            
+
+            <div className="d-flex justify-content-center">
+                {company?.name && <div className="d-flex justify-content-start col-3 text-truncate mr-1 "><h6 style={{ color: '#3f51b5' }}>Компания: </h6>&nbsp;
+                    <Tooltip title={company?.name} placement="bottom-start">
+                    <h6 className="font-weight-light" style={{ color: '#3f51b5' }}> {company?.name}</h6>
+                    </Tooltip>
+                </div>}
+                {objectType?.name && <div className="d-flex justify-content-start col-3 text-truncate mr-1"><h6 style={{ color: '#3f51b5' }}>Тип объекта: </h6>&nbsp;
+                    <Tooltip title={objectType?.name} placement="bottom-start">
+                    <h6 className="font-weight-light" style={{ color: '#3f51b5' }}> {objectType?.name}</h6>
+                    </Tooltip>
+                </div>}
+                {objectsIdToChangeType?.length? <div className="d-flex justify-content-start col-2 text-truncate">
+                    <h6 style={{ color: '#3f51b5' }}>Выбрано объектов: </h6>&nbsp; 
+                    <h6 className="font-weight-light" style={{ color: '#3f51b5' }}> {objectsIdToChangeType?.length}</h6>
+                </div>: null}
+            </div>
+            {/*<div className="d-flex justify-content-start text-secondary"> <h6>Компания: </h6>&nbsp; <h6 className="font-weight-light"> {company?.name}</h6></div>*/}
+            {/*<div className="d-flex justify-content-start text-secondary"> <h6>Тип объекта: </h6>&nbsp; <h6 className="font-weight-light"> {objectType?.name}</h6></div>*/}
+            {/*<div className="d-flex justify-content-start text-secondary"> <h6>Выбрано объектов: </h6>&nbsp; <h6 className="font-weight-light"> {objectsIdToChangeType?.length}</h6> </div>*/}
+
             <Stepper activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
                     <Step key={label}>
@@ -278,9 +292,9 @@ function HorizontalLabelPositionBelowStepper(props) {
                     <div>
                         <Typography
                             className={classes.instructions}>{getStepContent(
-                                activeStep, 
-                            form, 
-                            props.questionary, 
+                            activeStep,
+                            form,
+                            props.questionary,
                             props.getAllRoute,
                             props.objectTypes,
                             props.setObjectTypes,
@@ -299,7 +313,8 @@ function HorizontalLabelPositionBelowStepper(props) {
                                 Назад
                             </Button>
                             {activeStep === steps.length - 1 ?
-                                <Button className="ml-50" onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
+                                <Button className="ml-50" onClick={handleSubmit(onSubmit)} variant="contained"
+                                        color="primary">
                                     Сохранить
                                 </Button> :
                                 <Button className="ml-50" variant="contained" color="primary" onClick={handleNext}>
@@ -312,12 +327,14 @@ function HorizontalLabelPositionBelowStepper(props) {
         </div>
     );
 }
+
 interface Company {
     companyId: number;
     companyName: string;
 }
+
 function App(props: { questionary?: any, getAllRoute: string }) {
-    
+
     const form = useForm({shouldUnregister: false, defaultValues: props.questionary});
     const {register, handleSubmit} = form;
 
@@ -350,7 +367,7 @@ function App(props: { questionary?: any, getAllRoute: string }) {
 
             const selectOptions = await getSelectOptions();
 
-            if(!selectOptions){
+            if (!selectOptions) {
                 //todo show a popup with error
                 return;
             }
@@ -380,22 +397,15 @@ function App(props: { questionary?: any, getAllRoute: string }) {
             }));
 
             setSelectableAnswers(answers);
-            console.log("3333",selectOptions);
 
         })()
     }, []);
-    
+
     return (
         <div>
             <form autoComplete="off">
                 <FormProvider {...form}>
-                    {/*{company?.companyName && <div>Компания: {company.companyName}</div>}*/}
-                    {/*{objectType.name && <div> Тип объекта: {objectType.name}</div>}*/}
-                    {/*{objectsIdToChangeType && <div> Выбрано объектов: {objectsIdToChangeType.length}</div>}*/}
-                    {/*<div>Компания: {company?.companyName}</div>*/}
-                    {/*<div> Тип объекта: {objectType?.name}</div>*/}
-                    {/*<div> Выбрано объектов: {objectsIdToChangeType?.length}</div>*/}
-                    <HorizontalLabelPositionBelowStepper 
+                    <HorizontalLabelPositionBelowStepper
                         questionary={props.questionary}
                         getAllRoute={props.getAllRoute}
                         objectTypes={objectTypes}
@@ -414,6 +424,7 @@ function App(props: { questionary?: any, getAllRoute: string }) {
         </div>
     );
 }
+
 const Log = (a) => {
     console.log(a);
     return a;
