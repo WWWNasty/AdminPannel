@@ -66,11 +66,7 @@ const DraggableCard = props => {
   }), /*#__PURE__*/React.createElement(FormSwitch, {
     name: `questionaryQuestions[${props.index}].canSkipQuestion`,
     control: control,
-    label: "Обязательный вопрос",
-    required: {
-      message: '',
-      value: true
-    }
+    label: "Обязательный вопрос"
   }), /*#__PURE__*/React.createElement(MySelect, {
     required: {
       message: '',

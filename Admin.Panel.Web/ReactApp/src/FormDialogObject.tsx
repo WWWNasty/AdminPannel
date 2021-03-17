@@ -44,7 +44,9 @@ const FormDialogObject = (props) => {
         setOpen(false);
         reset();
     };
-
+    const objectTypeId = form.watch('objectTypeId');
+    const objectType = props.objectTypes?.find(o => o.id == objectTypeId);
+    
     return (
         <div>
             <Button variant="outlined" color="primary" onClick={handleClickOpen} className="mt-3 mb-2">
@@ -84,24 +86,6 @@ const FormDialogObject = (props) => {
                             helperText={errors?.code?.message}
                         />
                         
-                        {/*<FormControl*/}
-                        {/*    {...props}*/}
-                        {/*    error={errors?.code?.type}*/}
-                        {/*    fullWidth={true}*/}
-                        {/*    rules={{required: true, maxLength: {message:'Максимально символов: 20', value:20}, validate: true}}*/}
-                        {/*>*/}
-                        {/*    <Controller*/}
-                        {/*        as={TextField}*/}
-                        {/*        name="code"*/}
-                        {/*        control={control}*/}
-                        {/*        defaultValue=""*/}
-                        {/*        required*/}
-                        {/*        margin="dense"*/}
-                        {/*        id="standard-required"*/}
-                        {/*        label="Код"*/}
-                        {/*    />*/}
-                        {/*    <FormHelperText>{errors.code?.message}</FormHelperText>*/}
-                        {/*</FormControl>*/}
                         <Controller
                             as={TextField}
                             name="description"
@@ -116,7 +100,7 @@ const FormDialogObject = (props) => {
                             rows={4}
                         />
 
-                        <div className="mt-3">Заполните свойства типа объекта: </div>
+                        <div className="mt-3">Заполните свойства типа объекта "{objectType.name}": </div>
                         {props.selectedObjectype.objectProperties?.map((item, index) =>
                             <div>
                                 <Controller

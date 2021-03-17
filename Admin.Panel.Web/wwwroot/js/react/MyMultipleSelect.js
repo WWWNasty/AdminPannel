@@ -1,4 +1,6 @@
 const MyMultipleSelect = props => {
+  const form = useFormContext();
+
   function getStyles(name, personName, theme) {
     return {
       fontWeight: personName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium
@@ -40,8 +42,8 @@ const MyMultipleSelect = props => {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(FormControl, {
     className: `${classes.formControl} col-md-3`
   }, /*#__PURE__*/React.createElement(ReactHookFormSelect, {
-    labelId: "demo-mutiple-chip-label",
-    id: "demo-mutiple-chip",
+    labelId: "demo-mutiple-checkbox-label",
+    id: "demo-mutiple-checkbox",
     multiple: true,
     validate: () => {
       const isValid = props.form.getValues('objectsIdToChangeType')?.length > 0;
@@ -72,7 +74,8 @@ const MyMultipleSelect = props => {
     key: object.id,
     value: object.id
   }, /*#__PURE__*/React.createElement(Checkbox, {
-    color: "primary"
+    color: "primary",
+    checked: form.watch('objectsIdToChangeType')?.indexOf(object.id) > -1
   }), /*#__PURE__*/React.createElement(ListItemText, {
     primary: object.name
   })))]))));

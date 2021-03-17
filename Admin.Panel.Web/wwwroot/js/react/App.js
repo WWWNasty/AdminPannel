@@ -94,65 +94,6 @@ function getSteps() {
 }
 
 function getStepContent(step, form, questionary, getAllRoute, objectTypes, setObjectTypes, companies, selectableAnswersLists, questionaryInputFieldTypes, selectableAnswers) {
-  // const [objectTypes, setObjectTypes] = React.useState<SelectOption[]>([]);
-  // const [companies, setCompanies] = React.useState<SelectOption[]>([]);
-  // const [selectableAnswersLists, setSelectableAnswersLists] = React.useState<SelectOption[]>([]);
-  // const [questionaryInputFieldTypes, setQuestionaryInputFieldTypes] = React.useState<QuestionaryInputFieldTypes[]>([]);
-  // const [selectableAnswers, setSelectableAnswers] = React.useState<SelectOption[]>([]);
-  //
-  // React.useEffect(() => {
-  //     (async () => {
-  //
-  //         const getSelectOptions = async () => {
-  //             if (questionary)
-  //                 return questionary;
-  //            
-  //             const basePath = getBasePath(getAllRoute);
-  //            
-  //             const response = await fetch(basePath + "/api/QuestionaryApi", {
-  //                 method: "Get",
-  //                 headers: {"Accept": "application/json"},
-  //                 credentials: "include"
-  //             });
-  //
-  //             if (response.ok) {
-  //                 return await response.json();
-  //             }
-  //         }
-  //
-  //         const selectOptions = await getSelectOptions();
-  //
-  //         if(!selectOptions){
-  //             //todo show a popup with error
-  //             return;
-  //         }
-  //        
-  //         let objTypes: SelectOption[] = selectOptions.questionaryObjectTypes;
-  //         setObjectTypes(objTypes);
-  //
-  //         let companies: SelectOption[] = selectOptions.applicationCompanies.map(company => ({
-  //             id: company.companyId,
-  //             name: company.companyName
-  //         }));
-  //         setCompanies(companies);
-  //
-  //         let answersList: SelectOption[] = selectOptions.selectableAnswersLists;
-  //         setSelectableAnswersLists(answersList);
-  //
-  //         let inputFieldTypes: QuestionaryInputFieldTypes[] = selectOptions.questionaryInputFieldTypes;
-  //         setQuestionaryInputFieldTypes(inputFieldTypes);
-  //
-  //         let answers: SelectableAnswers[] = selectOptions.selectableAnswers.map(answer => ({
-  //             name: answer.answerText,
-  //             id: answer.id,
-  //             selectableAnswersListId: answer.selectableAnswersListId
-  //         }));
-  //
-  //         setSelectableAnswers(answers);
-  //         console.log("3333",selectOptions);
-  //
-  //     })()
-  // }, []);
   const selectedObjectTypeId = form.watch('objectTypeId');
   const selectedObjectype = objectTypes.find(ot => ot.id == selectedObjectTypeId);
 

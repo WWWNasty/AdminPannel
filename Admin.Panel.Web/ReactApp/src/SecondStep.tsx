@@ -16,7 +16,7 @@ const SecondStep = (props) => {
                 selectName="Выберите объекты для анкеты"
             />
             <FormDialogObject
-                objectTypes={props.objectTypes}
+                objectTypes={props.selectOptions}
                 selectedObjectype={props.selectedObjectype}
                 setOpenAlertRed={setOpenAlertRed}
                 setOpenAlertGreen={setOpenAlertGreen}

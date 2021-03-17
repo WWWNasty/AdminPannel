@@ -72,7 +72,6 @@ const DraggableCard = (props) => {
                             name={`questionaryQuestions[${props.index}].canSkipQuestion`}
                             control={control}
                             label={"Обязательный вопрос"}
-                            required={{message: '', value: true}}
                         />
                         <MySelect required={ {message: '', value: true} }
                                   onChange={onChange}

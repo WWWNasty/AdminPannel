@@ -5,7 +5,7 @@ interface QuestionaryObjecTypes extends SelectOption {
 }
 
 const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selectedValue: any, selectName: string, form: any }) => {
-
+    const form = useFormContext();
     function getStyles(name, personName, theme) {
         return {
             fontWeight:
@@ -51,8 +51,8 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
         <div>
             <FormControl className={`${classes.formControl} col-md-3`}>
                 <ReactHookFormSelect
-                    labelId="demo-mutiple-chip-label"
-                    id="demo-mutiple-chip" 
+                    labelId="demo-mutiple-checkbox-label"
+                    id="demo-mutiple-checkbox" 
                     multiple
                     validate={ () => {
                         const isValid = props.form.getValues('objectsIdToChangeType')?.length > 0;
@@ -61,7 +61,7 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
                         if(!isValid)
                             props.form.setError('objectsIdToChangeType', {type, message: 'Выберите объекты для анкеты!'});
                         
-                        return isValid;
+                          return isValid;
                     }}
                     name="objectsIdToChangeType"
                     label={props.selectName}
@@ -85,43 +85,12 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
                         <ListSubheader>{item.name}</ListSubheader> : null,
                         item.questionaryObjects?.map((object) =>
                             <MenuItem key={object.id} value={object.id}>
-                                <Checkbox color="primary"/>
+                                <Checkbox color="primary"
+                                          checked={form.watch('objectsIdToChangeType')?.indexOf(object.id) > -1}/>
                                 <ListItemText primary={object.name}/>
                             </MenuItem>)
                     ])}                
                 </ReactHookFormSelect>
-                
-                {/*<InputLabel id="demo-mutiple-chip-label">{props.selectName}</InputLabel>*/}
-                {/*<Select*/}
-                {/*    labelId="demo-mutiple-chip-label"*/}
-                {/*    id="demo-mutiple-chip"*/}
-                {/*    multiple*/}
-                {/*    value={props.selectedValue}*/}
-                {/*    onChange={handleChange}*/}
-                {/*    input={<Input id="select-multiple-chip"/>}*/}
-                {/*    renderValue={(selected) => (*/}
-                {/*        <div className={classes.chips}>*/}
-                {/*            {props.selectOptions*/}
-                {/*                .flatMap(option => option.questionaryObjects)*/}
-                {/*                .filter(option => selected.indexOf(option.id) > -1)*/}
-                {/*                .map((option) =>*/}
-                {/*                    <Chip key={option.id} label={option.name} className={classes.chip}/>*/}
-                {/*                )}*/}
-                {/*        </div>*/}
-                {/*    )}*/}
-                {/*    MenuProps={MenuProps}>*/}
-                
-                {/*    {props.selectOptions?.map(item => [*/}
-                {/*        <ListSubheader>{item.name}</ListSubheader>,*/}
-                {/*        item.questionaryObjects.map((object) =>*/}
-                {/*            <MenuItem key={object.id} value={object.id}>*/}
-                {/*                <Checkbox />*/}
-                {/*                <ListItemText primary={object.name}/>*/}
-                {/*            </MenuItem>)*/}
-                {/*    ])}*/}
-                {/*    */}
-                {/*</Select>*/}
-                
             </FormControl>
         </div>
     );

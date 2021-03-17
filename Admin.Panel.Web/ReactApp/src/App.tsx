@@ -101,66 +101,6 @@ function getStepContent(step: number,
                         selectableAnswersLists,
                         questionaryInputFieldTypes,
                         selectableAnswers) {
-    // const [objectTypes, setObjectTypes] = React.useState<SelectOption[]>([]);
-    // const [companies, setCompanies] = React.useState<SelectOption[]>([]);
-    // const [selectableAnswersLists, setSelectableAnswersLists] = React.useState<SelectOption[]>([]);
-    // const [questionaryInputFieldTypes, setQuestionaryInputFieldTypes] = React.useState<QuestionaryInputFieldTypes[]>([]);
-    // const [selectableAnswers, setSelectableAnswers] = React.useState<SelectOption[]>([]);
-    //
-    // React.useEffect(() => {
-    //     (async () => {
-    //
-    //         const getSelectOptions = async () => {
-    //             if (questionary)
-    //                 return questionary;
-    //            
-    //             const basePath = getBasePath(getAllRoute);
-    //            
-    //             const response = await fetch(basePath + "/api/QuestionaryApi", {
-    //                 method: "Get",
-    //                 headers: {"Accept": "application/json"},
-    //                 credentials: "include"
-    //             });
-    //
-    //             if (response.ok) {
-    //                 return await response.json();
-    //             }
-    //         }
-    //
-    //         const selectOptions = await getSelectOptions();
-    //
-    //         if(!selectOptions){
-    //             //todo show a popup with error
-    //             return;
-    //         }
-    //        
-    //         let objTypes: SelectOption[] = selectOptions.questionaryObjectTypes;
-    //         setObjectTypes(objTypes);
-    //
-    //         let companies: SelectOption[] = selectOptions.applicationCompanies.map(company => ({
-    //             id: company.companyId,
-    //             name: company.companyName
-    //         }));
-    //         setCompanies(companies);
-    //
-    //         let answersList: SelectOption[] = selectOptions.selectableAnswersLists;
-    //         setSelectableAnswersLists(answersList);
-    //
-    //         let inputFieldTypes: QuestionaryInputFieldTypes[] = selectOptions.questionaryInputFieldTypes;
-    //         setQuestionaryInputFieldTypes(inputFieldTypes);
-    //
-    //         let answers: SelectableAnswers[] = selectOptions.selectableAnswers.map(answer => ({
-    //             name: answer.answerText,
-    //             id: answer.id,
-    //             selectableAnswersListId: answer.selectableAnswersListId
-    //         }));
-    //
-    //         setSelectableAnswers(answers);
-    //         console.log("3333",selectOptions);
-    //
-    //     })()
-    // }, []);
-
     const selectedObjectTypeId = form.watch('objectTypeId');
     const selectedObjectype = objectTypes.find(ot => ot.id == selectedObjectTypeId)
 
@@ -256,25 +196,23 @@ function HorizontalLabelPositionBelowStepper(props) {
         <div className={classes.root}>
 
             <div className="d-flex justify-content-center">
-                {company?.name && <div className="d-flex justify-content-start col-3 text-truncate mr-1 "><h6 style={{ color: '#3f51b5' }}>Компания: </h6>&nbsp;
+                {company?.name && <div className="d-flex justify-content-start col-3 text-truncate mr-1 "><h6
+                    style={{color: '#3f51b5'}}>Компания: </h6>&nbsp;
                     <Tooltip title={company?.name} placement="bottom-start">
-                    <h6 className="font-weight-light" style={{ color: '#3f51b5' }}> {company?.name}</h6>
+                        <h6 className="font-weight-light" style={{color: '#3f51b5'}}> {company?.name}</h6>
                     </Tooltip>
                 </div>}
-                {objectType?.name && <div className="d-flex justify-content-start col-3 text-truncate mr-1"><h6 style={{ color: '#3f51b5' }}>Тип объекта: </h6>&nbsp;
+                {objectType?.name && <div className="d-flex justify-content-start col-3 text-truncate mr-1"><h6
+                    style={{color: '#3f51b5'}}>Тип объекта: </h6>&nbsp;
                     <Tooltip title={objectType?.name} placement="bottom-start">
-                    <h6 className="font-weight-light" style={{ color: '#3f51b5' }}> {objectType?.name}</h6>
+                        <h6 className="font-weight-light" style={{color: '#3f51b5'}}> {objectType?.name}</h6>
                     </Tooltip>
                 </div>}
-                {objectsIdToChangeType?.length? <div className="d-flex justify-content-start col-2 text-truncate">
-                    <h6 style={{ color: '#3f51b5' }}>Выбрано объектов: </h6>&nbsp; 
-                    <h6 className="font-weight-light" style={{ color: '#3f51b5' }}> {objectsIdToChangeType?.length}</h6>
-                </div>: null}
+                {objectsIdToChangeType?.length ? <div className="d-flex justify-content-start col-2 text-truncate">
+                    <h6 style={{color: '#3f51b5'}}>Выбрано объектов: </h6>&nbsp;
+                    <h6 className="font-weight-light" style={{color: '#3f51b5'}}> {objectsIdToChangeType?.length}</h6>
+                </div> : null}
             </div>
-            {/*<div className="d-flex justify-content-start text-secondary"> <h6>Компания: </h6>&nbsp; <h6 className="font-weight-light"> {company?.name}</h6></div>*/}
-            {/*<div className="d-flex justify-content-start text-secondary"> <h6>Тип объекта: </h6>&nbsp; <h6 className="font-weight-light"> {objectType?.name}</h6></div>*/}
-            {/*<div className="d-flex justify-content-start text-secondary"> <h6>Выбрано объектов: </h6>&nbsp; <h6 className="font-weight-light"> {objectsIdToChangeType?.length}</h6> </div>*/}
-
             <Stepper activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
                     <Step key={label}>
