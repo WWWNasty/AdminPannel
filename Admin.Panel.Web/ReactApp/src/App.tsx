@@ -140,12 +140,12 @@ function HorizontalLabelPositionBelowStepper(props) {
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
     const form = useFormContext();
-    const {handleSubmit} = form;
+    const {handleSubmit, clearErrors} = form;
 
 
     const handleNext = () => {
         const onSuccess = data => {
-            form.clearErrors();
+            clearErrors();
 
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
@@ -153,12 +153,14 @@ function HorizontalLabelPositionBelowStepper(props) {
     };
 
     const handleBack = () => {
-        const onSuccess = data => {
-            form.clearErrors();
+        clearErrors();
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    }
+    const backEvent = () => {
+       // const onSuccess = data => {
 
-            setActiveStep((prevActiveStep) => prevActiveStep - 1);
-        }
-        handleSubmit(onSuccess)();
+       // }
+      //  handleSubmit(onSuccess)();
 
     };
 

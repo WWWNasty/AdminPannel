@@ -21,6 +21,23 @@ const DraggableComponent = props => {
     move(result.source.index, result.destination.index); //form.setValue(`questionaryQuestions[${props.index}].sequenceOrder`, result.destination.index)
   };
 
+  const handleNewQuestion = () => {
+    const onSuccess = data => {
+      form.clearErrors();
+      append({
+        key: Math.random(),
+        questionText: '',
+        canSkipQuestion: false,
+        selectableAnswersListId: null,
+        questionaryInputFieldTypeId: null,
+        defaultAnswerId: null,
+        questionaryAnswerOptions: []
+      });
+    };
+
+    form.handleSubmit(onSuccess)();
+  };
+
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(DragDropContext, {
     onDragEnd: onDragEnd
   }, /*#__PURE__*/React.createElement(Droppable, {
@@ -44,15 +61,7 @@ const DraggableComponent = props => {
     snapshot: snapshot,
     index: index
   }))), provided.placeholder)))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(IconButton, {
-    onClick: () => append({
-      key: Math.random(),
-      questionText: '',
-      canSkipQuestion: false,
-      selectableAnswersListId: null,
-      questionaryInputFieldTypeId: null,
-      defaultAnswerId: null,
-      questionaryAnswerOptions: []
-    }),
+    onClick: handleNewQuestion,
     color: "primary",
     "aria-label": "add",
     className: "mt-50 mb-50 ml-50"
