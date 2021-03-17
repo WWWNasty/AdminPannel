@@ -100,7 +100,7 @@ const FormDialogObject = (props) => {
                             rows={4}
                         />
 
-                        <div className="mt-3">Заполните свойства типа объекта "{objectType.name}": </div>
+                        <div className="font-weight-light mt-3" style={{color: '#3f51b5'}}>Заполните свойства типа объекта "{objectType.name}": </div>
                         {props.selectedObjectype.objectProperties?.map((item, index) =>
                             <div>
                                 <Controller

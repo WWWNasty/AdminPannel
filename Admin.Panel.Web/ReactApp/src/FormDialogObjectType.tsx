@@ -92,7 +92,7 @@ function FormDialogObjectType(props) {
                                 nameInReport: ''
                             })
                             }>
-                                <Icon>add</Icon> <h6 className="mt-2">Добавить свойство</h6>
+                                <Icon>add</Icon> <h6 className="mt-2 font-weight-light">Добавить свойство</h6>
                             </IconButton>
                         </div>
                     </DialogContent>

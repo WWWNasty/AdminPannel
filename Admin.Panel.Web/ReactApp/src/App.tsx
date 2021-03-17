@@ -156,13 +156,6 @@ function HorizontalLabelPositionBelowStepper(props) {
         clearErrors();
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
-    const backEvent = () => {
-       // const onSuccess = data => {
-
-       // }
-      //  handleSubmit(onSuccess)();
-
-    };
 
     const handleReset = () => {
         setActiveStep(0);

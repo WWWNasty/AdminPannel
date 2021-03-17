@@ -103,7 +103,7 @@ function FormDialogObjectType(props) {
       nameInReport: ''
     })
   }, /*#__PURE__*/React.createElement(Icon, null, "add"), " ", /*#__PURE__*/React.createElement("h6", {
-    className: "mt-2"
+    className: "mt-2 font-weight-light"
   }, "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u043E")))), /*#__PURE__*/React.createElement(DialogActions, null, /*#__PURE__*/React.createElement(Button, {
     onClick: handleClose,
     color: "primary"

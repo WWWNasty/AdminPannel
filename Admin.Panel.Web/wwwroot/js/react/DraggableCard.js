@@ -100,7 +100,12 @@ const DraggableCard = props => {
     id: "panel1a-header"
   }, /*#__PURE__*/React.createElement(Typography, {
     className: classes.heading
-  }, "\u041E\u0442\u0432\u0435\u0442\u044B")), /*#__PURE__*/React.createElement(AccordionDetails, null, /*#__PURE__*/React.createElement(Typography, null, "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043D\u0438\u0436\u0435 \u043E\u0442\u0432\u0435\u0442\u044B, \u043A\u043E\u0442\u043E\u0440\u044B\u043C \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C \u043A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u0439", /*#__PURE__*/React.createElement(FormGroup, null, availableSelectableAnswers?.map((item, index) => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(FormControlLabel, {
+  }, "\u041E\u0442\u0432\u0435\u0442\u044B")), /*#__PURE__*/React.createElement(AccordionDetails, null, /*#__PURE__*/React.createElement(Typography, null, /*#__PURE__*/React.createElement("h6", {
+    className: "font-weight-light",
+    style: {
+      color: '#3f51b5'
+    }
+  }, "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043D\u0438\u0436\u0435 \u043E\u0442\u0432\u0435\u0442\u044B, \u043A\u043E\u0442\u043E\u0440\u044B\u043C \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C \u043A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u0439:"), /*#__PURE__*/React.createElement(FormGroup, null, availableSelectableAnswers?.map((item, index) => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(FormControlLabel, {
     control: /*#__PURE__*/React.createElement(Controller, {
       name: `questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].isInvolvesComment`,
       control: control,

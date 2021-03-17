@@ -106,7 +106,7 @@ const DraggableCard = (props) => {
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Typography>
-                                    Выберите ниже ответы, которым необходим комментарий
+                                    <h6 className="font-weight-light" style={{color: '#3f51b5'}} >Выберите ниже ответы, которым необходим комментарий:</h6>
                                     <FormGroup>
                                         {availableSelectableAnswers?.map((item, index) =>
                                             <div>
