@@ -23,7 +23,7 @@ function CloseAlertDialog(props: {getAllRoute:string}) {
     return (
         <div className="d-flex justify-content-around">
             <Button className="d-flex justify-content-end" variant="outlined" color="secondary" onClick={handleClickOpen}>
-                Отмена
+                Выйти без сохранения
             </Button>
             <Dialog
                 open={open}

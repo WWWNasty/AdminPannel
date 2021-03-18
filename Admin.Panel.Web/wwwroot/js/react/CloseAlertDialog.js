@@ -29,7 +29,7 @@ function CloseAlertDialog(props) {
     variant: "outlined",
     color: "secondary",
     onClick: handleClickOpen
-  }, "\u041E\u0442\u043C\u0435\u043D\u0430"), /*#__PURE__*/React.createElement(Dialog, {
+  }, "\u0412\u044B\u0439\u0442\u0438 \u0431\u0435\u0437 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u044F"), /*#__PURE__*/React.createElement(Dialog, {
     open: open,
     TransitionComponent: SlideTransition,
     keepMounted: true,

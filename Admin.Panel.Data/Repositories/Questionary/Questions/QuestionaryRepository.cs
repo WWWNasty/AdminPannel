@@ -133,7 +133,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             @"INSERT INTO Questionary(Name, ObjectTypeId, CompanyId, IsUsed) 
                                 VALUES(@Name,@ObjectTypeId,@CompanyId,1);
                                 SELECT QuestionaryId = @@IDENTITY";
-                        var objTypeId = cn.ExecuteScalar<int>(query, selectableAnswersList, transaction);
+                        var objId = cn.ExecuteScalar<int>(query, selectableAnswersList, transaction);
 
                         if (selectableAnswersList.QuestionaryQuestions.Count != 0)
                         {
@@ -147,10 +147,10 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                 var questionId = cn.ExecuteScalar<int>(
                                     @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectableAnswersListId,SequenceOrder,IsUsed,DefaultAnswerId)
 		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,1,@DefaultAnswerId);
-                                                        SELECT QuestionaryId = @@IDENTITY",
+                                                        SELECT QuestionaryQuestionsId = @@IDENTITY",
                                     new QuestionaryQuestions
                                     {
-                                        QuestionaryId = objTypeId,
+                                        QuestionaryId = objId,
                                         QuestionText = question.QuestionText,
                                         QuestionaryInputFieldTypeId = question.QuestionaryInputFieldTypeId,
                                         CanSkipQuestion = !question.CanSkipQuestion,
@@ -201,7 +201,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                          WHERE Id IN @ObjectsId",new{ObjectsId = selectableAnswersList.ObjectsIdToChangeType, selectableAnswersList.ObjectTypeId} , transaction);
 
                         QuestionaryDto result = cn.Query<QuestionaryDto>(@"SELECT * FROM Questionary WHERE Id=@Id",
-                            new {@Id = objTypeId}, transaction).FirstOrDefault();
+                            new {@Id = objId}, transaction).FirstOrDefault();
 
                         transaction.Commit();
                         _logger.LogInformation("Анкета {0} успешно добавлена в бд для компании с Id: {1}.",
@@ -296,10 +296,11 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                         if (newQuestions.Count != 0)
                         {
                             foreach (var question in newQuestions)
-                            {
-                                connection.Execute(
+                            { 
+                                int questionId = connection.ExecuteScalar<int>(
                                     @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectableAnswersListId,SequenceOrder,IsUsed,DefaultAnswerId)
-		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,@IsUsed,@DefaultAnswerId)",
+		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,@IsUsed,@DefaultAnswerId);
+		                                                SELECT QuestionaryQuestionId = @@IDENTITY",
                                     new QuestionaryQuestions
                                     {
                                         QuestionaryId = questionary.Id,
@@ -325,7 +326,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                                 {
                                                     IsInvolvesComment = option.IsInvolvesComment,
                                                     SelectableAnswerId = option.SelectableAnswerId,
-                                                    QuestionaryId = question.Id
+                                                    QuestionaryId = questionId
                                                 }, transaction);
                                         
                                     }
