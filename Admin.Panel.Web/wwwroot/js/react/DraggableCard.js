@@ -27,6 +27,7 @@ const DraggableCard = props => {
   };
 
   console.log(errors);
+  console.log(form.watch(`questionaryQuestions[${props.index}].id`));
   return /*#__PURE__*/React.createElement("div", {
     className: "mt-3 bg-light"
   }, /*#__PURE__*/React.createElement(ListItem, _extends({
@@ -66,7 +67,8 @@ const DraggableCard = props => {
   }), /*#__PURE__*/React.createElement(FormSwitch, {
     name: `questionaryQuestions[${props.index}].canSkipQuestion`,
     control: control,
-    label: "Обязательный вопрос"
+    label: "Обязательный вопрос",
+    defaultValue: form.watch(`questionaryQuestions[${props.index}].canSkipQuestion`)
   }), /*#__PURE__*/React.createElement(MySelect, {
     required: {
       message: '',
@@ -76,7 +78,8 @@ const DraggableCard = props => {
     error: Log(errors?.questionaryQuestions?.[props.index]?.selectableAnswersListId?.type),
     name: `questionaryQuestions[${props.index}].selectableAnswersListId`,
     selectOptions: props.selectableAnswersLists,
-    nameSwlect: "\u0412\u0430\u0440\u0438\u0430\u043D\u0442\u044B \u043E\u0442\u0432\u0435\u0442\u0430"
+    nameSwlect: "\u0412\u0430\u0440\u0438\u0430\u043D\u0442\u044B \u043E\u0442\u0432\u0435\u0442\u0430",
+    selectedValue: form.watch(`questionaryQuestions[${props.index}].selectableAnswersListId`)
   }), /*#__PURE__*/React.createElement(MySelect, {
     required: {
       message: '',
@@ -86,12 +89,14 @@ const DraggableCard = props => {
     error: errors?.questionaryQuestions?.[props.index]?.questionaryInputFieldTypeId?.type,
     name: `questionaryQuestions[${props.index}].questionaryInputFieldTypeId`,
     selectOptions: availableQuestionaryInputFieldTypeses,
-    nameSwlect: "\u0422\u0438\u043F \u0432\u0432\u043E\u0434\u0430"
+    nameSwlect: "\u0422\u0438\u043F \u0432\u0432\u043E\u0434\u0430",
+    selectedValue: form.watch(`questionaryQuestions[${props.index}].questionaryInputFieldTypeId`)
   }), /*#__PURE__*/React.createElement(MySelect //error={errors?.questionaryQuestions?.[props.index]?.defaultAnswerId?.type}
   , {
     name: `questionaryQuestions[${props.index}].defaultAnswerId`,
     selectOptions: availableSelectableAnswers,
-    nameSwlect: "\u041E\u0442\u0432\u0435\u0442 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E"
+    nameSwlect: "\u041E\u0442\u0432\u0435\u0442 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E",
+    selectedValue: form.watch(`questionaryQuestions[${props.index}].defaultAnswerId`)
   })), /*#__PURE__*/React.createElement("div", {
     className: `${classes.root} mt-3`
   }, /*#__PURE__*/React.createElement(Accordion, null, /*#__PURE__*/React.createElement(AccordionSummary, {
@@ -109,6 +114,7 @@ const DraggableCard = props => {
     control: /*#__PURE__*/React.createElement(Controller, {
       name: `questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].isInvolvesComment`,
       control: control,
+      defaultValue: form.watch(`questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].isInvolvesComment`),
       render: ({
         onChange,
         value,
@@ -125,8 +131,8 @@ const DraggableCard = props => {
     ref: register,
     name: `questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].selectableAnswerId`,
     value: item.id
-  }))))))))), /*#__PURE__*/React.createElement(ListItemSecondaryAction, null, /*#__PURE__*/React.createElement(IconButton, {
+  }))))))))), /*#__PURE__*/React.createElement(ListItemSecondaryAction, null, !form.watch(`questionaryQuestions[${props.index}].id`) ? /*#__PURE__*/React.createElement(IconButton, {
     onClick: () => props.removeQuestion(props.index)
-  }, /*#__PURE__*/React.createElement(Icon, null, "delete")))));
+  }, /*#__PURE__*/React.createElement(Icon, null, "delete")) : null)));
 };
 //# sourceMappingURL=DraggableCard.js.map

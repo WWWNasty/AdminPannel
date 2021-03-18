@@ -56,7 +56,9 @@ const MySelect = (props) => {
                 className={classes.selectEmpty}
                 control={control}>
                 {props.selectOptions?.map((item) => <MenuItem value={item.id}>{item.name}</MenuItem>) ?? []}
+              
             </ReactHookFormSelect>
+            
         </FormControl>
     );
 }

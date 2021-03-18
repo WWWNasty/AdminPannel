@@ -13,9 +13,7 @@ const DraggableComponent = (props) => {
         if (!result.destination) {
             return;
         }
-
         move(result.source.index, result.destination.index);
-        
         //form.setValue(`questionaryQuestions[${props.index}].sequenceOrder`, result.destination.index)
     }
     

@@ -31,6 +31,8 @@ const DraggableCard = (props) => {
         form.setValue(`questionaryQuestions[${props.index}].defaultAnswerId`, null)
     };
     console.log(errors);
+    console.log(form.watch(`questionaryQuestions[${props.index}].id`));
+
     return (
         <div className="mt-3 bg-light">
             <ListItem
@@ -72,6 +74,7 @@ const DraggableCard = (props) => {
                             name={`questionaryQuestions[${props.index}].canSkipQuestion`}
                             control={control}
                             label={"Обязательный вопрос"}
+                            defaultValue={form.watch(`questionaryQuestions[${props.index}].canSkipQuestion`)}
                         />
                         <MySelect required={ {message: '', value: true} }
                                   onChange={onChange}
@@ -79,6 +82,7 @@ const DraggableCard = (props) => {
                                   name={`questionaryQuestions[${props.index}].selectableAnswersListId`}
                                   selectOptions={props.selectableAnswersLists}
                                   nameSwlect="Варианты ответа"
+                                  selectedValue={form.watch(`questionaryQuestions[${props.index}].selectableAnswersListId`)}
                         />
                         <MySelect required={ {message: '', value: true} }
                                   errorMessage={Log(errors?.questionaryQuestions?.[props.index]?.questionaryInputFieldTypeId?.message)}
@@ -86,12 +90,14 @@ const DraggableCard = (props) => {
                                   name={`questionaryQuestions[${props.index}].questionaryInputFieldTypeId`}
                                   selectOptions={availableQuestionaryInputFieldTypeses}
                                   nameSwlect="Тип ввода"
+                                  selectedValue={form.watch(`questionaryQuestions[${props.index}].questionaryInputFieldTypeId`)}
                         />
                         <MySelect
                             //error={errors?.questionaryQuestions?.[props.index]?.defaultAnswerId?.type}
                             name={`questionaryQuestions[${props.index}].defaultAnswerId`}
                             selectOptions={availableSelectableAnswers}
                             nameSwlect="Ответ по умолчанию"
+                            selectedValue={form.watch(`questionaryQuestions[${props.index}].defaultAnswerId`)}
                         />
 
                     </div>
@@ -116,6 +122,7 @@ const DraggableCard = (props) => {
                                                         <Controller
                                                             name={`questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].isInvolvesComment`}
                                                             control={control}
+                                                            defaultValue={form.watch(`questionaryQuestions[${props.index}].questionaryAnswerOptions[${index}].isInvolvesComment`)}
                                                             render={({onChange, value, ...props}) => (
                                                                 <Checkbox
                                                                     {...props}
@@ -145,9 +152,13 @@ const DraggableCard = (props) => {
                 </div>
 
                 <ListItemSecondaryAction>
-                    <IconButton onClick={() => props.removeQuestion(props.index)}>
-                        <Icon>delete</Icon>
-                    </IconButton>
+                    {
+                        !form.watch(`questionaryQuestions[${props.index}].id`) ?
+                            <IconButton onClick={() => props.removeQuestion(props.index)}>
+                                <Icon>delete</Icon>
+                            </IconButton> : null
+                    }
+                    
                 </ListItemSecondaryAction>
             </ListItem>
         </div>

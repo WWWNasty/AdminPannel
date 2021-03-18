@@ -1,11 +1,11 @@
 const FormSwitch = (props) =>{
-    
     return(
         <FormControlLabel
             control={
                 <Controller
                     name={props.name}
                     control={props.control}
+                    defaultValue={props.defaultValue}
                     render={({onChange, value, ...props}) => (
                         <Switch
                             {...props}

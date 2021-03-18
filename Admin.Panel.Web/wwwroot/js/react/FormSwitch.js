@@ -5,6 +5,7 @@ const FormSwitch = props => {
     control: /*#__PURE__*/React.createElement(Controller, {
       name: props.name,
       control: props.control,
+      defaultValue: props.defaultValue,
       render: ({
         onChange,
         value,
