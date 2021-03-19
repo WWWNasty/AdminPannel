@@ -4,11 +4,11 @@ function FormDialogObjectType(props) {
     register,
     handleSubmit,
     control,
-    reset
+    reset,
+    errors
   } = dialogForm;
 
   const onSubmit = async data => {
-    console.log(data);
     const response = await fetch("/api/ObjectTypeApi", {
       method: "POST",
       headers: {
@@ -18,8 +18,6 @@ function FormDialogObjectType(props) {
       body: JSON.stringify(data)
     });
     const newObjectType = await response.json();
-    console.log(newObjectType);
-    debugger;
     props.setObjectTypes([newObjectType, ...props.selectOptionsTypes]);
     setOpen(false);
 
@@ -64,11 +62,14 @@ function FormDialogObjectType(props) {
   }, /*#__PURE__*/React.createElement(DialogTitle, {
     id: "form-dialog-title"
   }, "\u041D\u043E\u0432\u044B\u0439 \u0442\u0438\u043F \u043E\u0431\u044A\u0435\u043A\u0442\u0430"), /*#__PURE__*/React.createElement("form", {
-    onSubmit: handleSubmit(onSubmit),
     autoComplete: "off"
   }, /*#__PURE__*/React.createElement(DialogContent, null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(MySelect, {
+    error: errors?.companyId?.type,
     autoFocus: true,
-    required: true,
+    required: {
+      message: '',
+      value: true
+    },
     name: "companyId",
     selectOptions: props.selectOptions,
     selectedValue: props.selectedValue,
@@ -76,6 +77,7 @@ function FormDialogObjectType(props) {
     setSelectedValue: props.setSelectedValue,
     nameSwlect: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043A\u043E\u043C\u043F\u0430\u043D\u0438\u044E"
   })), /*#__PURE__*/React.createElement(Controller, {
+    error: errors?.name?.type,
     as: TextField,
     name: "name",
     control: control,
@@ -84,7 +86,16 @@ function FormDialogObjectType(props) {
     margin: "dense",
     id: "standard-required",
     label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0442\u0438\u043F\u0430 \u043E\u0431\u044A\u0435\u043A\u0442\u0430",
-    fullWidth: true
+    fullWidth: true,
+    rules: {
+      required: true,
+      maxLength: {
+        message: 'Максимально символов: 250',
+        value: 250
+      },
+      validate: true
+    },
+    helperText: errors?.name?.message
   }), /*#__PURE__*/React.createElement("div", null, fields.map((property, index) => {
     return /*#__PURE__*/React.createElement(CardProp, {
       remove: () => remove(index),
@@ -108,7 +119,7 @@ function FormDialogObjectType(props) {
     onClick: handleClose,
     color: "primary"
   }, "\u041E\u0442\u043C\u0435\u043D\u0430"), /*#__PURE__*/React.createElement(Button, {
-    type: "submit",
+    onClick: handleSubmit(onSubmit),
     color: "primary"
   }, "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C")))));
 }

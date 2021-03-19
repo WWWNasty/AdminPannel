@@ -1,9 +1,8 @@
 function FormDialogObjectType(props) {
     const dialogForm = useForm();
-    const {register, handleSubmit, control, reset} = dialogForm;
+    const {register, handleSubmit, control, reset, errors} = dialogForm;
 
     const onSubmit = async data => {
-        console.log(data);
         const response = await fetch("/api/ObjectTypeApi", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -12,9 +11,7 @@ function FormDialogObjectType(props) {
         })
         
         const newObjectType = await response.json();
-        console.log(newObjectType);
 
-        debugger;
         props.setObjectTypes([newObjectType, ...props.selectOptionsTypes]);
         setOpen(false);
         
@@ -46,12 +43,13 @@ function FormDialogObjectType(props) {
             <Dialog fullWidth={true} maxWidth={'lg'} open={open} onClose={handleClose}
                     aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Новый тип объекта</DialogTitle>
-                <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+                <form autoComplete="off">
                     <DialogContent>
                         <div>
                             <MySelect
+                                error={errors?.companyId?.type}
                                 autoFocus
-                                required
+                                required={{message: '', value: true}}
                                 name="companyId" 
                                 selectOptions={props.selectOptions}
                                 selectedValue={props.selectedValue}
@@ -60,6 +58,7 @@ function FormDialogObjectType(props) {
                                 nameSwlect="Выберите компанию"/>
                         </div>
                         <Controller
+                            error={errors?.name?.type}
                             as={TextField}
                             name="name"
                             control={control}
@@ -69,6 +68,8 @@ function FormDialogObjectType(props) {
                             id="standard-required"
                             label="Название типа объекта"
                             fullWidth={true}
+                            rules={{required: true, maxLength: {message:'Максимально символов: 250', value:250}, validate: true}}
+                            helperText={errors?.name?.message}
                         />
 
                         <div>
@@ -101,7 +102,7 @@ function FormDialogObjectType(props) {
                             Отмена
                         </Button>
 
-                        <Button type="submit" color="primary">
+                        <Button onClick={handleSubmit(onSubmit)} color="primary">
                             Добавить
                         </Button>
                     </DialogActions>

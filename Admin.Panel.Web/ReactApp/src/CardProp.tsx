@@ -13,6 +13,7 @@ function CardProp(props: {index: number, form: any, registerForm: any, remove: a
                     </div>
                 </Typography>
                 <Controller
+                    error={props.form.errors?.objectProperties?.[props.index]?.name?.type}
                     as={TextField}
                     name={`objectProperties[${props.index}].name`}
                     className="mr-3 col-md-3"
@@ -20,8 +21,11 @@ function CardProp(props: {index: number, form: any, registerForm: any, remove: a
                     required
                     control={props.form.control}
                     label="Название свойства"
+                    rules={{required: true, maxLength: {message:'Максимально символов: 250', value:250}, validate: true}}
+                    helperText={props.form.errors?.objectProperties?.[props.index]?.name?.message}
                 />
                 <Controller
+                    error={props.form.errors?.objectProperties?.[props.index]?.nameInReport?.type}
                     as={TextField}
                     name={`objectProperties[${props.index}].nameInReport`}
                     className="mr-3 col-md-3"
@@ -29,6 +33,8 @@ function CardProp(props: {index: number, form: any, registerForm: any, remove: a
                     required
                     control={props.form.control}
                     label="Название свойства в отчете"
+                    rules={{required: true, maxLength: {message:'Максимально символов: 250', value:250}, validate: true}}
+                    helperText={props.form.errors?.objectProperties?.[props.index]?.nameInReport?.message}
                 />  
                 
                 <FormControlLabel

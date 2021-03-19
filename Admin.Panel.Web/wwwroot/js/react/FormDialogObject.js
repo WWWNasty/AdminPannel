@@ -30,6 +30,7 @@ const FormDialogObject = props => {
       props.selectedObjectype.questionaryObjects.push(result);
       setOpen(false);
     } else if (response.status == 400) {
+      debugger;
       const type = 'oneOrMoreRequired';
       setError('code', {
         type,
@@ -69,6 +70,7 @@ const FormDialogObject = props => {
   }, "\u041D\u043E\u0432\u044B\u0439 \u043E\u0431\u044A\u0435\u043A\u0442"), /*#__PURE__*/React.createElement("form", {
     autoComplete: "off"
   }, /*#__PURE__*/React.createElement(DialogContent, null, /*#__PURE__*/React.createElement(Controller, {
+    error: errors?.name?.type,
     as: TextField,
     autoFocus: true,
     name: "name",
@@ -78,11 +80,19 @@ const FormDialogObject = props => {
     margin: "dense",
     id: "standard-required",
     label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043E\u0431\u044A\u0435\u043A\u0442\u0430",
-    fullWidth: true
+    fullWidth: true,
+    rules: {
+      required: true,
+      maxLength: {
+        message: 'Максимально символов: 250',
+        value: 250
+      },
+      validate: true
+    },
+    helperText: errors?.name?.message
   }), /*#__PURE__*/React.createElement(Controller, {
     error: errors?.code?.type,
     as: TextField,
-    autoFocus: true,
     name: "code",
     control: control,
     defaultValue: "",
@@ -95,12 +105,13 @@ const FormDialogObject = props => {
       required: true,
       maxLength: {
         message: 'Максимально символов: 20',
-        value: 250
+        value: 20
       },
       validate: true
     },
     helperText: errors?.code?.message
   }), /*#__PURE__*/React.createElement(Controller, {
+    error: errors?.description?.type,
     as: TextField,
     name: "description",
     control: control,
@@ -111,13 +122,23 @@ const FormDialogObject = props => {
     label: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435",
     fullWidth: true,
     multiline: true,
-    rows: 4
+    rows: 4,
+    rules: {
+      required: true,
+      maxLength: {
+        message: 'Максимально символов: 500',
+        value: 500
+      },
+      validate: true
+    },
+    helperText: errors?.description?.message
   }), /*#__PURE__*/React.createElement("div", {
     className: "font-weight-light mt-3",
     style: {
       color: '#3f51b5'
     }
   }, "\u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430 \u0442\u0438\u043F\u0430 \u043E\u0431\u044A\u0435\u043A\u0442\u0430 \"", objectType.name, "\": "), props.selectedObjectype.objectProperties?.map((item, index) => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Controller, {
+    error: errors?.selectedObjectPropertyValues?.[index]?.value?.type,
     as: TextField,
     name: `selectedObjectPropertyValues[${index}].value`,
     control: control,
@@ -126,7 +147,16 @@ const FormDialogObject = props => {
     margin: "dense",
     id: "standard-required",
     label: item.name,
-    fullWidth: true
+    fullWidth: true,
+    rules: {
+      required: true,
+      maxLength: {
+        message: 'Максимально символов: 250',
+        value: 250
+      },
+      validate: true
+    },
+    helperText: errors?.selectedObjectPropertyValues?.[index]?.value?.message
   }), /*#__PURE__*/React.createElement("input", {
     type: "hidden",
     ref: register,

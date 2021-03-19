@@ -12,21 +12,41 @@ function CardProp(props) {
     className: `${classes.margin} ml-auto`,
     onClick: () => props.remove(props.index)
   }, /*#__PURE__*/React.createElement(Icon, null, "delete")))), /*#__PURE__*/React.createElement(Controller, {
+    error: props.form.errors?.objectProperties?.[props.index]?.name?.type,
     as: TextField,
     name: `objectProperties[${props.index}].name`,
     className: "mr-3 col-md-3",
     defaultValue: "",
     required: true,
     control: props.form.control,
-    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430"
+    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430",
+    rules: {
+      required: true,
+      maxLength: {
+        message: 'Максимально символов: 250',
+        value: 250
+      },
+      validate: true
+    },
+    helperText: props.form.errors?.objectProperties?.[props.index]?.name?.message
   }), /*#__PURE__*/React.createElement(Controller, {
+    error: props.form.errors?.objectProperties?.[props.index]?.nameInReport?.type,
     as: TextField,
     name: `objectProperties[${props.index}].nameInReport`,
     className: "mr-3 col-md-3",
     defaultValue: "",
     required: true,
     control: props.form.control,
-    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430 \u0432 \u043E\u0442\u0447\u0435\u0442\u0435"
+    label: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430 \u0432 \u043E\u0442\u0447\u0435\u0442\u0435",
+    rules: {
+      required: true,
+      maxLength: {
+        message: 'Максимально символов: 250',
+        value: 250
+      },
+      validate: true
+    },
+    helperText: props.form.errors?.objectProperties?.[props.index]?.nameInReport?.message
   }), /*#__PURE__*/React.createElement(FormControlLabel, {
     control: /*#__PURE__*/React.createElement(Switch, {
       className: "mr-3",

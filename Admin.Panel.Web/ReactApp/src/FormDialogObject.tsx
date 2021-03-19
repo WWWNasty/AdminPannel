@@ -10,7 +10,6 @@ const FormDialogObject = (props) => {
 
     const onSubmit = async data => {
         data.objectTypeId = selectedObjectTypeId;
-
         data.selectedObjectPropertyValues?.forEach(prop => prop.objectPropertyId = Number(prop.objectPropertyId));
 
         const response = await fetch("/api/QuestionaryObjectApi", {
@@ -27,15 +26,14 @@ const FormDialogObject = (props) => {
             props.selectedObjectype.questionaryObjects.push(result);
             setOpen(false);
         } else if (response.status == 400) {
+            debugger;
             const type = 'oneOrMoreRequired';
             setError('code', {type, message: 'Введите уникальный код!'});
         } else {
-            props.setOpenAlertRed(true);
+            props.setOpenAlertRed(true); 
         }
-
     };
     const [open, setOpen] = React.useState(false);
-
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -58,6 +56,7 @@ const FormDialogObject = (props) => {
                 <form autoComplete="off">
                     <DialogContent>
                         <Controller
+                            error={errors?.name?.type}
                             as={TextField}
                             autoFocus
                             name="name"
@@ -68,12 +67,13 @@ const FormDialogObject = (props) => {
                             id="standard-required"
                             label="Название объекта"
                             fullWidth={true}
+                            rules={{required: true, maxLength: {message:'Максимально символов: 250', value:250}, validate: true}}
+                            helperText={errors?.name?.message}
                         />
 
                         <Controller
                             error={errors?.code?.type}
                             as={TextField}
-                            autoFocus
                             name="code"
                             control={control}
                             defaultValue=""
@@ -82,11 +82,12 @@ const FormDialogObject = (props) => {
                             id="standard-required"
                             label="Код"
                             fullWidth={true}
-                            rules={{required: true, maxLength: {message:'Максимально символов: 20', value:250}, validate: true}}
+                            rules={{required: true, maxLength: {message:'Максимально символов: 20', value:20}, validate: true}}
                             helperText={errors?.code?.message}
                         />
                         
                         <Controller
+                            error={errors?.description?.type}
                             as={TextField}
                             name="description"
                             control={control}
@@ -98,12 +99,15 @@ const FormDialogObject = (props) => {
                             fullWidth={true}
                             multiline
                             rows={4}
+                            rules={{required: true, maxLength: {message:'Максимально символов: 500', value:500}, validate: true}}
+                            helperText={errors?.description?.message}
                         />
 
                         <div className="font-weight-light mt-3" style={{color: '#3f51b5'}}>Заполните свойства типа объекта "{objectType.name}": </div>
                         {props.selectedObjectype.objectProperties?.map((item, index) =>
                             <div>
                                 <Controller
+                                    error={errors?.selectedObjectPropertyValues?.[index]?.value?.type}
                                     as={TextField}
                                     name={`selectedObjectPropertyValues[${index}].value`}
                                     control={control}
@@ -113,6 +117,8 @@ const FormDialogObject = (props) => {
                                     id="standard-required"
                                     label={item.name}
                                     fullWidth={true}
+                                    rules={{required: true, maxLength: {message:'Максимально символов: 250', value:250}, validate: true}}
+                                    helperText={errors?.selectedObjectPropertyValues?.[index]?.value?.message}
                                 />
                                 <input type="hidden"
                                        ref={register}
