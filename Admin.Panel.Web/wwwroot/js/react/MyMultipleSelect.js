@@ -64,13 +64,13 @@ const MyMultipleSelect = props => {
     }),
     renderValue: selected => /*#__PURE__*/React.createElement("div", {
       className: classes.chips
-    }, props.selectOptions.flatMap(option => option.questionaryObjects).filter(option => selected.indexOf(option.id) > -1).map(option => /*#__PURE__*/React.createElement(Chip, {
+    }, props.selectOptions.flatMap(option => option.questionaryObjects).filter(option => selected.indexOf(option?.id) > -1).map(option => /*#__PURE__*/React.createElement(Chip, {
       key: option.id,
       label: option.name,
       className: classes.chip
     }))),
     MenuProps: MenuProps
-  }, props.selectOptions?.map(item => [item.questionaryObjects.length ? /*#__PURE__*/React.createElement(ListSubheader, null, item.name) : null, item.questionaryObjects?.map(object => /*#__PURE__*/React.createElement(MenuItem, {
+  }, props.selectOptions?.map(item => [item.questionaryObjects?.length ? /*#__PURE__*/React.createElement(ListSubheader, null, item.name) : null, item.questionaryObjects?.map(object => /*#__PURE__*/React.createElement(MenuItem, {
     key: object.id,
     value: object.id
   }, /*#__PURE__*/React.createElement(Checkbox, {

@@ -1,6 +1,5 @@
 const ThirdStep = props => {
   const form = useFormContext();
-  console.log(form);
   const {
     register,
     handleSubmit,
@@ -8,7 +7,6 @@ const ThirdStep = props => {
     errors
   } = form;
   const questionaryId = form.watch('id');
-  console.log(errors);
   return /*#__PURE__*/React.createElement("div", null, questionaryId != null && /*#__PURE__*/React.createElement(FormSwitch, {
     name: `isUsed`,
     control: control,

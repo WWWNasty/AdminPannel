@@ -1,9 +1,7 @@
 const ThirdStep = (props) => {
     const form = useFormContext();
-    console.log(form);
     const {register, handleSubmit, control, errors} = form;
     const questionaryId = form.watch('id');
-    console.log(errors);
     return (
         <div>
             {questionaryId != null &&

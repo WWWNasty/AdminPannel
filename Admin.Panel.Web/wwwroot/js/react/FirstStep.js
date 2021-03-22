@@ -35,10 +35,7 @@ const FirstStep = props => {
     selectOptions: props.selectOptionsСompanies,
     form: form,
     onChange: onChange,
-    name: "companyId" // setSelectedValue={selectedValue => {
-    //     props.setSelectedValueTypes(null);
-    // }} 
-    ,
+    name: "companyId",
     nameSwlect: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043A\u043E\u043C\u043F\u0430\u043D\u0438\u044E"
   }), /*#__PURE__*/React.createElement(MySelect, {
     required: true,

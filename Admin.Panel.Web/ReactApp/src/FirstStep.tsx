@@ -31,9 +31,6 @@ const FirstStep = (props) => {
                           form={form}
                           onChange={onChange}
                           name="companyId"
-                          // setSelectedValue={selectedValue => {
-                          //     props.setSelectedValueTypes(null);
-                          // }} 
                           nameSwlect="Выберите компанию"
                 />
                 <MySelect required 

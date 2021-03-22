@@ -217,9 +217,9 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                 var objectPropertyId = cn.ExecuteScalar<int>(
                                     @"INSERT INTO ObjectProperties(Name,NameInReport,IsUsedInReport,ReportCellStyle,IsUsed) 
                                             VALUES(@Name,@NameInReport,@IsUsedInReport,'Text',1)
-                                            SELECT QuestionaryObjectTypeId = @@IDENTITY",
+                                            SELECT ObjectPropertyId = @@IDENTITY",
                                     objectProperty, transaction);
-
+                                objectProperty.Id = objectPropertyId;
                                 // добавление свойств типу объекта
                                 cn.Execute(
                                     @"INSERT INTO  ObjectPropertyToObjectTypes(QuestionaryObjectTypeId,ObjectPropertyId)
@@ -232,13 +232,13 @@ namespace Admin.Panel.Data.Repositories.Questionary
                             }
                         }
 
-                        var result = cn.Query<QuestionaryObjectType>(
-                            @"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id",
-                            new {@Id = objTypeId}, transaction).SingleOrDefault();
+                        // var result = cn.Query<QuestionaryObjectType>(
+                        //     @"SELECT * FROM QuestionaryObjectTypes WHERE Id=@Id",
+                        //     new {@Id = objTypeId}, transaction).SingleOrDefault();
 
                         transaction.Commit();
-
-                        return result;
+                        obj.Id = objTypeId; 
+                        return obj;
                     }
                     catch (Exception ex)
                     {
