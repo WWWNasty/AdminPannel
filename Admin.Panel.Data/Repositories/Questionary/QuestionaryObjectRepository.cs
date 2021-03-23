@@ -38,13 +38,27 @@ namespace Admin.Panel.Data.Repositories.Questionary
                     var obj = cn.Query<QuestionaryObject>(query, new {Id = id}).SingleOrDefault();
 
                     var properties = cn.Query<ObjectPropertyValues>(@"SELECT 
-	                                                                po.*, p.IsUsedInReport, p.Name, p.NameInReport, p.ReportCellStyle
-		                                                                FROM ObjectPropertyValues AS po
+                                                                     p.Id AS ObjectPropertyId, p.Name AS Name
+                                                                      FROM ObjectProperties AS p
+                                                                       INNER JOIN ObjectPropertyToObjectTypes AS po ON po.ObjectPropertyId = p.Id
+                                                                        where po.QuestionaryObjectTypeId = @QuestionaryObjectTypeId",
+                        new {QuestionaryObjectTypeId = obj.ObjectTypeId}).ToList();
+                    
+                    var valueProperties = cn.Query<ObjectPropertyValues>(@"SELECT 
+	                                                                po.* FROM ObjectPropertyValues AS po
 			                                                                INNER JOIN ObjectProperties AS p ON po.ObjectPropertyId = p.Id
-				                                                                where 
-					                                                                po.QuestionaryObjectId = @QuestionaryObjectId",
+				                                                                where po.QuestionaryObjectId IN (@QuestionaryObjectId)",
                         new {QuestionaryObjectId = id}).ToList();
-
+                    foreach (var property in properties)
+                    {
+                       var value = valueProperties
+                            .FirstOrDefault(v => v.ObjectPropertyId == property.ObjectPropertyId);
+                       if (value != null)
+                       {
+                           property.QuestionaryObjectId = value.QuestionaryObjectId;
+                           property.Value = value.Value;
+                       }
+                    }
                     obj.SelectedObjectPropertyValues = properties;
 
                     return obj;
@@ -55,7 +69,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 }
             }
         }
-
+ 
         public async Task<List<QuestionaryObject>> GetAllAsync()
         {
             using (var connection = new SqlConnection(_connectionString))
