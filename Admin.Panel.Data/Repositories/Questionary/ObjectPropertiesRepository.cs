@@ -67,7 +67,10 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 await connection.OpenAsync();
                 try
                 {
-                    var query = "SELECT * FROM ObjectProperties WHERE IsUsed = 1";
+                    var query = @" SELECT p.*, po.QuestionaryObjectTypeId as QuestionaryObjectTypeId FROM
+                    ObjectProperties as p
+                    INNER JOIN ObjectPropertyToObjectTypes as po ON po.ObjectPropertyId = p.Id 
+                    WHERE p.IsUsed = 1";
                     var result = connection.Query<ObjectProperty>(query).ToList();
                     return result;
                 }

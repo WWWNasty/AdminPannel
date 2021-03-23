@@ -23,6 +23,7 @@ const FormDialogObject = (props) => {
             const result = await response.json();
             props.setOpenAlertGreen(true);
             props.selectedObjectype.questionaryObjects.push(result);
+            debugger;
             setOpen(false);
         } else if (response.status == 400) {
             const type = 'oneOrMoreRequired';

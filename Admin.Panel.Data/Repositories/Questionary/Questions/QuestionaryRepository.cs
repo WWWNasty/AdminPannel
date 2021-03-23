@@ -41,7 +41,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 		                                                                FROM QuestionaryQuestions p 
 		                                                                INNER JOIN QuestionaryInputFieldTypes f ON f.Id = p.QuestionaryInputFieldTypeId
 																		INNER JOIN SelectableAnswersLists l ON l.Id = p.SelectableAnswersListId
-				                                                                where QuestionaryId = @QuestionaryId",
+				                                                                where QuestionaryId = @QuestionaryId Order by p.SequenceOrder",
                         new {QuestionaryId = id}).ToList();
 
                     List<int> questionIds = new List<int>();

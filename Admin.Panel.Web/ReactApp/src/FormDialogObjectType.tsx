@@ -102,7 +102,6 @@ function FormDialogObjectType(props) {
                         <Button onClick={handleClose} color="primary">
                             Отмена
                         </Button>
-
                         <Button onClick={handleSubmit(onSubmit)} color="primary">
                             Добавить
                         </Button>

@@ -281,7 +281,7 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                                                       FROM ObjectProperties AS p
                                                                        INNER JOIN ObjectPropertyToObjectTypes AS po ON po.ObjectPropertyId = p.Id
                                                                         where 
-                                                                         po.QuestionaryObjectTypeId = @QuestionaryObjectTypeId",
+                                                                         po.QuestionaryObjectTypeId = @QuestionaryObjectTypeId AND p.IsUsed = 1",
                         new {QuestionaryObjectTypeId = idTypeObj}).ToList();
                     return properties;
                 }

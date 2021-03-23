@@ -49,7 +49,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             obj.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllActiveWithoutQuestionaryAsync(objectTypeId);
             obj.SelectableAnswersLists = await _selectableAnswersListRepository.GetAllActiveAsync();
             obj.QuestionaryObjects = await _questionaryObjectRepository.GetAllActiveAsync();
-            obj.ObjectProperties = await _objectPropertiesRepository.GetAllAsync();
+            obj.ObjectProperties = await _objectPropertiesRepository.GetAllActiveAsync();
             obj.SelectableAnswers = await _selectableAnswersListRepository.GetAllAnswers();
             obj.QuestionaryInputFieldTypes = await _questionaryInputFieldTypesRepository.GetAllWithListId();
             return obj;
@@ -62,7 +62,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             obj.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllActiveWithoutQuestionaryForUserAsync(Convert.ToInt32(idUser), objectTypeId);
             obj.SelectableAnswersLists = await _selectableAnswersListRepository.GetAllActiveAsync();
             obj.QuestionaryObjects = await _questionaryObjectRepository.GetAllActiveForUserAsync(Convert.ToInt32(idUser));
-            obj.ObjectProperties = await _objectPropertiesRepository.GetAllAsync();
+            obj.ObjectProperties = await _objectPropertiesRepository.GetAllActiveAsync();
             obj.SelectableAnswers = await _selectableAnswersListRepository.GetAllAnswers();
             obj.QuestionaryInputFieldTypes = await _questionaryInputFieldTypesRepository.GetAllWithListId();
             return obj;
@@ -70,7 +70,6 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
 
         public async Task<QuestionaryDto> GetAllForQuestionaryUpdate(QuestionaryDto model)
         {
-            //model = await _questionaryRepository.GetAsync(model.Id);
             var obj = await GetAllForQuestionary(model.ObjectTypeId);
             model.ApplicationCompanies = obj.ApplicationCompanies;
             model.QuestionaryObjectTypes = obj.QuestionaryObjectTypes;
