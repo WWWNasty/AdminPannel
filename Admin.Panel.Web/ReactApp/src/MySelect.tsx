@@ -19,15 +19,6 @@ const ReactHookFormSelect = ({
             <InputLabel id={labelId}>{label}</InputLabel>
             <Controller
                 render={({onChange, value, name}) =>
-                    <Tooltip title={(value) => {
-                        console.log(value);
-                        debugger;
-                        props.selectOptions
-                            .flatMap(option => option.questionaryObjects)
-                            .filter(option => value.indexOf(option?.id) > -1)
-                            .map((option) => option.name).join(', ')
-                    }}
-                             placement="bottom-start">
                         <Select renderValue={props.renderValue}
                                 multiple={props.multiple}
                                 labelId={labelId}
@@ -41,7 +32,7 @@ const ReactHookFormSelect = ({
                                 }}>
                             {children}
                         </Select>
-                    </Tooltip>}
+                    }
                 rules={{required: props.required, minLength: props.minLength, validate: props.validate}}
                 name={name}
                 control={control}
