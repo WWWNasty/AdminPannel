@@ -21,13 +21,6 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
             // minWidth: 120,
             // maxWidth: 300,
         },
-        chips: {
-            display: 'flex',
-            flexWrap: 'wrap',
-        },
-        chip: {
-            margin: 2,
-        },
         noLabel: {
             marginTop: theme.spacing(3),
         },
@@ -46,7 +39,7 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
     };
     const classes = useStyles();
     const {control} = useFormContext();
-
+  
     return (
         <div>
             <FormControl className={`${classes.formControl} col-md-3`}>
@@ -68,16 +61,15 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
                     defaultValue={[]}
                     className={classes.selectEmpty}
                     control={control}
-                    input={<Input id="select-multiple-chip"/>}
-                    renderValue={(selected) => (
-                        <div className={classes.chips}>
-                            {props.selectOptions
+                    input={<Input/>}
+                    selectOptions={props.selectOptions}
+                    renderValue={
+                        (selected) => (
+                            props.selectOptions
                                 .flatMap(option => option.questionaryObjects)
                                 .filter(option => selected.indexOf(option?.id) > -1)
-                                .map((option) => 
-                                    <Chip key={option.id} label={option.name} className={classes.chip}/>
-                                )}
-                        </div>
+                                .map((option) => option.name
+                                ).join(', ')
                     )}
                     MenuProps={MenuProps}>
 

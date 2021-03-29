@@ -17,7 +17,11 @@ const FirstStep = (props) => {
     const { handleSubmit } = form;
     const selectedCompany = form.watch('companyId');
     const availableObjectTypes = props.selectOptionsTypes.filter(type => type.companyId == selectedCompany)
-    const onChange = () => form.setValue('objectTypeId', null);
+    const onChange = () =>  {
+        props.setObjectTypeId(null);
+        form.setValue('objectTypeId', null);
+        console.log(form.watch('objectTypeId'), 'obj id');
+    };
     
     const handleClose = () => {
         setOpenAlertGreen(false);
@@ -51,7 +55,7 @@ const FirstStep = (props) => {
                 />
             </div>
 
-            <Snackbar open={openAlertGreen} autoHideDuration={6000} onClose={handleClose}>
+            <Snackbar open={openAlertGreen}  autoHideDuration={6000} onClose={handleClose}>
                 <div className="alert alert-success" role="alert">
                     Тип объектов успешно создан!
                     <button type="button" className="close" data-dismiss="alert" aria-label="Close">

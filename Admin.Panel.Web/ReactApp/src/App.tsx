@@ -100,13 +100,15 @@ function getStepContent(step: number,
                         companies,
                         selectableAnswersLists,
                         questionaryInputFieldTypes,
-                        selectableAnswers) {
+                        selectableAnswers,
+                        setObjectTypeId) {
     const selectedObjectTypeId = form.watch('objectTypeId');
     const selectedObjectype = objectTypes.find(ot => ot.id == selectedObjectTypeId)
 
     switch (step) {
         case 0:
             return <FirstStep
+                setObjectTypeId={setObjectTypeId}
                 setObjectTypes={setObjectTypes}
                 selectOptionsTypes={objectTypes}
                 selectOptionsСompanies={companies}
@@ -234,7 +236,8 @@ function HorizontalLabelPositionBelowStepper(props) {
                             props.companies,
                             props.selectableAnswersLists,
                             props.questionaryInputFieldTypes,
-                            props.selectableAnswers
+                            props.selectableAnswers,
+                            props.setObjectTypeId
                         )}</Typography>
                         <div>
                             <Button
@@ -277,6 +280,7 @@ function App(props: { questionary?: any, getAllRoute: string }) {
     const [questionaryInputFieldTypes, setQuestionaryInputFieldTypes] = React.useState<QuestionaryInputFieldTypes[]>([]);
     const [selectableAnswers, setSelectableAnswers] = React.useState<SelectOption[]>([]);
     const [companyId, setCompanyId] = React.useState<number>(0);
+    const [objectTypeId, setObjectTypeId] = React.useState<number>(0);
 
     React.useEffect(() => {
         (async () => {
@@ -307,6 +311,9 @@ function App(props: { questionary?: any, getAllRoute: string }) {
 
             let companyId = form.watch('companyId');
             setCompanyId(companyId);
+            
+            let objectTypeId = form.watch('objectTypeId');
+            setObjectTypeId(objectTypeId);
 
             let objTypes: SelectOption[] = selectOptions.questionaryObjectTypes;
             setObjectTypes(objTypes);
@@ -348,6 +355,7 @@ function App(props: { questionary?: any, getAllRoute: string }) {
                         questionaryInputFieldTypes={questionaryInputFieldTypes}
                         selectableAnswers={selectableAnswers}
                         companyId={companyId}
+                        setObjectTypeId={setObjectTypeId}
                     />
                 </FormProvider>
             </form>

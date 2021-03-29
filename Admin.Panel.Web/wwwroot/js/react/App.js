@@ -93,13 +93,14 @@ function getSteps() {
   return ['Выбор типа объекта', 'Выбор объекта', 'Создание анкеты'];
 }
 
-function getStepContent(step, form, questionary, getAllRoute, objectTypes, setObjectTypes, companies, selectableAnswersLists, questionaryInputFieldTypes, selectableAnswers) {
+function getStepContent(step, form, questionary, getAllRoute, objectTypes, setObjectTypes, companies, selectableAnswersLists, questionaryInputFieldTypes, selectableAnswers, setObjectTypeId) {
   const selectedObjectTypeId = form.watch('objectTypeId');
   const selectedObjectype = objectTypes.find(ot => ot.id == selectedObjectTypeId);
 
   switch (step) {
     case 0:
       return /*#__PURE__*/React.createElement(FirstStep, {
+        setObjectTypeId: setObjectTypeId,
         setObjectTypes: setObjectTypes,
         selectOptionsTypes: objectTypes,
         selectOptionsСompanies: companies
@@ -237,7 +238,7 @@ function HorizontalLabelPositionBelowStepper(props) {
     onClick: handleReset
   }, "Reset")) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Typography, {
     className: classes.instructions
-  }, getStepContent(activeStep, form, props.questionary, props.getAllRoute, props.objectTypes, props.setObjectTypes, props.companies, props.selectableAnswersLists, props.questionaryInputFieldTypes, props.selectableAnswers)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
+  }, getStepContent(activeStep, form, props.questionary, props.getAllRoute, props.objectTypes, props.setObjectTypes, props.companies, props.selectableAnswersLists, props.questionaryInputFieldTypes, props.selectableAnswers, props.setObjectTypeId)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
     disabled: activeStep === 0,
     onClick: handleBack,
     className: `${classes.backButton}`,
@@ -270,6 +271,7 @@ function App(props) {
   const [questionaryInputFieldTypes, setQuestionaryInputFieldTypes] = React.useState([]);
   const [selectableAnswers, setSelectableAnswers] = React.useState([]);
   const [companyId, setCompanyId] = React.useState(0);
+  const [objectTypeId, setObjectTypeId] = React.useState(0);
   React.useEffect(() => {
     (async () => {
       const getSelectOptions = async () => {
@@ -297,6 +299,8 @@ function App(props) {
 
       let companyId = form.watch('companyId');
       setCompanyId(companyId);
+      let objectTypeId = form.watch('objectTypeId');
+      setObjectTypeId(objectTypeId);
       let objTypes = selectOptions.questionaryObjectTypes;
       setObjectTypes(objTypes);
       let companies = selectOptions.applicationCompanies.map(company => ({
@@ -327,7 +331,8 @@ function App(props) {
     selectableAnswersLists: selectableAnswersLists,
     questionaryInputFieldTypes: questionaryInputFieldTypes,
     selectableAnswers: selectableAnswers,
-    companyId: companyId
+    companyId: companyId,
+    setObjectTypeId: setObjectTypeId
   }))), /*#__PURE__*/React.createElement(CloseAlertDialog, {
     getAllRoute: props.getAllRoute
   }));

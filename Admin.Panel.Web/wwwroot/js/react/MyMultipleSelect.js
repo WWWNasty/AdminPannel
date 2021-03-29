@@ -13,13 +13,6 @@ const MyMultipleSelect = props => {
       // maxWidth: 300,
 
     },
-    chips: {
-      display: 'flex',
-      flexWrap: 'wrap'
-    },
-    chip: {
-      margin: 2
-    },
     noLabel: {
       marginTop: theme.spacing(3)
     }
@@ -59,16 +52,9 @@ const MyMultipleSelect = props => {
     defaultValue: [],
     className: classes.selectEmpty,
     control: control,
-    input: /*#__PURE__*/React.createElement(Input, {
-      id: "select-multiple-chip"
-    }),
-    renderValue: selected => /*#__PURE__*/React.createElement("div", {
-      className: classes.chips
-    }, props.selectOptions.flatMap(option => option.questionaryObjects).filter(option => selected.indexOf(option?.id) > -1).map(option => /*#__PURE__*/React.createElement(Chip, {
-      key: option.id,
-      label: option.name,
-      className: classes.chip
-    }))),
+    input: /*#__PURE__*/React.createElement(Input, null),
+    selectOptions: props.selectOptions,
+    renderValue: selected => props.selectOptions.flatMap(option => option.questionaryObjects).filter(option => selected.indexOf(option?.id) > -1).map(option => option.name).join(', '),
     MenuProps: MenuProps
   }, props.selectOptions?.map(item => [item.questionaryObjects?.length ? /*#__PURE__*/React.createElement(ListSubheader, null, item.name) : null, item.questionaryObjects?.map(object => /*#__PURE__*/React.createElement(MenuItem, {
     key: object.id,

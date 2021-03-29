@@ -17,7 +17,11 @@ const FirstStep = props => {
   const selectedCompany = form.watch('companyId');
   const availableObjectTypes = props.selectOptionsTypes.filter(type => type.companyId == selectedCompany);
 
-  const onChange = () => form.setValue('objectTypeId', null);
+  const onChange = () => {
+    props.setObjectTypeId(null);
+    form.setValue('objectTypeId', null);
+    console.log(form.watch('objectTypeId'), 'obj id');
+  };
 
   const handleClose = () => {
     setOpenAlertGreen(false);
