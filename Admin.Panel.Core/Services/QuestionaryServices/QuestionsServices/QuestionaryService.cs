@@ -167,6 +167,7 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             model.SelectableAnswersLists = obj.SelectableAnswersLists;
             model.SelectableAnswers = obj.SelectableAnswers;
             model.QuestionaryInputFieldTypes = obj.QuestionaryInputFieldTypes;
+            
             return model;
         }
 

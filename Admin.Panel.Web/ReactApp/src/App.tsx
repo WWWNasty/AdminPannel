@@ -101,7 +101,8 @@ function getStepContent(step: number,
                         selectableAnswersLists,
                         questionaryInputFieldTypes,
                         selectableAnswers,
-                        setObjectTypeId) {
+                        setObjectTypeId,
+                        originObjectTypeId) {
     const selectedObjectTypeId = form.watch('objectTypeId');
     const selectedObjectype = objectTypes.find(ot => ot.id == selectedObjectTypeId)
 
@@ -125,6 +126,7 @@ function getStepContent(step: number,
                 selectableAnswersLists={selectableAnswersLists}
                 questionaryInputFieldTypes={questionaryInputFieldTypes}
                 selectableAnswers={selectableAnswers}
+                originObjectTypeId={originObjectTypeId}
             />;
         default:
             return 'Unknown step';
@@ -188,10 +190,17 @@ function HorizontalLabelPositionBelowStepper(props) {
     const objectType = props.objectTypes?.find(o => o.id == objectTypeId);
 
     const objectsIdToChangeType = form.watch('objectsIdToChangeType');
+    
+    const ifQuestionaryCurrentInCompany = form.watch('ifQuestionaryCurrentInCompany');
+    console.log("ifQuestionaryCurrentInCompany",ifQuestionaryCurrentInCompany)
 
     return (
         <div className={classes.root}>
 
+            {(ifQuestionaryCurrentInCompany && props.originObjectTypeId == objectTypeId)? <div className="alert alert-warning" role="alert">
+                Уже существует активная анкета для типа объекта "{objectType?.name}"!
+            </div> : null}
+            
             <div className="d-flex justify-content-center">
                 {company?.name && <div className="d-flex justify-content-start col-3 text-truncate mr-1 "><h6
                     style={{color: '#3f51b5'}}>Компания: </h6>&nbsp;
@@ -237,7 +246,8 @@ function HorizontalLabelPositionBelowStepper(props) {
                             props.selectableAnswersLists,
                             props.questionaryInputFieldTypes,
                             props.selectableAnswers,
-                            props.setObjectTypeId
+                            props.setObjectTypeId,
+                            props.originObjectTypeId
                         )}</Typography>
                         <div>
                             <Button
@@ -281,6 +291,7 @@ function App(props: { questionary?: any, getAllRoute: string }) {
     const [selectableAnswers, setSelectableAnswers] = React.useState<SelectOption[]>([]);
     const [companyId, setCompanyId] = React.useState<number>(0);
     const [objectTypeId, setObjectTypeId] = React.useState<number>(0);
+    const [originObjectTypeId, setOriginObjectTypeId] = React.useState<number>(0);
 
     React.useEffect(() => {
         (async () => {
@@ -309,6 +320,9 @@ function App(props: { questionary?: any, getAllRoute: string }) {
                 return;
             }
 
+            let originObjectTypeId = form.watch('objectTypeId');
+            setOriginObjectTypeId(originObjectTypeId);
+            
             let companyId = form.watch('companyId');
             setCompanyId(companyId);
             
@@ -356,6 +370,7 @@ function App(props: { questionary?: any, getAllRoute: string }) {
                         selectableAnswers={selectableAnswers}
                         companyId={companyId}
                         setObjectTypeId={setObjectTypeId}
+                        originObjectTypeId={originObjectTypeId}
                     />
                 </FormProvider>
             </form>

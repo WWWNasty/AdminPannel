@@ -21,14 +21,7 @@ const ReactHookFormSelect = ({
       onChange,
       value,
       name
-    }) => /*#__PURE__*/React.createElement(Tooltip, {
-      title: value => {
-        console.log(value);
-        debugger;
-        props.selectOptions.flatMap(option => option.questionaryObjects).filter(option => value.indexOf(option?.id) > -1).map(option => option.name).join(', ');
-      },
-      placement: "bottom-start"
-    }, /*#__PURE__*/React.createElement(Select, {
+    }) => /*#__PURE__*/React.createElement(Select, {
       renderValue: props.renderValue,
       multiple: props.multiple,
       labelId: labelId,
@@ -39,7 +32,7 @@ const ReactHookFormSelect = ({
         onChange(event);
         props?.onChange(event);
       }
-    }, children)),
+    }, children),
     rules: {
       required: props.required,
       minLength: props.minLength,

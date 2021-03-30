@@ -61,6 +61,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                     }
 
                     obj.QuestionaryQuestions = questions;
+                    obj.IfQuestionaryCurrentInCompany = await IfQuestionaryCurrentInCompanyAsync(obj.CompanyId, obj.ObjectTypeId, id);
                     return obj;
                 }
                 catch (Exception ex)

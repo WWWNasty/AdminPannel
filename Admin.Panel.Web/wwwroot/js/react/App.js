@@ -93,7 +93,7 @@ function getSteps() {
   return ['Выбор типа объекта', 'Выбор объекта', 'Создание анкеты'];
 }
 
-function getStepContent(step, form, questionary, getAllRoute, objectTypes, setObjectTypes, companies, selectableAnswersLists, questionaryInputFieldTypes, selectableAnswers, setObjectTypeId) {
+function getStepContent(step, form, questionary, getAllRoute, objectTypes, setObjectTypes, companies, selectableAnswersLists, questionaryInputFieldTypes, selectableAnswers, setObjectTypeId, originObjectTypeId) {
   const selectedObjectTypeId = form.watch('objectTypeId');
   const selectedObjectype = objectTypes.find(ot => ot.id == selectedObjectTypeId);
 
@@ -118,7 +118,8 @@ function getStepContent(step, form, questionary, getAllRoute, objectTypes, setOb
         form: form,
         selectableAnswersLists: selectableAnswersLists,
         questionaryInputFieldTypes: questionaryInputFieldTypes,
-        selectableAnswers: selectableAnswers
+        selectableAnswers: selectableAnswers,
+        originObjectTypeId: originObjectTypeId
       });
 
     default:
@@ -184,9 +185,14 @@ function HorizontalLabelPositionBelowStepper(props) {
   const objectTypeId = form.watch('objectTypeId');
   const objectType = props.objectTypes?.find(o => o.id == objectTypeId);
   const objectsIdToChangeType = form.watch('objectsIdToChangeType');
+  const ifQuestionaryCurrentInCompany = form.watch('ifQuestionaryCurrentInCompany');
+  console.log("ifQuestionaryCurrentInCompany", ifQuestionaryCurrentInCompany);
   return /*#__PURE__*/React.createElement("div", {
     className: classes.root
-  }, /*#__PURE__*/React.createElement("div", {
+  }, ifQuestionaryCurrentInCompany && props.originObjectTypeId == objectTypeId ? /*#__PURE__*/React.createElement("div", {
+    className: "alert alert-warning",
+    role: "alert"
+  }, "\u0423\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u0430\u043A\u0442\u0438\u0432\u043D\u0430\u044F \u0430\u043D\u043A\u0435\u0442\u0430 \u0434\u043B\u044F \u0442\u0438\u043F\u0430 \u043E\u0431\u044A\u0435\u043A\u0442\u0430 \"", objectType?.name, "\"!") : null, /*#__PURE__*/React.createElement("div", {
     className: "d-flex justify-content-center"
   }, company?.name && /*#__PURE__*/React.createElement("div", {
     className: "d-flex justify-content-start col-3 text-truncate mr-1 "
@@ -238,7 +244,7 @@ function HorizontalLabelPositionBelowStepper(props) {
     onClick: handleReset
   }, "Reset")) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Typography, {
     className: classes.instructions
-  }, getStepContent(activeStep, form, props.questionary, props.getAllRoute, props.objectTypes, props.setObjectTypes, props.companies, props.selectableAnswersLists, props.questionaryInputFieldTypes, props.selectableAnswers, props.setObjectTypeId)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
+  }, getStepContent(activeStep, form, props.questionary, props.getAllRoute, props.objectTypes, props.setObjectTypes, props.companies, props.selectableAnswersLists, props.questionaryInputFieldTypes, props.selectableAnswers, props.setObjectTypeId, props.originObjectTypeId)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Button, {
     disabled: activeStep === 0,
     onClick: handleBack,
     className: `${classes.backButton}`,
@@ -272,6 +278,7 @@ function App(props) {
   const [selectableAnswers, setSelectableAnswers] = React.useState([]);
   const [companyId, setCompanyId] = React.useState(0);
   const [objectTypeId, setObjectTypeId] = React.useState(0);
+  const [originObjectTypeId, setOriginObjectTypeId] = React.useState(0);
   React.useEffect(() => {
     (async () => {
       const getSelectOptions = async () => {
@@ -297,6 +304,8 @@ function App(props) {
         return;
       }
 
+      let originObjectTypeId = form.watch('objectTypeId');
+      setOriginObjectTypeId(originObjectTypeId);
       let companyId = form.watch('companyId');
       setCompanyId(companyId);
       let objectTypeId = form.watch('objectTypeId');
@@ -332,7 +341,8 @@ function App(props) {
     questionaryInputFieldTypes: questionaryInputFieldTypes,
     selectableAnswers: selectableAnswers,
     companyId: companyId,
-    setObjectTypeId: setObjectTypeId
+    setObjectTypeId: setObjectTypeId,
+    originObjectTypeId: originObjectTypeId
   }))), /*#__PURE__*/React.createElement(CloseAlertDialog, {
     getAllRoute: props.getAllRoute
   }));
