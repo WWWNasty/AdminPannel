@@ -160,8 +160,9 @@ namespace Admin.Panel.Data.Repositories.Questionary
                                     INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId 
                                     WHERE t.IsUsed = 1 AND (q.ObjectTypeId is NULL OR q.IsUsed = 0) AND t.CompanyId IN @CompanyId";
                     var result = connection.Query<QuestionaryObjectType>(query, new {CompanyId = companiesId}).ToList();
+                    var objectTypeIdCurrent = result.FirstOrDefault(ot => ot.Id == objectTypeId)?.Id;
 
-                    if (objectTypeId != 0)
+                    if (objectTypeId != 0 && objectTypeIdCurrent != objectTypeId)
                     {
                         result.Add(connection.Query<QuestionaryObjectType>(
                             @"SELECT t.*, c.CompanyName AS CompanyName  FROM QuestionaryObjectTypes AS t 
