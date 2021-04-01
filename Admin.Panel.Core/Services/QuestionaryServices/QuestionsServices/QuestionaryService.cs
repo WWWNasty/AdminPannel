@@ -27,9 +27,9 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             ISelectableAnswersListRepository selectableAnswersListRepository,
             IQuestionaryInputFieldTypesRepository questionaryInputFieldTypesRepository,
             ICompanyRepository companyRepository,
-            IQuestionaryRepository questionaryRepository, 
-            IQuestionaryInputFieldTypesRepository fieldTypesRepository, 
-            IQuestionaryObjectRepository questionaryObjectRepository, 
+            IQuestionaryRepository questionaryRepository,
+            IQuestionaryInputFieldTypesRepository fieldTypesRepository,
+            IQuestionaryObjectRepository questionaryObjectRepository,
             IObjectPropertiesRepository objectPropertiesRepository)
         {
             _questionaryObjectTypesRepository = questionaryObjectTypesRepository;
@@ -46,9 +46,10 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
         {
             QuestionaryDto obj = new QuestionaryDto();
             obj.ApplicationCompanies = await _companyRepository.GetAllActiveAsync();
-            obj.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllActiveWithoutQuestionaryAsync(objectTypeId);
+            obj.QuestionaryObjectTypes =
+                await _questionaryObjectTypesRepository.GetAllActiveWithoutQuestionaryAsync(objectTypeId);
             obj.SelectableAnswersLists = await _selectableAnswersListRepository.GetAllActiveAsync();
-            obj.QuestionaryObjects = await _questionaryObjectRepository.GetAllActiveAsync();
+            obj.QuestionaryObjects = await _questionaryObjectRepository.GetAllAsync();
             obj.ObjectProperties = await _objectPropertiesRepository.GetAllActiveAsync();
             obj.SelectableAnswers = await _selectableAnswersListRepository.GetAllAnswers();
             obj.QuestionaryInputFieldTypes = await _questionaryInputFieldTypesRepository.GetAllWithListId();
@@ -59,9 +60,12 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
         {
             QuestionaryDto obj = new QuestionaryDto();
             obj.ApplicationCompanies = await _companyRepository.GetAllActiveForUserAsync(idUser);
-            obj.QuestionaryObjectTypes = await _questionaryObjectTypesRepository.GetAllActiveWithoutQuestionaryForUserAsync(Convert.ToInt32(idUser), objectTypeId);
+            obj.QuestionaryObjectTypes =
+                await _questionaryObjectTypesRepository.GetAllActiveWithoutQuestionaryForUserAsync(
+                    Convert.ToInt32(idUser), objectTypeId);
             obj.SelectableAnswersLists = await _selectableAnswersListRepository.GetAllActiveAsync();
-            obj.QuestionaryObjects = await _questionaryObjectRepository.GetAllActiveForUserAsync(Convert.ToInt32(idUser));
+            obj.QuestionaryObjects =
+                await _questionaryObjectRepository.GetAllForUserAsync(Convert.ToInt32(idUser));
             obj.ObjectProperties = await _objectPropertiesRepository.GetAllActiveAsync();
             obj.SelectableAnswers = await _selectableAnswersListRepository.GetAllAnswers();
             obj.QuestionaryInputFieldTypes = await _questionaryInputFieldTypesRepository.GetAllWithListId();
@@ -76,10 +80,14 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             //получить все объекты и пропсы для типов объектов
             foreach (var objectType in model.QuestionaryObjectTypes)
             {
-                objectType.ObjectProperties = obj.ObjectProperties.Where(p => p.QuestionaryObjectTypeId == objectType.Id).ToList();
-                objectType.QuestionaryObjects = obj.QuestionaryObjects.Where(o => o.ObjectTypeId == objectType.Id).ToList();
+                objectType.ObjectProperties =
+                    obj.ObjectProperties.Where(p => p.QuestionaryObjectTypeId == objectType.Id).ToList();
+                objectType.QuestionaryObjects =
+                    obj.QuestionaryObjects.Where(o => o.ObjectTypeId == objectType.Id).ToList();
             }
-            model.ObjectsIdToChangeType = model.QuestionaryObjectTypes.FirstOrDefault(t => t.Id == model.ObjectTypeId)?.QuestionaryObjects.Select(o => o.Id).ToArray();
+
+            model.ObjectsIdToChangeType = model.QuestionaryObjectTypes.FirstOrDefault(t => t.Id == model.ObjectTypeId)
+                ?.QuestionaryObjects?.Where(o => o.IsUsed).Select(o => o.Id).ToArray();
             model.SelectableAnswersLists = obj.SelectableAnswersLists;
             model.SelectableAnswers = obj.SelectableAnswers;
             model.QuestionaryInputFieldTypes = obj.QuestionaryInputFieldTypes;
@@ -93,13 +101,15 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
                         List<QuestionaryInputFieldTypes> currentInputFields =
                             await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
                         question.CurrentQuestionaryInputFieldTypes = currentInputFields;
-                  
+
                         List<SelectableAnswers> current =
-                            await _selectableAnswersListRepository.GetSelectableAnswersAsync(question.SelectableAnswersListId);
+                            await _selectableAnswersListRepository.GetSelectableAnswersAsync(question
+                                .SelectableAnswersListId);
                         question.CurrentSelectableAnswerses = current;
                     }
                 }
             }
+
             return model;
         }
 
@@ -110,9 +120,12 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             model.QuestionaryObjectTypes = allForQuestionary.QuestionaryObjectTypes;
             foreach (var objectType in model.QuestionaryObjectTypes)
             {
-                objectType.ObjectProperties = allForQuestionary.ObjectProperties.Where(p => p.QuestionaryObjectTypeId == objectType.Id).ToList();
-                objectType.QuestionaryObjects = allForQuestionary.QuestionaryObjects.Where(o => o.ObjectTypeId == objectType.Id).ToList();
+                objectType.ObjectProperties = allForQuestionary.ObjectProperties
+                    .Where(p => p.QuestionaryObjectTypeId == objectType.Id).ToList();
+                objectType.QuestionaryObjects = allForQuestionary.QuestionaryObjects
+                    .Where(o => o.ObjectTypeId == objectType.Id).ToList();
             }
+
             model.SelectableAnswersLists = allForQuestionary.SelectableAnswersLists;
             model.SelectableAnswers = allForQuestionary.SelectableAnswers;
             model.QuestionaryInputFieldTypes = allForQuestionary.QuestionaryInputFieldTypes;
@@ -127,10 +140,14 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             //получить все объекты и пропсы для типов объектов в репозитории
             foreach (var objectType in model.QuestionaryObjectTypes)
             {
-                objectType.ObjectProperties = allForObj.ObjectProperties.Where(p => p.QuestionaryObjectTypeId == objectType.Id).ToList();
-                objectType.QuestionaryObjects = allForObj.QuestionaryObjects.Where(o => o.ObjectTypeId == objectType.Id).ToList();
+                objectType.ObjectProperties = allForObj.ObjectProperties
+                    .Where(p => p.QuestionaryObjectTypeId == objectType.Id).ToList();
+                objectType.QuestionaryObjects =
+                    allForObj.QuestionaryObjects.Where(o => o.ObjectTypeId == objectType.Id).ToList();
             }
-            model.ObjectsIdToChangeType = model.QuestionaryObjectTypes.FirstOrDefault(t => t.Id == model.ObjectTypeId)?.QuestionaryObjects.Select(o => o.Id).ToArray();
+
+            model.ObjectsIdToChangeType = model.QuestionaryObjectTypes.FirstOrDefault(t => t.Id == model.ObjectTypeId)
+                ?.QuestionaryObjects.Where(o => o.IsUsed).Select(o => o.Id).ToArray();
             model.SelectableAnswers = allForObj.SelectableAnswers;
             model.QuestionaryInputFieldTypes = allForObj.QuestionaryInputFieldTypes;
             model.SelectableAnswersLists = allForObj.SelectableAnswersLists;
@@ -144,13 +161,15 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
                         List<QuestionaryInputFieldTypes> currentInputFields =
                             await _questionaryInputFieldTypesRepository.GetAllCurrent(question.SelectableAnswersListId);
                         question.CurrentQuestionaryInputFieldTypes = currentInputFields;
-                  
+
                         List<SelectableAnswers> current =
-                            await _selectableAnswersListRepository.GetSelectableAnswersAsync(question.SelectableAnswersListId);
+                            await _selectableAnswersListRepository.GetSelectableAnswersAsync(question
+                                .SelectableAnswersListId);
                         question.CurrentSelectableAnswerses = current;
                     }
                 }
             }
+
             return model;
         }
 
@@ -161,13 +180,16 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             model.QuestionaryObjectTypes = obj.QuestionaryObjectTypes;
             foreach (var objectType in model.QuestionaryObjectTypes)
             {
-                objectType.ObjectProperties = obj.ObjectProperties.Where(p => p.QuestionaryObjectTypeId == objectType.Id).ToList();
-                objectType.QuestionaryObjects = obj.QuestionaryObjects.Where(o => o.ObjectTypeId == objectType.Id).ToList();
+                objectType.ObjectProperties =
+                    obj.ObjectProperties.Where(p => p.QuestionaryObjectTypeId == objectType.Id).ToList();
+                objectType.QuestionaryObjects =
+                    obj.QuestionaryObjects.Where(o => o.ObjectTypeId == objectType.Id).ToList();
             }
+
             model.SelectableAnswersLists = obj.SelectableAnswersLists;
             model.SelectableAnswers = obj.SelectableAnswers;
             model.QuestionaryInputFieldTypes = obj.QuestionaryInputFieldTypes;
-            
+
             return model;
         }
 
@@ -185,8 +207,9 @@ namespace Admin.Panel.Core.Services.QuestionaryServices.QuestionsServices
             model.IndexCurrentQuestion = index;
             foreach (var _ in Enumerable.Range(0, index + 1))
             {
-                model.QuestionaryQuestions.Add( new QuestionaryQuestions());
+                model.QuestionaryQuestions.Add(new QuestionaryQuestions());
             }
+
             model.SelectableAnswers = await _selectableAnswersListRepository.GetSelectableAnswersAsync(id);
             return model;
         }

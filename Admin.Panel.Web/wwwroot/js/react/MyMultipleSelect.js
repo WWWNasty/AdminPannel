@@ -54,7 +54,7 @@ const MyMultipleSelect = props => {
     control: control,
     input: /*#__PURE__*/React.createElement(Input, null),
     selectOptions: props.selectOptions,
-    renderValue: selected => props.selectOptions.flatMap(option => option.questionaryObjects).filter(option => selected.indexOf(option?.id) > -1).map(option => option.name).join(', '),
+    renderValue: selected => props.selectOptions.flatMap(option => option.questionaryObjects).filter(option => option['isUsed'] = true).filter(option => selected.indexOf(option?.id) > -1).map(option => option.name).join(', '),
     MenuProps: MenuProps
   }, props.selectOptions?.map(item => [item.questionaryObjects?.length ? /*#__PURE__*/React.createElement(ListSubheader, null, item.name) : null, item.questionaryObjects?.map(object => /*#__PURE__*/React.createElement(MenuItem, {
     key: object.id,

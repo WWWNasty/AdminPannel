@@ -281,6 +281,7 @@ interface Company {
 
 function App(props: { questionary?: any, getAllRoute: string }) {
 
+    debugger;
     const form = useForm({shouldUnregister: false, defaultValues: props.questionary});
     const {register, handleSubmit} = form;
 

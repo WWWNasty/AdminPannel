@@ -263,6 +263,7 @@ function HorizontalLabelPositionBelowStepper(props) {
 }
 
 function App(props) {
+  debugger;
   const form = useForm({
     shouldUnregister: false,
     defaultValues: props.questionary

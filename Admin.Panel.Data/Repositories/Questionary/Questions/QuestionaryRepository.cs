@@ -61,7 +61,8 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                     }
 
                     obj.QuestionaryQuestions = questions;
-                    obj.IfQuestionaryCurrentInCompany = await IfQuestionaryCurrentInCompanyAsync(obj.CompanyId, obj.ObjectTypeId, id);
+                    obj.IfQuestionaryCurrentInCompany =
+                        await IfQuestionaryCurrentInCompanyAsync(obj.CompanyId, obj.ObjectTypeId, id);
                     return obj;
                 }
                 catch (Exception ex)
@@ -142,7 +143,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             {
                                 selectableAnswersList.QuestionaryQuestions[i].SequenceOrder = i;
                             }
-                            
+
                             foreach (var question in selectableAnswersList.QuestionaryQuestions)
                             {
                                 var questionId = cn.ExecuteScalar<int>(
@@ -158,31 +159,37 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                         SelectableAnswersListId = question.SelectableAnswersListId,
                                         SequenceOrder = question.SequenceOrder,
                                         DefaultAnswerId = question.DefaultAnswerId
-
                                     }, transaction);
-                                
+
                                 foreach (var option in question.QuestionaryAnswerOptions)
                                 {
                                     //add answr option
-                                        cn.Execute(
-                                            @"INSERT INTO  QuestionaryAnswerOptions(QuestionaryId,SelectableAnswerId,IsInvolvesComment)
+                                    cn.Execute(
+                                        @"INSERT INTO  QuestionaryAnswerOptions(QuestionaryId,SelectableAnswerId,IsInvolvesComment)
 		                                                VALUES (@QuestionaryId,@SelectableAnswerId,@IsInvolvesComment)",
-                                            new QuestionaryAnswerOptions
-                                            {
-                                                IsInvolvesComment = option.IsInvolvesComment,
-                                                SelectableAnswerId = option.SelectableAnswerId,
-                                                QuestionaryId = questionId
-                                            }, transaction);
-                                } 
+                                        new QuestionaryAnswerOptions
+                                        {
+                                            IsInvolvesComment = option.IsInvolvesComment,
+                                            SelectableAnswerId = option.SelectableAnswerId,
+                                            QuestionaryId = questionId
+                                        }, transaction);
+                                }
                             }
                         }
 
                         //changes objectType to objects with propValues
-                        List<QuestionaryObject> selectedObjects = cn.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects where Id IN @ObjectIds",
+                        List<QuestionaryObject> selectedObjects = cn.Query<QuestionaryObject>(
+                            @"SELECT * FROM QuestionaryObjects where Id IN @ObjectIds",
                             new {ObjectIds = selectableAnswersList.ObjectsIdToChangeType}, transaction).ToList();
-
+                        
+                        await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=0 
+                         WHERE ObjectTypeId = @ObjectTypeId", new {selectableAnswersList.ObjectTypeId}, transaction);
+                        
+                        await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
+                         WHERE Id IN @ObjectsId", new {ObjectsId = selectableAnswersList.ObjectsIdToChangeType, selectableAnswersList.ObjectTypeId }, transaction);
+                        
                         foreach (var selectedObject in selectedObjects)
-                        {
+                        { 
                             if (selectedObject.ObjectTypeId != selectableAnswersList.ObjectTypeId)
                             {
                                 cn.Execute(
@@ -191,16 +198,6 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             }
                         }
                         
-                        var objectsOfType = cn.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects where ObjectTypeId = @ObjectTypeId",
-                             new {selectableAnswersList.ObjectTypeId}, transaction).ToList();
-
-                        int[] objectsOfTypeIds = objectsOfType.Select(o => o.Id).ToArray();
-                        await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=0 
-                         WHERE Id IN @ObjectsId",new{ObjectsId = objectsOfTypeIds} , transaction);
-                        
-                        await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
-                         WHERE Id IN @ObjectsId",new{ObjectsId = selectableAnswersList.ObjectsIdToChangeType, selectableAnswersList.ObjectTypeId} , transaction);
-
                         QuestionaryDto result = cn.Query<QuestionaryDto>(@"SELECT * FROM Questionary WHERE Id=@Id",
                             new {@Id = objId}, transaction).FirstOrDefault();
 
@@ -226,7 +223,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                 using (var transaction = connection.BeginTransaction())
                 {
                     try
-                     {
+                    {
                         var query =
                             @"UPDATE Questionary SET Name=@Name,ObjectTypeId=@ObjectTypeId,CompanyId=@CompanyId,IsUsed=@Isused
                          WHERE Id=@Id";
@@ -235,7 +232,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
 
                         List<QuestionaryQuestions> newQuestions = new List<QuestionaryQuestions>();
                         List<QuestionaryQuestions> oldQuestions = new List<QuestionaryQuestions>();
-                        
+
                         foreach (int i in Enumerable.Range(0, questionary.QuestionaryQuestions.Count))
                         {
                             questionary.QuestionaryQuestions[i].SequenceOrder = i;
@@ -275,19 +272,19 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                 {
                                     connection.Execute(
                                         @"DELETE  QuestionaryAnswerOptions WHERE QuestionaryId = @QuestionaryId",
-                                        new { @QuestionaryId = question.Id}, transaction);
-                                    
+                                        new {@QuestionaryId = question.Id}, transaction);
+
                                     foreach (var option in question.QuestionaryAnswerOptions)
                                     {
-                                            connection.Execute(
-                                                @"INSERT INTO  QuestionaryAnswerOptions(QuestionaryId,SelectableAnswerId,IsInvolvesComment)
+                                        connection.Execute(
+                                            @"INSERT INTO  QuestionaryAnswerOptions(QuestionaryId,SelectableAnswerId,IsInvolvesComment)
                                       		                                                VALUES (@QuestionaryId,@SelectableAnswerId,@IsInvolvesComment)",
-                                                new QuestionaryAnswerOptions
-                                                {
-                                                    IsInvolvesComment = option.IsInvolvesComment,
-                                                    SelectableAnswerId = option.SelectableAnswerId,
-                                                    QuestionaryId = question.Id
-                                                }, transaction);
+                                            new QuestionaryAnswerOptions
+                                            {
+                                                IsInvolvesComment = option.IsInvolvesComment,
+                                                SelectableAnswerId = option.SelectableAnswerId,
+                                                QuestionaryId = question.Id
+                                            }, transaction);
                                     }
                                 }
                             }
@@ -297,7 +294,7 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                         if (newQuestions.Count != 0)
                         {
                             foreach (var question in newQuestions)
-                            { 
+                            {
                                 int questionId = connection.ExecuteScalar<int>(
                                     @"INSERT INTO  QuestionaryQuestions(QuestionaryId,QuestionText,QuestionaryInputFieldTypeId,CanSkipQuestion,SelectableAnswersListId,SequenceOrder,IsUsed,DefaultAnswerId)
 		                                                VALUES (@QuestionaryId,@QuestionText,@QuestionaryInputFieldTypeId,@CanSkipQuestion,@SelectableAnswersListId,@SequenceOrder,@IsUsed,@DefaultAnswerId);
@@ -318,29 +315,34 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                 {
                                     foreach (var option in question.QuestionaryAnswerOptions)
                                     {
-                                        
-                                            //add answr
-                                            connection.Execute(
-                                                @"INSERT INTO  QuestionaryAnswerOptions(QuestionaryId,SelectableAnswerId,IsInvolvesComment)
+                                        //add answr
+                                        connection.Execute(
+                                            @"INSERT INTO  QuestionaryAnswerOptions(QuestionaryId,SelectableAnswerId,IsInvolvesComment)
                                   		                                                VALUES (@QuestionaryId,@SelectableAnswerId,@IsInvolvesComment)",
-                                                new QuestionaryAnswerOptions
-                                                {
-                                                    IsInvolvesComment = option.IsInvolvesComment,
-                                                    SelectableAnswerId = option.SelectableAnswerId,
-                                                    QuestionaryId = questionId
-                                                }, transaction);
-                                        
+                                            new QuestionaryAnswerOptions
+                                            {
+                                                IsInvolvesComment = option.IsInvolvesComment,
+                                                SelectableAnswerId = option.SelectableAnswerId,
+                                                QuestionaryId = questionId
+                                            }, transaction);
                                     }
                                 }
                             }
                         }
 
                         //changes objectType to objects with propValues
-                        List<QuestionaryObject> selectedObjects = connection.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects where Id IN @ObjectIds",
+                        List<QuestionaryObject> selectedObjects = connection.Query<QuestionaryObject>(
+                            @"SELECT * FROM QuestionaryObjects where Id IN @ObjectIds",
                             new {ObjectIds = questionary.ObjectsIdToChangeType}, transaction).ToList();
-
+                        
+                        await connection.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=0 
+                         WHERE ObjectTypeId = @ObjectTypeId", new {questionary.ObjectTypeId}, transaction);
+                        
+                        await connection.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
+                         WHERE Id IN @ObjectsId", new {ObjectsId = questionary.ObjectsIdToChangeType, questionary.ObjectTypeId }, transaction);
+                        
                         foreach (var selectedObject in selectedObjects)
-                        {
+                        { 
                             if (selectedObject.ObjectTypeId != questionary.ObjectTypeId)
                             {
                                 connection.Execute(
@@ -348,18 +350,8 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                                     new {QuestionaryObjectId = selectedObject.Id}, transaction);
                             }
                         }
-                        
-                        var objectsOfType = connection.Query<QuestionaryObject>(@"SELECT * FROM QuestionaryObjects where ObjectTypeId = @ObjectTypeId",
-                            new {questionary.ObjectTypeId}, transaction).ToList();
 
-                        int[] objectsOfTypeIds = objectsOfType.Select(o => o.Id).ToArray();
-                        await connection.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=0 
-                         WHERE Id IN @ObjectsId",new{ObjectsId = objectsOfTypeIds} , transaction);
-                        
-                        await connection.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
-                         WHERE Id IN @ObjectsId",new{ObjectsId = questionary.ObjectsIdToChangeType, questionary.ObjectTypeId} , transaction);
-                        
-                        transaction.Commit();
+                        transaction.Commit(); 
                         _logger.LogInformation("Анкета с Id :{0} успешно отредактирована в бд.", questionary.Id);
                         return questionary;
                     }

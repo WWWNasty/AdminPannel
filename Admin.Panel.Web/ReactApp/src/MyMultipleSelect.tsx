@@ -67,6 +67,7 @@ const MyMultipleSelect = (props: { selectOptions: QuestionaryObjecTypes[], selec
                         (selected) => (
                             props.selectOptions
                                 .flatMap(option => option.questionaryObjects)
+                                .filter(option => option['isUsed'] = true)
                                 .filter(option => selected.indexOf(option?.id) > -1)
                                 .map((option) => option.name
                                 ).join(', ')
