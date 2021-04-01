@@ -177,26 +177,27 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             }
                         }
 
+                        await AddObjectsToQuestionaryObjectType(cn, selectableAnswersList, transaction);
                         //changes objectType to objects with propValues
-                        List<QuestionaryObject> selectedObjects = cn.Query<QuestionaryObject>(
-                            @"SELECT * FROM QuestionaryObjects where Id IN @ObjectIds",
-                            new {ObjectIds = selectableAnswersList.ObjectsIdToChangeType}, transaction).ToList();
-                        
-                        await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=0 
-                         WHERE ObjectTypeId = @ObjectTypeId", new {selectableAnswersList.ObjectTypeId}, transaction);
-                        
-                        await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
-                         WHERE Id IN @ObjectsId", new {ObjectsId = selectableAnswersList.ObjectsIdToChangeType, selectableAnswersList.ObjectTypeId }, transaction);
-                        
-                        foreach (var selectedObject in selectedObjects)
-                        { 
-                            if (selectedObject.ObjectTypeId != selectableAnswersList.ObjectTypeId)
-                            {
-                                cn.Execute(
-                                    @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
-                                    new {QuestionaryObjectId = selectedObject.Id}, transaction);
-                            }
-                        }
+                        // List<QuestionaryObject> selectedObjects = cn.Query<QuestionaryObject>(
+                        //     @"SELECT * FROM QuestionaryObjects where Id IN @ObjectIds",
+                        //     new {ObjectIds = selectableAnswersList.ObjectsIdToChangeType}, transaction).ToList();
+                        //
+                        // await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=0 
+                        //  WHERE ObjectTypeId = @ObjectTypeId", new {selectableAnswersList.ObjectTypeId}, transaction);
+                        //
+                        // await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
+                        //  WHERE Id IN @ObjectsId", new {ObjectsId = selectableAnswersList.ObjectsIdToChangeType, selectableAnswersList.ObjectTypeId }, transaction);
+                        //
+                        // foreach (var selectedObject in selectedObjects)
+                        // { 
+                        //     if (selectedObject.ObjectTypeId != selectableAnswersList.ObjectTypeId)
+                        //     {
+                        //         cn.Execute(
+                        //             @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
+                        //             new {QuestionaryObjectId = selectedObject.Id}, transaction);
+                        //     }
+                        // }
                         
                         QuestionaryDto result = cn.Query<QuestionaryDto>(@"SELECT * FROM Questionary WHERE Id=@Id",
                             new {@Id = objId}, transaction).FirstOrDefault();
@@ -330,26 +331,27 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                             }
                         }
 
+                        await AddObjectsToQuestionaryObjectType(connection, questionary, transaction);
                         //changes objectType to objects with propValues
-                        List<QuestionaryObject> selectedObjects = connection.Query<QuestionaryObject>(
-                            @"SELECT * FROM QuestionaryObjects where Id IN @ObjectIds",
-                            new {ObjectIds = questionary.ObjectsIdToChangeType}, transaction).ToList();
-                        
-                        await connection.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=0 
-                         WHERE ObjectTypeId = @ObjectTypeId", new {questionary.ObjectTypeId}, transaction);
-                        
-                        await connection.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
-                         WHERE Id IN @ObjectsId", new {ObjectsId = questionary.ObjectsIdToChangeType, questionary.ObjectTypeId }, transaction);
-                        
-                        foreach (var selectedObject in selectedObjects)
-                        { 
-                            if (selectedObject.ObjectTypeId != questionary.ObjectTypeId)
-                            {
-                                connection.Execute(
-                                    @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
-                                    new {QuestionaryObjectId = selectedObject.Id}, transaction);
-                            }
-                        }
+                        // List<QuestionaryObject> selectedObjects = connection.Query<QuestionaryObject>(
+                        //     @"SELECT * FROM QuestionaryObjects where Id IN @ObjectIds",
+                        //     new {ObjectIds = questionary.ObjectsIdToChangeType}, transaction).ToList();
+                        //
+                        // await connection.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=0 
+                        //  WHERE ObjectTypeId = @ObjectTypeId", new {questionary.ObjectTypeId}, transaction);
+                        //
+                        // await connection.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
+                        //  WHERE Id IN @ObjectsId", new {ObjectsId = questionary.ObjectsIdToChangeType, questionary.ObjectTypeId }, transaction);
+                        //
+                        // foreach (var selectedObject in selectedObjects)
+                        // { 
+                        //     if (selectedObject.ObjectTypeId != questionary.ObjectTypeId)
+                        //     {
+                        //         connection.Execute(
+                        //             @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
+                        //             new {QuestionaryObjectId = selectedObject.Id}, transaction);
+                        //     }
+                        // }
 
                         transaction.Commit(); 
                         _logger.LogInformation("Анкета с Id :{0} успешно отредактирована в бд.", questionary.Id);
@@ -397,6 +399,30 @@ namespace Admin.Panel.Data.Repositories.Questionary.Questions
                         "Не удалось выполнить проверку на наличие такой активной анкеты в компании c Id:{1} в бд с ошибкой: {0}",
                         ex, companyId);
                     throw new Exception($"{GetType().FullName}.WithConnection__", ex);
+                }
+            }
+        }
+
+        private async Task AddObjectsToQuestionaryObjectType(SqlConnection cn, QuestionaryDto questionary, SqlTransaction transaction)
+        {
+            //changes objectType to objects with propValues
+            List<QuestionaryObject> selectedObjects = cn.Query<QuestionaryObject>(
+                @"SELECT * FROM QuestionaryObjects where Id IN @ObjectIds",
+                new {ObjectIds = questionary.ObjectsIdToChangeType}, transaction).ToList();
+                        
+            await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=0 
+                         WHERE ObjectTypeId = @ObjectTypeId", new {questionary.ObjectTypeId}, transaction);
+                        
+            await cn.ExecuteAsync(@"UPDATE QuestionaryObjects SET IsUsed=1, ObjectTypeId=@ObjectTypeId
+                         WHERE Id IN @ObjectsId", new {ObjectsId = questionary.ObjectsIdToChangeType, questionary.ObjectTypeId }, transaction);
+                        
+            foreach (var selectedObject in selectedObjects)
+            { 
+                if (selectedObject.ObjectTypeId != questionary.ObjectTypeId)
+                {
+                    cn.Execute(
+                        @"DELETE FROM ObjectPropertyValues WHERE QuestionaryObjectId = @QuestionaryObjectId",
+                        new {QuestionaryObjectId = selectedObject.Id}, transaction);
                 }
             }
         }

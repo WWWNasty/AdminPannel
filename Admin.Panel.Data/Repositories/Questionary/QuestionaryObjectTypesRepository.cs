@@ -121,9 +121,10 @@ namespace Admin.Panel.Data.Repositories.Questionary
                 try
                 {
                     var query = @"SELECT DISTINCT t.*, c.CompanyName AS CompanyName FROM QuestionaryObjectTypes AS t 
-                                    LEFT JOIN Questionary as q on t.Id = q.ObjectTypeId
                                     INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId 
-                                    WHERE t.IsUsed = 1 AND (q.ObjectTypeId is NULL OR q.IsUsed = 0)";
+                                    WHERE t.IsUsed = 1 AND 
+									(Select COUNT(*) From Questionary as q Where q.IsUsed = 1 And q.ObjectTypeId = t.Id) = 0 
+								";
                     var result = connection.Query<QuestionaryObjectType>(query).ToList();
                     var objectTypeIdCurrent = result.FirstOrDefault(ot => ot.Id == objectTypeId)?.Id;
                     
@@ -156,9 +157,10 @@ namespace Admin.Panel.Data.Repositories.Questionary
                             new {@Id = userId}).ToArray();
 
                     var query = @"SELECT DISTINCT t.*, c.CompanyName AS CompanyName FROM QuestionaryObjectTypes AS t 
-                                    LEFT JOIN Questionary as q on t.Id = q.ObjectTypeId
                                     INNER JOIN Companies AS c ON c.CompanyId = t.CompanyId 
-                                    WHERE t.IsUsed = 1 AND (q.ObjectTypeId is NULL OR q.IsUsed = 0) AND t.CompanyId IN @CompanyId";
+                                    WHERE t.IsUsed = 1 AND 
+									(Select COUNT(*) From Questionary as q Where q.IsUsed = 1 And q.ObjectTypeId = t.Id) = 0 
+									AND t.CompanyId IN (1, 5)";
                     var result = connection.Query<QuestionaryObjectType>(query, new {CompanyId = companiesId}).ToList();
                     var objectTypeIdCurrent = result.FirstOrDefault(ot => ot.Id == objectTypeId)?.Id;
 
