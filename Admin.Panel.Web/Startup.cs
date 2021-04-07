@@ -143,7 +143,10 @@ namespace Admin.Panel.Web
         {
             if (context.User.Claims.FirstOrDefault(c => c.Type == "needs_reset_password")?.Value == true.ToString() && context.Request.Path != "/Account/ChangePassword" && context.Request.Path != "/Account/Logout")
             {
-                context.Response.Redirect("/Account/ChangePassword");
+                var allRouteParts = context.Request.Path.ToString().Split('/');
+                var path = allRouteParts.Take(allRouteParts.Length - 2).ToArray();
+                var basePath = string.Join("/", path);
+                context.Response.Redirect(basePath + "/Account/ChangePassword");
                 return;
             }
             // Call the next delegate/middleware in the pipeline
